@@ -381,31 +381,36 @@ Stylistically, what kind of sound effects are you looking for? Do you want to ex
 
 ### **Sounds Needed**
 
-1. Effects
-    1. Soft Footsteps (dirt floor)
-    2. Sharper Footsteps (stone floor)
-    3. Soft Landing (low vertical velocity)
-    4. Hard Landing (high vertical velocity)
-    5. Glass Breaking
-    6. Chest Opening
-    7. Door Opening
-2. Feedback
-    1. Relieved &quot;Ahhhh!&quot; (health)
-    2. Shocked &quot;Ooomph!&quot; (attacked)
-    3. Happy chime (extra life)
-    4. Sad chime (died)
+1. Effectos
+    1. Giro de rueda (movimiento del jugador, igual para todo tipo de suelos)
+    2. Salto del jugador
+    3. Agacharse
+    4. Aterrizaje del jugador (al caer verticalmente)
+    5. Ataque cuerpo a cuerpo (al atacar enemigos u objetos)
+    6. Ataque a distancia (pistola láser)
+    7. Abrir puerta
+2. Retroalimentación (Feedback)
+    1. Abrir botella (recuperar salud)
+    2. Golpe (daño hacia el jugador)
+    3. Presionar botón
+    4. Golpe exagerado (enemigo derrotado)
+    5. Explosión pequeña (jugador derrotado)
 
-_(example)_
+
+
 
 ### **Music Needed**
 
-1. Slow-paced, nerve-racking &quot;forest&quot; track
-2. Exciting &quot;castle&quot; track
-3. Creepy, slow &quot;dungeon&quot; track
-4. Happy ending credits track
-5. Rick Astley&#39;s hit #1 single &quot;Never Gonna Give You Up&quot;
 
-_(example)_
+1. Música lenta-melódica para el menú principal.
+2. Música tenue-lenta para menú de settings(Aplicable a todas las páginas de settings independientemente del nivel) 
+3. Música rápida-enérgica con efectos de sonido que evoquen a escritura o a un salón de clases(nivel 1).
+4. Música rápida-enérgica, con efectos de sonido de química, sonidos genéricos de ciencia (nivel dos).
+5. Música lúgubre, efectos de sonido mecánicos, eco, alta reverberación (nivel 3).
+6.Música épica, con sonidos cyberpunk-mecánicos (Final boss).
+7. Música feliz-nostálgica(créditos finales).
+*Las canciones del nivel 1 y 2, al llegar al boss del nivel acelerarán su velocidad.
+
 
 
 ## _Schedule_
@@ -421,8 +426,7 @@ _(define the main activities and the expected dates when they should be finished
         3. base block
   2. base app state
         1. game world
-        2. menu world
-2. develop player and basic block classes
+        2. menu world2. develop player and basic block classes
     1. physics / collisions
 3. find some smooth controls/physics
 4. develop other derived classes
