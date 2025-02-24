@@ -4,7 +4,7 @@
 
 **Grupo:** 401
 
-**Equipo:**
+**Equipo - BotRunners:**
 - Diego Córdova Rodríguez, A01781166
 - Lorena Estefanía Chewtat Torres, A01785378
 - Eder Jezrael Cantero Moreno, A01785888
