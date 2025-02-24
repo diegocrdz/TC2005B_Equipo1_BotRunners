@@ -399,11 +399,7 @@ Stylistically, what kind of sound effects are you looking for? Do you want to ex
     4. Golpe exagerado (enemigo derrotado)
     5. Explosión pequeña (jugador derrotado)
 
-
-
-
 ### **Music Needed**
-
 
 1. Música lenta-melódica para el menú principal.
 2. Música tenue-lenta para menú de settings(Aplicable a todas las páginas de settings independientemente del nivel) 
@@ -413,8 +409,6 @@ Stylistically, what kind of sound effects are you looking for? Do you want to ex
 6.Música épica, con sonidos cyberpunk-mecánicos (Final boss).
 7. Música feliz-nostálgica(créditos finales).
 *Las canciones del nivel 1 y 2, al llegar al boss del nivel acelerarán su velocidad.
-
-
 
 ## _Schedule_
 
