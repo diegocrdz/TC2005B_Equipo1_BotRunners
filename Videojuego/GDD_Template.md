@@ -16,7 +16,7 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
 - **Desarrollo Web:** Octavio Navarro Hinojosa
 - **Base de datos, Análisis y modelación de sistemas de software:** Esteban Castillo Juarez
 
-**Autores del videojuego:**
+**Autores del videojuego - Equipo BotRunners**
 - Diego Córdova Rodríguez, A01781166
 - Lorena Estefanía Chewtat Torres, A01785378
 - Eder Jezrael Cantero Moreno, A01785888
