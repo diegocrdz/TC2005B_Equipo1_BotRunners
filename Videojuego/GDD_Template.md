@@ -60,32 +60,62 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
 
 [Sum up your game idea in 2 sentences. A kind of elevator pitch. Keep it simple!]: #
 
-Overclocked es un juego roguelite de acción en 2D, donde encarnas a tu propio robot en una competencia de robótica y avanzas por mapas generados proceduralmente de izquierda a derecha, saltando, agachándote y derrotando enemigos cuerpo a cuerpo o a distancia. Explora cada rincón de los niveles para encontrar el botón que activa la sala del jefe final.
+Overclocked es roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
 
-Cada combate te permite subir de nivel y desbloquear una de tres mejoras aleatorias, ya sean estadísticas de fuerza, resistencia, velocidad o habilidades de movimiento. Cada nivel completado te acerca al desafío final, desbloqueando armas permanentes que te permitirán reintentar el juego al perder. El tiempo está corriendo, ¿Tienes la habilidad para ser uno de los mejores en la competencia?
+Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear mejoras aleatorias para potenciar tus estadísticas de fuerza, resistencia, velocidad o habilidades de movimiento. Tras completar cada uno de los 3 niveles, desbloqueas armas permanentes que te permitirán reducir el tiempo en el que terminas el juego, ¿Tienes la habilidad para convertirte en el robot definitivo?
 
 ### **Gameplay**
 
 [What should the gameplay be like? What is the goal of the game, and what kind of obstacles are in the way? What tactics should the player use to overcome them?]: #
 
-**Resumen del gameplay**
-Overclocked es un juego que incentiva a los jugadores a completar el juego en el menor tiempo posible. Cada nivel consiste en  habitaciones generadas de forma aleatoria que contienen enemigos como robots pequeños, grandes y voladores. El jugador debe explorar las salas hasta encontrar el botón que activa la puerta del jefe final de cada nivel.
+**Estructura del gameplay**
+
+Overclocked es un juego que incentiva a los jugadores a completar el juego en el menor tiempo posible. El jugador encarna un pequeño robot llamado “Skippy”, quien cuenta con un brazo robótico como arma inicial para enfrentarse a los demás robots de la competencia.
+
+El jugador inicia el videojuego en una sala rectangular de fondo blanco, con un letrero en la pared que indica los controles de movimiento con las teclas “W,A,S,D”. De igual forma, hay un letrero con una flecha hacia la izquierda, guiando al jugador a avanzar en esa dirección.
+
+Al avanzar, el jugador se encuentra con un robot enemigo de categoría Normal (salud y daño equilibrado). En la pared de esta sala, se encuentra un letrero que indica los controles de ataque cuerpo a cuerpo con la tecla “1” y “click derecho” para atacar.
+
+De esta forma, el jugador continúa avanzando por las salas con obstáculos y enemigos generados de forma aleatoria. El jugador puede encontrarse con enemigos de categoría Normal (salud y daño equilibrado), Pesado (salud y daño elevado) y Aéreo (salud y daño bajo).
+
+El jugador debe explorar las salas del nivel hasta encontrar una que contenga un botón azul. Al acercarse, el botón se activa automáticamente, desbloqueando la sala final del nivel, en donde el jugador deberá enfrentarse a un jefe final.
+
+Cada vez que el jugador derrota enemigos, obtiene una bonificación de experiencia, haciendo que cada vez que suba de nivel pueda seleccionar una mejora de estadísticas (salud, daño, protección) o movilidad (doble salto, esquivar (dash)). Al derrotar al jefe final de los niveles, el jugador obtiene un arma permanente que modifica su estadística base de daño.
 
 **Objetivo del juego**
-El objetivo principal del juego es completarlo en el menor tiempo posible, lo que implica dominar las mecánicas del juego y obtener cada una de las armas permanentes posibles tras completar el juego por primera vez. De esta forma, el juego invita a que los jugadores optimicen su forma de juego para ser más veloces en cada intento.
+
+El objetivo principal del juego es que el jugador complete cada uno de los 3 niveles en el menor tiempo posible, lo que implica dominar las mecánicas del juego y obtener cada una de las armas permanentes posibles tras derrotar a cada jefe de los niveles. De esta forma, el juego invita a que los jugadores optimicen su forma de juego para ser más veloces en cada intento, así como los invita a utilizar diferentes estrategias para completar el juego.
 
 **Obstáculos y Retos**
-Cada nivel cuenta con tres variaciones de enemigos, mismos que varían en forma de ataque, velocidad y vida. Además, el juego fomenta ser completado en el menor tiempo posible, por lo que el contador de tiempo representa un reto al cual ser vencido. La generación aleatoria de mapas y opciones de habilidades temporales (escogiendo una habilidad de tres después de subir de nivel) fomenta la estrategia y planeación de parte del jugador.
+
+Cada nivel cuenta con tres variaciones de enemigos, mismos que cuentan con distintas estadísticas de salud y daño:
+- Robot Normal: Salud - 50 puntos, Daño - 20%
+- Robot Pesado: Salud - 75 puntos, Daño - 40%
+- Robot Aéreo: Salud - 25 puntos, Daño - 10%
+
+Adicionalmente, el juego cuenta con 3 tipos de obstáculos:
+- Cajas de mader/metal (bloquean el paso del jugador/enemigos)
+- Picos de metal (dañan al jugador si este se acerca)
+- Tuberías de metal (bloquean el paso del jugador/enemigos)
+
+Además, el juego fomenta ser completado en el menor tiempo posible, por lo que el contador de tiempo representa un reto al cual ser vencido. La generación aleatoria de mapas y opciones de habilidades temporales (escogiendo una habilidad de tres después de subir de nivel) fomenta la estrategia y planeación de parte del jugador.
 
 **Tácticas para completar el juego**
-- **Dominar las mecánicas del juego:** Los jugadores deben aprender a utilizar el movimiento del personaje a su favor, aprovechando habilidades como el doble salto, dash y escudo a su favor.
-- **Aprender patrones de generación:** Tras un par de intentos, los jugadores pueden empezar a detectar patrones en la generación de niveles, lo que los puede llevar a optimizar sus rutas o estrategias para derrotar a los enemigos de forma eficaz.
+
+- **Dominar las mecánicas del juego:** Los jugadores deben aprender a utilizar el movimiento del personaje a su favor, aprovechando habilidades como el doble salto y esquivar (dash).
+- **Aprender patrones de los niveles:** Tras un par de intentos, los jugadores pueden empezar a detectar patrones en la generación de niveles, lo que los puede llevar a optimizar sus rutas o estrategias para derrotar a los enemigos de forma eficaz.
 - **Combate agresivo:** Si los jugadores logran adoptar una forma de combate agresiva, pueden lograr un menor tiempo para completar el juego a la vez que suben más niveles y desbloquean mejores habilidades.
 - **Decisiones estratégicas:** Probar diferentes combinaciones de habilidades al momento de subir niveles. Esto permite que cada jugador tenga una experiencia diferente de juego y optimicen su forma ideal de jugar.
 
 ### **Mindset**
 
-What kind of mindset do you want to provoke in the player? Do you want them to feel powerful, or weak? Adventurous, or nervous? Hurried, or calm? How do you intend to provoke those emotions?
+[What kind of mindset do you want to provoke in the player? Do you want them to feel powerful, or weak? Adventurous, or nervous? Hurried, or calm? How do you intend to provoke those emotions?]: #
+
+Overclocked -al igual que una competencia de robótica- fomenta la competitividad, donde solo los mejores son reconocidos por su esfuerzo. De esta forma, el juego busca que los jugadores tengan un deseo por explorar y navegar rápidamente los niveles, en un tiempo no mayor a 5 minutos por cada uno. El juego busca provocar un ambiente apresurado y enérgico en todo momento.
+
+Para provocar estas emociones de rapidez y exploración, el juego muestra en todo momento el mejor tiempo para completar cada nivel, así como el tiempo actual del jugador. De igual forma, la música es enérgica y rápida, lo que permite que los jugadores sientan que deben avanzar en todo momento.
+
+Se busca que el videojuego provoque un deseo por explorar, combatir y completar el juego en el menor tiempo posible, de forma apresurada.
 
 ## _Technical_
 
