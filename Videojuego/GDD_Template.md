@@ -2,6 +2,9 @@
 
 ## _Game Design Document_
 
+![Logo de Overclocked](img/logo_overclocked.png)
+>*Logo de Overclocked*
+
 ---
 
 ##### **Copyright notice / author information / boring legal stuff nobody likes**
