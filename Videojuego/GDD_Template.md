@@ -1,3 +1,5 @@
+![Logo Tec](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeCTWgs8hKfnOJ5vedq5xNXygQMUcdX_0zLA&s)
+
 # **Overclocked**
 
 ## _Game Design Document_
@@ -20,7 +22,8 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
 - Diego Córdova Rodríguez, A01781166
 - Lorena Estefanía Chewtat Torres, A01785378
 - Eder Jezrael Cantero Moreno, A01785888
-
+##
+![Overclocked logo](overclocked_logob.png)
 ##
 ## _Index_
 
@@ -63,7 +66,7 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
 
 [Sum up your game idea in 2 sentences. A kind of elevator pitch. Keep it simple!]: #
 
-Overclocked es roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
+Overclocked es un roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
 
 Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear mejoras aleatorias para potenciar tus estadísticas de fuerza, resistencia, velocidad o habilidades de movimiento. Tras completar cada uno de los 3 niveles, desbloqueas armas permanentes que te permitirán reducir el tiempo en el que terminas el juego, ¿Tienes la habilidad para convertirte en el robot definitivo?
 
@@ -274,15 +277,38 @@ _(example)_
 
 ### **Game Flow**
 
-1. Player starts in forest
-2. Pond to the left, must move right
-3. To the right is a hill, player jumps to traverse it (&quot;jump&quot; taught)
-4. Player encounters castle - door&#39;s shut and locked
-5. There&#39;s a window within jump height, and a rock on the ground
-6. Player picks up rock and throws at glass (&quot;throw&quot; taught)
-7. … etc.
+1. El jugador inicia en una sala vacía de laboratorio.
+2. Pared a la izquierda, el jugador debe avanzar a la derecha y saltar una caja.
+3. La pared muestra un letrero que muestra las direcciones en las que puede avanzar el jugador.
+4. El jugador avanza a la derecha y salta la caja de madera/metal en el suelo.
+5. El jugador entra en la segunda sala por el extremo izquierdo.
+6. El jugador encuentra un enemigo estático en el extremo derecho.
+7. El jugador observa en la pared un letrero que le indica cómo seleccionar su arma cuerpo a cuerpo y cómo utilizarla.
+8. El jugador derrota al enemigo y avanza a la siguiente sala.
+9. El jugador continúa avanzando por salas a la vez que derrota enemigos.
+10. El jugador sube un nivel de experiencia. Se le presenta una pantalla con 3 distintas opciones de estadísticas/habilidades a desbloquear. El jugador selecciona una.
+11. El jugador continúa su camino y encuentra unas escaleras en el centro de una sala. Puede seguir adelante o acercarse a las escaleras.
+12. Las escaleras tienen un letrero para subir/bajar o ambos.
+13. El jugador puede subir/bajar o ambos por las escaleras.
+14. El jugador encuentra una sala con un botón azul.
+15. El jugador se acerca al botón azul y este se activa automáticamente, mostrando un letrero que dice que la sala del jefe se ha activado.
+16. El jugador busca la sala del jefe final del nivel (si no la ha encontrado), entra y lo derrota.
+17. Tras derrotar al jefe, el jugador sube de nivel de experiencia automáticamente y el jugador es capaz de desbloquear una nueva habilidad aleatoria.
+18. Tras derrotar a cada jefe de cada uno de los 3 niveles, el jugador obtiene un arma permanente.
+    1. Espada.
+    2. Pistola láser que dispara lento.
+    3. Pistola láser que dispara rápido.
+19. El jugador obtiene una poción de curación de un solo uso para el siguiente nivel.
+20. El jugador avanza al siguiente nivel y repite el proceso.
+21. Si el jugador termina el juego, se muestran las estadísticas del jugador:
+- Tiempo de partida
+- Número de muertes
+- Enemigos derrotados
+- Número total de daño infligido y recibido
+- Número de partidas completadas.
+22. Se muestra la tabla de las mejores 5 puntuaciones de tiempo.
+22. El jugador es devuelto al menú principal.
 
-_(example)_
 
 ## _Development_
 
