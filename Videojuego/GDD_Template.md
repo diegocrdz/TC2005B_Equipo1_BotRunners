@@ -1,6 +1,7 @@
-![Logo Tec](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeCTWgs8hKfnOJ5vedq5xNXygQMUcdX_0zLA&s)
+![Logo Tec](img/logo_tec.png)
+>*Logo del Tecnológico de Monterrey*
 
-# **Overclocked**
+# **Overclocked** :robot:
 
 ## _Game Design Document_
 
@@ -22,9 +23,7 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
 - Diego Córdova Rodríguez, A01781166
 - Lorena Estefanía Chewtat Torres, A01785378
 - Eder Jezrael Cantero Moreno, A01785888
-##
-![Overclocked logo](overclocked_logob.png)
-##
+
 ## _Index_
 
 ---
@@ -66,7 +65,7 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
 
 [Sum up your game idea in 2 sentences. A kind of elevator pitch. Keep it simple!]: #
 
-Overclocked es un roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
+Overclocked es roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
 
 Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear mejoras aleatorias para potenciar tus estadísticas de fuerza, resistencia, velocidad o habilidades de movimiento. Tras completar cada uno de los 3 niveles, desbloqueas armas permanentes que te permitirán reducir el tiempo en el que terminas el juego, ¿Tienes la habilidad para convertirte en el robot definitivo?
 
@@ -74,7 +73,7 @@ Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear 
 
 [What should the gameplay be like? What is the goal of the game, and what kind of obstacles are in the way? What tactics should the player use to overcome them?]: #
 
-**Estructura del gameplay**
+**Descripción del juego**
 
 Overclocked es un juego que incentiva a los jugadores a completar el juego en el menor tiempo posible. El jugador encarna un pequeño robot llamado “Skippy”, quien cuenta con un brazo robótico como arma inicial para enfrentarse a los demás robots de la competencia.
 
@@ -236,7 +235,8 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 - Moverse a la derecha o izquierda: El jugador puede moverse en ambas direcciones de los niveles al presionar la tecla “a” (izquierda) o “d” (derecha), ejecutando una misma animación en dirección en la que se mueve.
 - Agacharse: El jugador es capaz de agacharse al presionar la tecla “s”, reduciendo su área para lograr atravesar obstáculos o situaciones en donde se tiene menos espacio. Existe una animación que es ejecutada al momento en el que el jugador se agacha.
 
-Habilidades de movimiento desbloqueables:
+**Habilidades de movimiento desbloqueables:**
+
 - Doble salto: El jugador es capaz de utilizar la habilidad de doble salto una vez la desbloquee al presionar la tecla “w” dos veces, lo cual le permitirá saltar el doble de distancia, ejecutando de nuevo la misma animación del salto normal.
 - Esquivar: El jugador es capaz de desplazarse rápidamente en muy poco tiempo al presionar la tecla shift, lo cual puede usar para esquivar ataques de enemigos o acortar su tiempo de la partida.
 
@@ -244,36 +244,58 @@ Habilidades de movimiento desbloqueables:
 
 ---
 
-_(Note : These sections can safely be skipped if they&#39;re not relevant, or you&#39;d rather go about it another way. For most games, at least one of them should be useful. But I&#39;ll understand if you don&#39;t want to use them. It&#39;ll only hurt my feelings a little bit.)_
-
 ### **Themes**
 
-1. Forest
-    1. Mood
-        1. Dark, calm, foreboding
-    2. Objects
-        1. _Ambient_
-            1. Fireflies
-            2. Beams of moonlight
-            3. Tall grass
-        2. _Interactive_
-            1. Wolves
-            2. Goblins
-            3. Rocks
-2. Castle
-    1. Mood
-        1. Dangerous, tense, active
-    2. Objects
-        1. _Ambient_
-            1. Rodents
-            2. Torches
-            3. Suits of armor
-        2. _Interactive_
-            1. Guards
-            2. Giant rats
-            3. Chests
-
-_(example)_
+1. Escuela
+    1. Ambiente
+        1. Competencia, tenso, activo
+    2. Objetos
+        1. _Ambiente_
+            1. Letreros para guiar al jugador
+            2. Pizarras
+            3. Cajas de madera
+        2. _Interactivos_
+            1. Botón azúl
+            2. Puertas
+            3. Escaleras
+            4. Robot Normal (enemigo)
+            5. Robot Pesado (enemigo)
+            6. Robot Aéreo (enemigo)
+            7. Jefe Final (enemigo)
+2. Laboratorio
+    1. Ambiente
+        1. Competencia, tenso, activo
+    2. Objetos
+        1. _Ambiente_
+            1. Letreros para guiar al jugador
+            2. Pantallas de computadora
+            3. Tuberías
+            4. Cajas de metal
+        2. _Interactivos_
+            1. Botón azúl
+            2. Puertas
+            3. Escaleras
+            4. Robot Normal (enemigo)
+            5. Robot Pesado (enemigo)
+            6. Robot Aéreo (enemigo)
+            7. Jefe Final (enemigo)
+3. Fábrica
+    1. Ambiente
+        1. Competencia, tenso, activo
+    2. Objetos
+        1. _Ambiente_
+            1. Letreros para guiar al jugador
+            2. Cajas de metal
+            3. Tuberías
+            4. Tubos de ensayo
+        2. _Interactivos_
+            1. Botón azúl
+            2. Puertas
+            3. Escaleras
+            4. Robot Normal (enemigo)
+            5. Robot Pesado (enemigo)
+            6. Robot Aéreo (enemigo)
+            7. Jefe Final (enemigo)
 
 ### **Game Flow**
 
@@ -301,14 +323,13 @@ _(example)_
 19. El jugador obtiene una poción de curación de un solo uso para el siguiente nivel.
 20. El jugador avanza al siguiente nivel y repite el proceso.
 21. Si el jugador termina el juego, se muestran las estadísticas del jugador:
-- Tiempo de partida
-- Número de muertes
-- Enemigos derrotados
-- Número total de daño infligido y recibido
-- Número de partidas completadas.
+    - Tiempo de partida
+    - Número de muertes
+    - Enemigos derrotados
+    - Número total de daño infligido y recibido
+    - Número de partidas completadas.
 22. Se muestra la tabla de las mejores 5 puntuaciones de tiempo.
 22. El jugador es devuelto al menú principal.
-
 
 ## _Development_
 
@@ -316,14 +337,17 @@ _(example)_
 
 ### **Abstract Classes / Components**
 
-1. BasePhysics
-    1. BasePlayer
-    2. BaseEnemy
-    3. BaseObject
-2. BaseObstacle
-3. BaseInteractable
-
-_(example)_
+1. BasePhysics: Física del juego, colisiones, movimiento, gravedad.
+    1. BasePlayer: Control de jugador, experiencia, armas, habilidades.
+    2. BaseEnemy: Define enemigos, movimiento.
+  3. BaseObject: Define elementos que interactúan de alguna forma con el jugador, como orbes de experiencia tras derrotar a los enemigos.
+2. BaseObstacle: Define elementos que pueden bloquear/dañar al jugador, como cajas, tuberías y picos en las salas de los niveles.
+3. BaseInteractable: Objetos con los que el jugador puede interactuar, como el botón que desbloquea la sala del jefe y las escaleras para subir/bajar/ambos.
+4. BaseSound: Control de los sonidos/música del juego.
+5. BaseGameState: Control de los estados del juego, como menú principal y pausa.
+6. BaseLevel: Control de los niveles, generación de mapas aleatorios, ubicación de enemigos y objetos.
+7. BaseUI: Control de la interfaz de usuario, como el cronómetro, barra de salud, barra de experiencia, habilidades desbloqueables, etc.
+8. BaseGame: Control principal del juego, carga de niveles, control de la música, sonidos, etc.
 
 ### **Derived Classes / Component Compositions**
 
@@ -450,7 +474,7 @@ _(define the main activities and the expected dates when they should be finished
   2. base app state
         1. game world
         2. menu world2. develop player and basic block classes
-    1. physics / collisions
+        3. physics / collisions
 3. find some smooth controls/physics
 4. develop other derived classes
     1. blocks
