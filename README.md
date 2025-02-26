@@ -1,4 +1,4 @@
-# TC2005B_Equipo1_BotRunners 👾
+# TC2005B_Equipo1_BotRunners :robot:
 
 **Bloque:** Construcción de software y toma de decisiones
 
