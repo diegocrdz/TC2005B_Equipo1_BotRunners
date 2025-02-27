@@ -462,35 +462,41 @@ Stylistically, what kind of sound effects are you looking for? Do you want to ex
 
 ## _Schedule_
 
----
+Sprint 1:
 
-_(define the main activities and the expected dates when they should be finished. This is only a reference, and can change as the project is developed)_
+1. Desarrollar clases base
+    1. Entidades base
+        1. Jugador base
+        2. Enemigo base (uso de polimorfismo para los diferentes métodos de ataque)
+        3. Bloque base
+  2. Estado base de app
+        1. Mundo del juego
+        2. Mundo del menú
 
-1. develop base classes
-    1. base entity
-        1. base player
-        2. base enemy
-        3. base block
-  2. base app state
-        1. game world
-        2. menu world2. develop player and basic block classes
-        3. physics / collisions
-3. find some smooth controls/physics
-4. develop other derived classes
-    1. blocks
-        1. moving
-        2. falling
-        3. breaking
-        4. cloud
-    2. enemies
-        1. soldier
-        2. rat
-        3. etc.
-5. design levels
-    1. introduce motion/jumping
-    2. introduce throwing
-    3. mind the pacing, let the player play between lessons
-6. design sounds
-7. design music
+Sprint 2:
 
-_(example)_
+3. Desarrollar las clases de jugador y bloques
+    1. Físicas/Colisiones (hitbox genérico para todos los bloques)
+3.1. Encontrar físicas de controles agradables
+4. Desarrollar clases derivadas
+    1. Bloques
+        1. Estáticos
+        2. Abrir (método de clase puerta  dependiente de “botón”)
+        3. Botón
+    2. Enemigos
+        1. Robot Normal
+        2. Robot Pesado
+        3. Robot Aéreo
+        4. Jefe Final
+
+Sprint 3 y 4:
+
+5. Diseño de niveles
+    1. Introducir movimiento/salto
+    2. Introducir ataque
+    3. Tener en cuenta el paso del jugador, para que pueda practicar entre lecciones.
+
+Sprint 5:
+
+6. Diseño de sonidos
+7. Diseño de música
