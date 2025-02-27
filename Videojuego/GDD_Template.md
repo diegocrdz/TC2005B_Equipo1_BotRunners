@@ -388,34 +388,28 @@ Well-designed feedback, both good (e.g. leveling up) and bad (e.g. being hit), a
 
 ### **Graphics Needed**
 
-1. Characters
-    1. Human-like
-        1. Goblin (idle, walking, throwing)
-        2. Guard (idle, walking, stabbing)
-        3. Prisoner (walking, running)
-    2. Other
-        1. Wolf (idle, walking, running)
-        2. Giant Rat (idle, scurrying)
-2. Blocks
-    1. Dirt
-    2. Dirt/Grass
-    3. Stone Block
-    4. Stone Bricks
-    5. Tiled Floor
-    6. Weathered Stone Block
-    7. Weathered Stone Bricks
-3. Ambient
-    1. Tall Grass
-    2. Rodent (idle, scurrying)
-    3. Torch
-    4. Armored Suit
-    5. Chains (matching Weathered Stone Bricks)
-    6. Blood stains (matching Weathered Stone Bricks)
-4. Other
-    1. Chest
-    2. Door (matching Stone Bricks)
-    3. Gate
-    4. Button (matching Weathered Stone Bricks)
+1. Personajes
+    1. Robots
+        1. Principal (Skippy) (idle, caminar, saltar, agacharse, atacar, recibir daño)
+        2. Robot Normal (idle, caminar, atacar, recibir daño)
+        3. Robot Pesado (idle, caminar, atacar, recibir daño)
+        4. Robot Volador (idle, volar, atacar, recibir daño)
+        5. Jefe (idle, caminar, atacar, recibir daño)
+2. Bloques
+    1. Contenedor (caja de madera, obstáculo)
+    2. Contenedor (caja de metal, obstáculo)
+    3. Suelo de baldosas
+    4. Muro de laboratorio
+    5. Muro de escuela
+    6. Muro de fábrica abandonada
+    7. Tubería de metal (obstáculo)
+    8. Picos puntiagudos (obstáculo)
+3. Ambiente
+    3. Letreros
+4. Otros
+    1. Botón azul (desbloquea la sala del jefe final de cada nivel)
+    2. Puerta de laboratorio (se abre al presionar el botón azul)
+
 
 _(example)_
 
