@@ -380,11 +380,63 @@ _(example)_
 
 ### **Style Attributes**
 
-What kinds of colors will you be using? Do you have a limited palette to work with? A post-processed HSV map/image? Consistency is key for immersion.
+**Paleta de colores:**
 
-What kind of graphic style are you going for? Cartoony? Pixel-y? Cute? How, specifically? Solid, thick outlines with flat hues? Non-black outlines with limited tints/shades? Emphasize smooth curvatures over sharp angles? Describe a set of general rules depicting your style here.
+Para el videojuego Overclocked, se utiliza la siguiente paleta de colores base:
+- Rojo: #FF1053
+- Morado: #6C6EA0
+- Azul claro: #66C7F4
+- Gris: #C1CAD6
+- Blanco: #FFFFFF
+Adicionalmente, los enemigos cuentan con los siguientes colores:
+- Robot Normal:
+- Naranja claro: FC683B
+- Naranja medio: #DD442C
+- Naranja oscuro: #7E3125
+- Gris claro: #DCELE7
+- Gris medio: #959AB1
+- Robot Pesado:
+- Azul claro: #2CC5F6
+- Azul oscuro: #1490C3
+- Naranja oscuro: #7E3125
+- Gris claro: #DCELE7
+- Gris medio: #959AB1
+- Robot Aéreo:
+- Café claro: #F4AC66
+- Café medio: #CB815E
+- Café oscuro: #6F3E43
+- Gris claro: #DCELE7
+- Gris medio: #959AB1
+- Contorno de los enemigos
+- Gris oscuro: #434A5F
 
-Well-designed feedback, both good (e.g. leveling up) and bad (e.g. being hit), are great for teaching the player how to play through trial and error, instead of scripting a lengthy tutorial. What kind of visual feedback are you going to use to let the player know they&#39;re interacting with something? That they \*can\* interact with something?
+De esta forma, Overclocked utiliza tonos claros entre blanco, gris, azul, rojo, naranja y café. Se busca que estos tonos creen una atmósfera minimalista, buscando utilizar tan solo 3 tonos entre colores. Ejemplo de esto es el gris, que solo tiene una variante clara, media y oscura.
+
+El estilo gráfico del juego es de 32 bits, por lo que se busca que el diseño de los personajes sea minimalista tipo retro. Para esto, los personajes deben contar con bordes negros/gris oscuro que resalten su silueta del ambiente resto de elementos en la pantalla.
+
+**Reglas de diseño de Overclocked:**
+
+Para establecer un estilo determinado y homogéneo a lo largo del videojuego, establecieron las siguientes reglas de diseño:
+
+1. Personajes y assets de 32 bits.
+2. Paleta de colores pastel: blanco, gris, azul, rojo, naranja y café.
+3. Personajes llamativos y animados: Cada personaje debe tener una animación atractiva de al menos 3 fotogramas al moverse e interactuar con el jugador.
+4. Silueta oscura: Tanto los personajes como los recursos (assets) del videojuego deben contar con una silueta oscura, separándolos del fondo, escenarios y demás  elementos del videojuego.
+5. El diseño de los personajes debe ser minimalista estilo retro: Para lograr esto, los personajes deben contar con ojos grandes y no más de 7 tonalidades de la paleta de color.
+6. Al tener en cuenta que los robots son la temática del juego, estos deben tener características que enfaticen su función. Ejemplo: El robot del jugador puede moverse y atacar en todas direcciones, por lo que su diseño cuenta con un brazo expandible y una rueda que lo ayuda a trasladarse por los escenarios.
+7. Los personajes pueden tener bordes afilados que resalten su silueta, así como otros que sean curvados.
+
+**Retroalimentación:**
+
+El jugador puede recibir retroalimentación de qué realizar en diferentes situaciones del videojuego:
+- Activar botones: Los botones cuentan con una silueta luminosa que hace que destaquen del resto de elementos en la sala.
+- Mini-mapa: El jugador cuenta con un mini-mapa disponible en la esquina superior derecha en todo momento para conocer su ubicación en el nivel.
+- Cronómetro: El jugador cuenta con un cronómetro disponible en la esquina superior izquierda en todo momento. Con este elemento, el jugador podrá conocer el tiempo que ha invertido en todo momento en el videojuego.
+- Letreros: En las primeras 2 salas de juego del primer nivel, el jugador puede consultar letreros ubicados en el fondo de la sala con la siguiente información:
+- Nivel 1: Letrero que indica al jugador las teclas para moverse (W,A,S,D).
+- Nivel 2: Letrero que indica al jugador las teclas para atacar (Click derecho del ratón).
+- Indicadores: Cuando un jugador se encuentra frente a una escalera, esta cuenta con un letrero que indica una flecha en la dirección en la que el jugador puede subir/bajar/ambos.
+
 
 ### **Graphics Needed**
 
