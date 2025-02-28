@@ -462,10 +462,6 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
     1. Botón azul (desbloquea la sala del jefe final de cada nivel)
     2. Puerta de laboratorio (se abre al presionar el botón azul)
 
-
-_(example)_
-
-
 ## _Sounds/Music_
 
 ---
