@@ -55,7 +55,16 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
     1. [Style Attributes](#style-attributes-1)
     2. [Sounds Needed](#sounds-needed)
     3. [Music Needed](#music-needed)
-8. [Schedule](#schedule)
+8. [Illustrations](#illustrations)
+    1. [Main Character](#main-character)
+    2. [Enemies](#enemies)
+    3. [Levels](#levels)
+    4. [Items](#items)
+    5. [GUI Elements](#gui-elements)
+9. [List of Assets](#list-of-assets)
+    1. [Graphical](#graphical)
+    2. [Audio](#audio)
+10. [Schedule](#schedule)
 
 ## _Game Design_
 
@@ -459,6 +468,58 @@ Stylistically, what kind of sound effects are you looking for? Do you want to ex
 6.Música épica, con sonidos cyberpunk-mecánicos (Final boss).
 7. Música feliz-nostálgica(créditos finales).
 *Las canciones del nivel 1 y 2, al llegar al boss del nivel acelerarán su velocidad.
+
+## _Illustrations_
+
+---
+
+### **Main Character**
+
+![Bocetos](img/skippy_concept.png)
+>Primeros bocetos de Skippy
+
+![Idle](img/skippy_idle.gif)
+>Idle
+
+![Caminar](img/skippy_walk.gif)
+>Caminar
+
+![Jumping sprites](img/skippy_jump.gif)
+>Saltar
+
+![Crouching sprites](img/skippy_crouch.gif)
+>Agacharse
+
+![Attacking sprites](img/skippy_attack.gif)
+>Ataque cuerpo a cuerpo
+
+![Shooting sprites](img/skippy_shoot.gif)
+>Ataque a distancia
+
+### **Enemies**
+
+1. **Robot Normal**
+    ![Robot Normal](img/robot_normal.gif)
+
+2. **Robot Pesado**
+    ![Robot Pesado](img/robot_heavy.gif)
+
+3. **Robot Aéreo**
+    ![Robot áereo](img/robot_fly.gif)
+
+### **Levels**
+
+### **Items**
+
+### **GUI Elements**
+
+## _List of Assets_
+
+---
+
+### **Graphical**
+
+### **Audio**
 
 ## _Schedule_
 
