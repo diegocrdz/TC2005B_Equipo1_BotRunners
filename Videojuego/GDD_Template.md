@@ -399,23 +399,23 @@ Para el videojuego Overclocked, se utiliza la siguiente paleta de colores base:
 - Blanco: #FFFFFF
 Adicionalmente, los enemigos cuentan con los siguientes colores:
 - Robot Normal:
-- Naranja claro: FC683B
-- Naranja medio: #DD442C
-- Naranja oscuro: #7E3125
-- Gris claro: #DCELE7
-- Gris medio: #959AB1
+    - Naranja claro: FC683B
+    - Naranja medio: #DD442C
+    - Naranja oscuro: #7E3125
+    - Gris claro: #DCELE7
+    - Gris medio: #959AB1
 - Robot Pesado:
-- Azul claro: #2CC5F6
-- Azul oscuro: #1490C3
-- Naranja oscuro: #7E3125
-- Gris claro: #DCELE7
-- Gris medio: #959AB1
+    - Azul claro: #2CC5F6
+    - Azul oscuro: #1490C3
+    - Naranja oscuro: #7E3125
+    - Gris claro: #DCELE7
+    - Gris medio: #959AB1
 - Robot Aéreo:
-- Café claro: #F4AC66
-- Café medio: #CB815E
-- Café oscuro: #6F3E43
-- Gris claro: #DCELE7
-- Gris medio: #959AB1
+    - Café claro: #F4AC66
+    - Café medio: #CB815E
+    - Café oscuro: #6F3E43
+    - Gris claro: #DCELE7
+    - Gris medio: #959AB1
 - Contorno de los enemigos
 - Gris oscuro: #434A5F
 
@@ -471,10 +471,6 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
     1. Botón azul (desbloquea la sala del jefe final de cada nivel)
     2. Puerta de laboratorio (se abre al presionar el botón azul)
 
-
-_(example)_
-
-
 ## _Sounds/Music_
 
 ---
@@ -485,7 +481,7 @@ Again, consistency is key. Define that consistency here. What kind of instrument
 
 Stylistically, what kind of sound effects are you looking for? Do you want to exaggerate actions with lengthy, cartoony sounds (e.g. mario&#39;s jump), or use just enough to let the player know something happened (e.g. mega man&#39;s landing)? Going for realism? You can use the music style as a bit of a reference too.
 
- Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!
+Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!
 
 ### **Sounds Needed**
 
@@ -521,43 +517,67 @@ Stylistically, what kind of sound effects are you looking for? Do you want to ex
 
 ### **Main Character**
 
-![Bocetos](img/skippy_concept.png)
 >Primeros bocetos de Skippy
+![Bocetos](img/skippy_concept.png)
 
-![Idle](img/skippy_idle.gif)
 >Idle
+![Idle](img/skippy_idle.gif)
 
-![Caminar](img/skippy_walk.gif)
 >Caminar
+![Caminar](img/skippy_walk.gif)
 
-![Jumping sprites](img/skippy_jump.gif)
 >Saltar
+![Jumping sprites](img/skippy_jump.gif)
 
-![Crouching sprites](img/skippy_crouch.gif)
 >Agacharse
+![Crouching sprites](img/skippy_crouch.gif)
 
-![Attacking sprites](img/skippy_attack.gif)
 >Ataque cuerpo a cuerpo
+![Attacking sprites](img/skippy_attack.gif)
 
-![Shooting sprites](img/skippy_shoot.gif)
 >Ataque a distancia
+![Shooting sprites](img/skippy_shoot.gif)
 
 ### **Enemies**
 
-1. **Robot Normal**
-    ![Robot Normal](img/robot_normal.gif)
+>Robot Normal
+![Robot Normal](img/robot_normal.gif)
 
-2. **Robot Pesado**
-    ![Robot Pesado](img/robot_heavy.gif)
+>Robot Pesado
+![Robot Pesado](img/robot_heavy.gif)
 
-3. **Robot Aéreo**
-    ![Robot áereo](img/robot_fly.gif)
+>Robot Aéreo
+![Robot áereo](img/robot_fly.gif)
 
 ### **Levels**
+
+>Introducción del juego
+![Intro](img/intro_overclocked.png)
+Skippy es un robot dieseñado para combatir en una competencia de robótica. Después de ser activado, descubre que debe completar una serie de niveles en el menor tiempo posible para ser reconocido como ganador de la competencia. Sin tiempo que perder, Skippy se adentra en el primer nivel de la competencia.
+
+**Estructura de niveles:**
+
+![Estructura Niveles](img/level_structure.png)
+>Los niveles cuentan con una estructura lineal con 1 o 2 bifurcaciones en salas intermedias. Cada sala contiene enemigos y obstáculos aleatorios, así como un botón para abrir la sala del jefe final.
 
 ### **Items**
 
 ### **GUI Elements**
+
+**Recorrido del jugador:**
+
+>El juego muestra los principales controles de movimiento del jugador, así como un mini-mapa para guiarlo y un cronómetro para medir su tiempo de partida.
+![GUI 1](img/gui_1.png)
+
+>El jugador debe enfrentarse al primer enemigo, seleccionando su arma cuerpo a cuerpo y aprendiendo a atacar.
+El jugador puede ver su barra de salud, barra de experiencia y objeto de curación en todo momento.
+![GUI 2](img/gui_2.png)
+
+>El jugador puede subir de nivel de experiencia tras derrotar cada enemigo.
+![GUI 3](img/gui_3.png)
+
+>El jugador puede seleccionar una habilidad aleatoria tras subir de nivel.
+![GUI 4](img/gui_4.png)
 
 ## _List of Assets_
 
