@@ -389,42 +389,88 @@ _(example)_
 
 ### **Style Attributes**
 
-What kinds of colors will you be using? Do you have a limited palette to work with? A post-processed HSV map/image? Consistency is key for immersion.
+**Paleta de colores:**
 
-What kind of graphic style are you going for? Cartoony? Pixel-y? Cute? How, specifically? Solid, thick outlines with flat hues? Non-black outlines with limited tints/shades? Emphasize smooth curvatures over sharp angles? Describe a set of general rules depicting your style here.
+Para el videojuego Overclocked, se utiliza la siguiente paleta de colores base:
+- Rojo: #FF1053
+- Morado: #6C6EA0
+- Azul claro: #66C7F4
+- Gris: #C1CAD6
+- Blanco: #FFFFFF
+Adicionalmente, los enemigos cuentan con los siguientes colores:
+- Robot Normal:
+- Naranja claro: FC683B
+- Naranja medio: #DD442C
+- Naranja oscuro: #7E3125
+- Gris claro: #DCELE7
+- Gris medio: #959AB1
+- Robot Pesado:
+- Azul claro: #2CC5F6
+- Azul oscuro: #1490C3
+- Naranja oscuro: #7E3125
+- Gris claro: #DCELE7
+- Gris medio: #959AB1
+- Robot Aéreo:
+- Café claro: #F4AC66
+- Café medio: #CB815E
+- Café oscuro: #6F3E43
+- Gris claro: #DCELE7
+- Gris medio: #959AB1
+- Contorno de los enemigos
+- Gris oscuro: #434A5F
 
-Well-designed feedback, both good (e.g. leveling up) and bad (e.g. being hit), are great for teaching the player how to play through trial and error, instead of scripting a lengthy tutorial. What kind of visual feedback are you going to use to let the player know they&#39;re interacting with something? That they \*can\* interact with something?
+De esta forma, Overclocked utiliza tonos claros entre blanco, gris, azul, rojo, naranja y café. Se busca que estos tonos creen una atmósfera minimalista, buscando utilizar tan solo 3 tonos entre colores. Ejemplo de esto es el gris, que solo tiene una variante clara, media y oscura.
+
+El estilo gráfico del juego es de 32 bits, por lo que se busca que el diseño de los personajes sea minimalista tipo retro. Para esto, los personajes deben contar con bordes negros/gris oscuro que resalten su silueta del ambiente resto de elementos en la pantalla.
+
+**Reglas de diseño de Overclocked:**
+
+Para establecer un estilo determinado y homogéneo a lo largo del videojuego, establecieron las siguientes reglas de diseño:
+
+1. Personajes y assets de 32 bits.
+2. Paleta de colores pastel: blanco, gris, azul, rojo, naranja y café.
+3. Personajes llamativos y animados: Cada personaje debe tener una animación atractiva de al menos 3 fotogramas al moverse e interactuar con el jugador.
+4. Silueta oscura: Tanto los personajes como los recursos (assets) del videojuego deben contar con una silueta oscura, separándolos del fondo, escenarios y demás  elementos del videojuego.
+5. El diseño de los personajes debe ser minimalista estilo retro: Para lograr esto, los personajes deben contar con ojos grandes y no más de 7 tonalidades de la paleta de color.
+6. Al tener en cuenta que los robots son la temática del juego, estos deben tener características que enfaticen su función. Ejemplo: El robot del jugador puede moverse y atacar en todas direcciones, por lo que su diseño cuenta con un brazo expandible y una rueda que lo ayuda a trasladarse por los escenarios.
+7. Los personajes pueden tener bordes afilados que resalten su silueta, así como otros que sean curvados.
+
+**Retroalimentación:**
+
+El jugador puede recibir retroalimentación de qué realizar en diferentes situaciones del videojuego:
+- Activar botones: Los botones cuentan con una silueta luminosa que hace que destaquen del resto de elementos en la sala.
+- Mini-mapa: El jugador cuenta con un mini-mapa disponible en la esquina superior derecha en todo momento para conocer su ubicación en el nivel.
+- Cronómetro: El jugador cuenta con un cronómetro disponible en la esquina superior izquierda en todo momento. Con este elemento, el jugador podrá conocer el tiempo que ha invertido en todo momento en el videojuego.
+- Letreros: En las primeras 2 salas de juego del primer nivel, el jugador puede consultar letreros ubicados en el fondo de la sala con la siguiente información:
+- Nivel 1: Letrero que indica al jugador las teclas para moverse (W,A,S,D).
+- Nivel 2: Letrero que indica al jugador las teclas para atacar (Click derecho del ratón).
+- Indicadores: Cuando un jugador se encuentra frente a una escalera, esta cuenta con un letrero que indica una flecha en la dirección en la que el jugador puede subir/bajar/ambos.
+
 
 ### **Graphics Needed**
 
-1. Characters
-    1. Human-like
-        1. Goblin (idle, walking, throwing)
-        2. Guard (idle, walking, stabbing)
-        3. Prisoner (walking, running)
-    2. Other
-        1. Wolf (idle, walking, running)
-        2. Giant Rat (idle, scurrying)
-2. Blocks
-    1. Dirt
-    2. Dirt/Grass
-    3. Stone Block
-    4. Stone Bricks
-    5. Tiled Floor
-    6. Weathered Stone Block
-    7. Weathered Stone Bricks
-3. Ambient
-    1. Tall Grass
-    2. Rodent (idle, scurrying)
-    3. Torch
-    4. Armored Suit
-    5. Chains (matching Weathered Stone Bricks)
-    6. Blood stains (matching Weathered Stone Bricks)
-4. Other
-    1. Chest
-    2. Door (matching Stone Bricks)
-    3. Gate
-    4. Button (matching Weathered Stone Bricks)
+1. Personajes
+    1. Robots
+        1. Principal (Skippy) (idle, caminar, saltar, agacharse, atacar, recibir daño)
+        2. Robot Normal (idle, caminar, atacar, recibir daño)
+        3. Robot Pesado (idle, caminar, atacar, recibir daño)
+        4. Robot Volador (idle, volar, atacar, recibir daño)
+        5. Jefe (idle, caminar, atacar, recibir daño)
+2. Bloques
+    1. Contenedor (caja de madera, obstáculo)
+    2. Contenedor (caja de metal, obstáculo)
+    3. Suelo de baldosas
+    4. Muro de laboratorio
+    5. Muro de escuela
+    6. Muro de fábrica abandonada
+    7. Tubería de metal (obstáculo)
+    8. Picos puntiagudos (obstáculo)
+3. Ambiente
+    3. Letreros
+4. Otros
+    1. Botón azul (desbloquea la sala del jefe final de cada nivel)
+    2. Puerta de laboratorio (se abre al presionar el botón azul)
+
 
 _(example)_
 
@@ -523,35 +569,41 @@ Stylistically, what kind of sound effects are you looking for? Do you want to ex
 
 ## _Schedule_
 
----
+Sprint 1:
 
-_(define the main activities and the expected dates when they should be finished. This is only a reference, and can change as the project is developed)_
+1. Desarrollar clases base
+    1. Entidades base
+        1. Jugador base
+        2. Enemigo base (uso de polimorfismo para los diferentes métodos de ataque)
+        3. Bloque base
+  2. Estado base de app
+        1. Mundo del juego
+        2. Mundo del menú
 
-1. develop base classes
-    1. base entity
-        1. base player
-        2. base enemy
-        3. base block
-  2. base app state
-        1. game world
-        2. menu world2. develop player and basic block classes
-        3. physics / collisions
-3. find some smooth controls/physics
-4. develop other derived classes
-    1. blocks
-        1. moving
-        2. falling
-        3. breaking
-        4. cloud
-    2. enemies
-        1. soldier
-        2. rat
-        3. etc.
-5. design levels
-    1. introduce motion/jumping
-    2. introduce throwing
-    3. mind the pacing, let the player play between lessons
-6. design sounds
-7. design music
+Sprint 2:
 
-_(example)_
+3. Desarrollar las clases de jugador y bloques
+    1. Físicas/Colisiones (hitbox genérico para todos los bloques)
+3.1. Encontrar físicas de controles agradables
+4. Desarrollar clases derivadas
+    1. Bloques
+        1. Estáticos
+        2. Abrir (método de clase puerta  dependiente de “botón”)
+        3. Botón
+    2. Enemigos
+        1. Robot Normal
+        2. Robot Pesado
+        3. Robot Aéreo
+        4. Jefe Final
+
+Sprint 3 y 4:
+
+5. Diseño de niveles
+    1. Introducir movimiento/salto
+    2. Introducir ataque
+    3. Tener en cuenta el paso del jugador, para que pueda practicar entre lecciones.
+
+Sprint 5:
+
+6. Diseño de sonidos
+7. Diseño de música
