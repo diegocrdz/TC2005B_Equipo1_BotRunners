@@ -361,27 +361,24 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 ### **Derived Classes / Component Compositions**
 
 1. BasePlayer
-    1. PlayerMain
-    2. PlayerUnlockable
+    1. PlayerMain: Robot controlado por el jugador.
 2. BaseEnemy
-    1. EnemyWolf
-    2. EnemyGoblin
-    3. EnemyGuard (may drop key)
-    4. EnemyGiantRat
-    5. EnemyPrisoner
-3. BaseObject
-    1. ObjectRock (pick-up-able, throwable)
-    2. ObjectChest (pick-up-able, throwable, spits gold coins with key)
-    3. ObjectGoldCoin (cha-ching!)
-    4. ObjectKey (pick-up-able, throwable)
-4. BaseObstacle
-    1. ObstacleWindow (destroyed with rock)
-    2. ObstacleWall
-    3. ObstacleGate (watches to see if certain buttons are pressed)
+    1. EnemyNormal: Robot con combate cuerpo a cuerpo (salud y daño normal). Persigue al jugador.
+    2. EnemyHeavy: Robot con combate cuerpo a cuerpo (salud y daño elevado). Persigue al jugador.
+    3. EnemyAerial: Robot con combate cuerpo a cuerpo (salud y daño reducido). Ignora al jugador, vuela de izquierda a derecha en las salas de los niveles.
+    4. EnemyBoss: Jefe final de cada nivel (salud y daño aumentado).
+3. BaseObstacle
+    1. ObstacleBox: Caja de madera/metal que bloquea el paso del jugador/enemigos.
+    2. ObstaclePipe: Tubería de metal bloquea el paso del jugador/enemigos.
+    3. ObstacleSpike: Pico (triángulo) de metal en el suelo que daña al jugador cuando lo toca.
+  4. ObstacleGate: Bloquea la sala del jefe final si el botón para desbloquearla no ha sido presionado.
+4. BaseObject
+    1. ObjectOrb: Orbes de experiencia que arrojan los enemigos al ser derrotados. Avanzan en la dirección del jugador hasta colisionar con él, aumentando su nivel de experiencia.
 5. BaseInteractable
-    1. InteractableButton
-
-_(example)_
+    1. InteractableButton: Botón ubicado en una sala aleatoria por nivel. Desbloquea la puerta “ObstacleGate” para que el jugador pueda acceder a la sala del jefe final de cada nivel.
+6. BaseSound: Control de los sonidos/música del juego.
+SoundEffect: Efectos de sonido para el juego.
+SoundTrack: Música del juego.
 
 ## _Graphics_
 
@@ -585,7 +582,47 @@ El jugador puede ver su barra de salud, barra de experiencia y objeto de curaci�
 
 ### **Graphical**
 
+**Enemigos, obstáculos y objetos:**
+
+- [Pixel platformer](https://www.kenney.nl/assets/pixel-platformer)
+
+- [Pixel platformer Industrial Expansion](https://www.kenney.nl/assets/pixel-platformer-industrial-expansion)
+
+- [Tech dungeon: Roguelite](https://trevor-pupkin.itch.io/tech-dungeon-roguelite)
+
+- [Laboratory pixel art tileset](https://marceles.itch.io/land-of-pixels-laboratory-tileset-pixel-art)
+
+- [Free Industrial Zone Tileset Pixel Art](https://craftpix.net/freebies/free-industrial-zone-tileset-pixel-art/?srsltid=AfmBOoodWJ1DTFH6MvbTnxbfGMwfpV5uxx7G4rHbyunapg08hc53c9XH)
+
+**UI:**
+
+- [UI Pack - Pixel Adventure](https://www.kenney.nl/assets/ui-pack-pixel-adventure)
+
+- [UI Pack - Sci-Fi](https://www.kenney.nl/assets/ui-pack-sci-fi)
+
+- [UI Pack](https://www.kenney.nl/assets/ui-pack)
+
+- [Input Prompts Pixel 16x](https://www.kenney.nl/assets/input-prompts-pixel-16)
+
+- [Cursor Pixel Pack](https://www.kenney.nl/assets/cursor-pixel-pack)
+
 ### **Audio**
+
+**Efectos de sonido:**
+
+- [Interface Sounds](https://www.kenney.nl/assets/interface-sounds)
+
+- [Sci-fi Sounds](https://www.kenney.nl/assets/sci-fi-sounds)
+
+- [Impact Sounds](https://www.kenney.nl/assets/impact-sounds)
+
+- [Music Jingles](https://www.kenney.nl/assets/music-jingles)
+
+**Música:**
+
+- [Music Assets](https://tallbeard.itch.io/music-loop-bundle)
+
+- [Pink Bloom Synthwave Music Pack](https://davidkbd.itch.io/pink-bloom-synthwave-music-pack)
 
 ## _Schedule_
 
