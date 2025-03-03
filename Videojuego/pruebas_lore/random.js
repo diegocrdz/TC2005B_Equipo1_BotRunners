@@ -32,13 +32,24 @@ class Character extends Object //personajes (?)
     }
 }
 
+class Player extends Character
+{
+    constructor(type, name, health, damage, experience, explevel)
+    {
+        super(type, name, health, damage, experience)
+        {
+            this.explevel = explevel;
+        }
+    }
+}
+
+tipos_enemigos = ["normal", "pesado", "volador"];
 class Enemy extends Character
 {
-
     constructor(type, name , health, damage, experience)
     {
        super(type, name, health, damage, experience)
-       this.tipos_enemigos = ["normal", "pesado", "volador"];
+       
        if(!this.tipos_enemigos.includes(type))
        {
             console.log("Tipo de enemigo invalido, los tipos permitidos son: ", tipos_enemigos);
@@ -47,17 +58,10 @@ class Enemy extends Character
     }
 }
 
-class Player extends Character
-{
-    constructor(type, name, health, damage, experience)
-    {
-        super(type, name, health, damage, experience)
-    }
-}
 
 //creacion de los objetos
 
-function randomGeneration()
+function randomGeneration() //probabilidades y tipos
 {
     let probabilities  = {normal: 0.4, pesado: 0.3, volador: 0.2};
     let random = Math.random();
@@ -84,7 +88,7 @@ function randomGeneration()
         //normal moderado todo, pesado alto todo, volador bajo todo
     }
 
-    return new Enemy(type, stats[type].name, stats[type].health, stats[type]. damage, stats[type].experience);
+    return new Enemy(type, stats[type].name, stats[type].health, stats[type].damage, stats[type].experience);
 
 }
 
