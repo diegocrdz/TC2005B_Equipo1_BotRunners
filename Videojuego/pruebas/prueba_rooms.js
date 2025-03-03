@@ -109,8 +109,25 @@ document.addEventListener("DOMContentLoaded", () => {
         addBranchingPaths() {
             let buttonRoom = null;
 
+            // Agregar la bifurcación del botón antes de generar las bifurcaciones
+            let random = Math.floor(Math.random() * (this.numRooms - 2)) + 1;
+
             for (let i = 1; i < this.numRooms - 1; i++) {
-                if (Math.random() < 0.3) { // 30% probabilidad de bifurcación
+                if (i === random) {
+                    let branchId = `B${i}`;
+                    let branchRoom = new RoomObject(branchId, new Vec(
+                        this.rooms.get(i).position.x, 
+                        this.rooms.get(i).position.y + (Math.random() < 0.5 ? -80 : 80)
+                    ), "button");
+                    buttonRoom = branchRoom;
+                    this.rooms.set(branchId, branchRoom); // Agregar la sala al mapa de salas
+                    this.rooms.get(i).connect(branchRoom); // Conectar la sala actual con la sala del botón
+                    branchRoom.connect(this.rooms.get(i)); // Conectar la sala del botón con la sala actual
+                }
+            }
+
+            for (let i = 1; i < this.numRooms - 1; i++) {
+                if (i !== random && Math.random() < 0.3) { // 30% probabilidad de bifurcación
                     let branchId = `B${i}`;
                     let branchRoom = new RoomObject(branchId, new Vec(
                         this.rooms.get(i).position.x, 
@@ -120,13 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     this.rooms.set(branchId, branchRoom);
                     this.rooms.get(i).connect(branchRoom);
                     branchRoom.connect(this.rooms.get(i));
-
-                    // Si no hay una sala "button", asignarla aquí
-                    if (!buttonRoom) {
-                        buttonRoom = branchRoom;
-                        buttonRoom.type = "button";
-                        buttonRoom.color = "blue";
-                    }
                 }
             }
         }
@@ -152,11 +162,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const ctx = canvas.getContext("2d");
 
     // Ajustar el tamaño del canvas
-    canvas.width = 800;
+    canvas.width = 10000;
     canvas.height = 600;
 
     // Crear el generador de niveles y generar el nivel
-    const generator = new LevelGenerator(10); // Puedes cambiar el número de salas aquí
+    const generator = new LevelGenerator(6); // Puedes cambiar el número de salas aquí
     generator.generate();
 
     // Función para dibujar el nivel
