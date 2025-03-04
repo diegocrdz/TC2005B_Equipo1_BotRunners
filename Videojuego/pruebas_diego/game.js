@@ -14,8 +14,8 @@ let oldTime;
 
 // Variables for the character
 const speed = 0.5; // Movement speed
-const gravity = 0.1; // Gravity force
-const jumpForce = 1.5; // Jump force
+const gravity = 0.05; // Gravity force
+const jumpForce = 2.0; // Jump force
 
 // Animation frames for the player
 
@@ -24,40 +24,66 @@ const playerIdleFrames = [
     new Image(),
     new Image(),
 ]
-playerIdleFrames[0].src = "idle_frames/skippy_idle_1.png";
-playerIdleFrames[1].src = "idle_frames/skippy_idle_2.png";
+playerIdleFrames[0].src = "../assets/characters/skippy/skippy_idle_1.png";
+playerIdleFrames[1].src = "../assets/characters/skippy/skippy_idle_2.png";
 
 // Running frames
 const playerRunningFrames = [
     new Image(),
     new Image(),
 ]
-playerRunningFrames[0].src = "walk_frames/skippy_walk_1.png";
-playerRunningFrames[1].src = "walk_frames/skippy_walk_2.png";
+playerRunningFrames[0].src = "../assets/characters/skippy/skippy_walk_1.png";
+playerRunningFrames[1].src = "../assets/characters/skippy/skippy_walk_2.png";
 
 // Crouching frames
 const playerCrouchingFrames = [
     new Image(),
     new Image(),
 ]
-playerCrouchingFrames[0].src = "crouch_frames/skippy_crouch_1.png";
-playerCrouchingFrames[1].src = "crouch_frames/skippy_crouch_2.png";
+playerCrouchingFrames[0].src = "../assets/characters/skippy/skippy_crouch_1.png";
+playerCrouchingFrames[1].src = "../assets/characters/skippy/skippy_crouch_2.png";
 
 // Jumping frames
 const playerJumpingFrames = [
     new Image(),
     new Image(),
 ]
-playerJumpingFrames[0].src = "jump_frames/skippy_jump_1.png";
-playerJumpingFrames[1].src = "jump_frames/skippy_jump_2.png";
+playerJumpingFrames[0].src = "../assets/characters/skippy/skippy_jump_1.png";
+playerJumpingFrames[1].src = "../assets/characters/skippy/skippy_jump_2.png";
 
 // Melee frames
 const playerMeleeFrames = [
     new Image(),
     new Image(),
 ]
-playerMeleeFrames[0].src = "melee_frames/skippy_attack_melee_1.png";
-playerMeleeFrames[1].src = "melee_frames/skippy_attack_melee_2.png";
+playerMeleeFrames[0].src = "../assets/characters/skippy/skippy_attack_melee_1.png";
+playerMeleeFrames[1].src = "../assets/characters/skippy/skippy_attack_melee_2.png";
+
+// Animation frames for the enemy
+
+// Enemy normal
+const enemyNormalFrames = [
+    new Image(),
+    new Image(),
+]
+enemyNormalFrames[0].src = "../assets/characters/enemies/robot_normal_1.png";
+enemyNormalFrames[1].src = "../assets/characters/enemies/robot_normal_2.png";
+
+// Enemy heavy
+const enemyHeavyFrames = [
+    new Image(),
+    new Image(),
+]
+enemyHeavyFrames[0].src = "../assets/characters/enemies/robot_heavy_1.png";
+enemyHeavyFrames[1].src = "../assets/characters/enemies/robot_heavy_2.png";
+
+// Enemy fly
+const enemyFlyFrames = [
+    new Image(),
+    new Image(),
+]
+enemyFlyFrames[0].src = "../assets/characters/enemies/robot_fly_1.png";
+enemyFlyFrames[1].src = "../assets/characters/enemies/robot_fly_2.png";
 
 // Classes for the game
 
@@ -65,30 +91,26 @@ class Player extends BaseCharacter {
     constructor(position) {
         super(position, 100, 100, "blue", "Player", 100, 10, speed);
 
-        this.level = 1;
+        // Player properties
+        this.level = 0;
         this.experience = 0;
         this.expToNextLevel = 100;
         this.abilities = [];
 
+        // Player animation properties
         this.currentImage = playerIdleFrames[0];
         this.animationFrame = 0;
         this.animationTimer = 0;
 
+        // Player state properties
         this.isAttacking = false;
         this.isCrouching = false;
         this.canJump = true;
 
+        // Player attack properties
         this.attackRange = 50;
         this.lastAttackTime = null;
         this.attackCooldown = 1000; // 1 second
-    }
-
-    attack(target) {
-
-        if (boxOverlap(this, target) && this.isAttacking) {
-            target.takeDamage(this.damage);
-            console.log(`El jugador atacó a ${target.type} causando ${this.damage} de daño.`);
-        }
     }
 
     gainExperience(amount) {
@@ -153,13 +175,6 @@ class Player extends BaseCharacter {
             this.currentImage = playerMeleeFrames[1];
         }
     }
-
-    draw(ctx) {
-        super.draw(ctx);
-        ctx.imageSmoothingEnabled = false;
-    }
-    
-    
 }
 
 class Enemy extends BaseCharacter {
@@ -167,51 +182,157 @@ class Enemy extends BaseCharacter {
         super(position, width, height, color, type, health, damage, speed);
         this.expReward = expReward;
     }
-    
-    attack(player) {
-
-        // Check if the enemy can attack
-
-        // If the enemy has not attacked yet
-        if (boxOverlap(this, player) && !this.lastAttackTime) {
-            player.takeDamage(this.damage);
-            console.log(`${this.type} atacó al jugador causando ${this.damage} de daño.`);
-            this.lastAttackTime = Date.now();
-
-        } // If the enemy has attacked but it has been more than 1 second
-        else if (boxOverlap(this, player) && Date.now() - this.lastAttackTime >= 1000) {
-            player.takeDamage(this.damage);
-            console.log(`${this.type} atacó al jugador causando ${this.damage} de daño.`);
-            this.lastAttackTime = Date.now();
-        }
-    }
 
     die() {
         console.log(`${this.type} ha sido derrotado.`);
         return this.expReward;
     }
-}
 
+    update(deltaTime) {
+        super.update(deltaTime);
+    }
+
+    moveToPlayer(player) {
+        if (this.position.x < player.position.x) { // If the player is to the right, move right
+            this.position.x += this.speed;
+        }
+        else if (this.position.x > player.position.x) { // If the player is to the left, move left
+            this.position.x -= this.speed;
+        }
+    }
+
+    moveHorizontally() {
+        this.position.x += this.speed;
+    }
+}
 
 class EnemyNormal extends Enemy {
     constructor(position) {
-        super(position, 40, 40, "red", "EnemyNormal", 50, 20, 2, 10);
+        super(position, 100, 100, "red", "EnemyNormal", 50, 20, 0.5, 10);
+
+        // Enemy animation properties
+        this.currentImage = enemyNormalFrames[0];
+        this.animationFrame = 0;
+        this.animationTimer = 0;
+    }
+
+    update(deltaTime) {
+        super.update(deltaTime);
+
+        // Move towards the player
+        this.moveToPlayer(player);
+
+        this.controlAnimation(deltaTime);
+    }
+
+    controlAnimation(deltaTime) {
+        // Control the idle animation
+        this.animationTimer += deltaTime;
+        if (this.animationTimer > 200) { // Change frame every 200 ms
+            this.animationFrame = (this.animationFrame + 1) % 2;
+            this.currentImage = enemyNormalFrames[this.animationFrame];
+            this.animationTimer = 0;
+        }
+    }
+
+    draw(ctx) {
+        ctx.save();
+        if (this.position.x < player.position.x) {
+            ctx.scale(-1, 1);
+            ctx.drawImage(this.currentImage, -this.position.x - this.width, this.position.y, this.width, this.height);
+        } else {
+            ctx.drawImage(this.currentImage, this.position.x, this.position.y, this.width, this.height);
+        }
+        ctx.restore();
+    }
+}
+
+class EnemyHeavy extends Enemy {
+    constructor(position) {
+        super(position, 100, 100, "darkred", "EnemyHeavy", 75, 40, 0.1, 20);
+
+        // Enemy animation properties
+        this.currentImage = enemyHeavyFrames[0];
+        this.animationFrame = 0;
+        this.animationTimer = 0;
+    }
+
+    update(deltaTime) {
+        super.update(deltaTime);
+
+        // Move towards the player
+        this.moveToPlayer(player);
+
+        this.controlAnimation(deltaTime);
+    }
+
+    controlAnimation(deltaTime) {
+        // Control the idle animation
+        this.animationTimer += deltaTime;
+        if (this.animationTimer > 200) { // Change frame every 200 ms
+            this.animationFrame = (this.animationFrame + 1) % 2;
+            this.currentImage = enemyHeavyFrames[this.animationFrame];
+            this.animationTimer = 0;
+        }
+    }
+
+    draw(ctx) {
+        ctx.save();
+        if (this.position.x < player.position.x) {
+            ctx.scale(-1, 1);
+            ctx.drawImage(this.currentImage, -this.position.x - this.width, this.position.y, this.width, this.height);
+        } else {
+            ctx.drawImage(this.currentImage, this.position.x, this.position.y, this.width, this.height);
+        }
+        ctx.restore();
+    }
+}
+
+class EnemyFly extends Enemy {
+    constructor(position) {
+        super(position, 100, 100, "brown", "EnemyAerial", 25, 10, 3, 15);
+
+        // Enemy animation properties
+        this.currentImage = enemyFlyFrames[0];
+        this.animationFrame = 0;
+        this.animationTimer = 0;
+    }
+
+    update(deltaTime) {
+        super.update(deltaTime);
+
+        // Moves from left to right
+        this.moveHorizontally();
+
+        // Unapply gravity
+        this.velocity.y = 0;
+
+        this.controlAnimation(deltaTime);
+    }
+
+    controlAnimation(deltaTime) {
+        // Control the idle animation
+        this.animationTimer += deltaTime;
+        if (this.animationTimer > 200) { // Change frame every 200 ms
+            this.animationFrame = (this.animationFrame + 1) % 2;
+            this.currentImage = enemyFlyFrames[this.animationFrame];
+            this.animationTimer = 0;
+        }
+    }
+
+    draw(ctx) {
+        ctx.save();
+        if (this.position.x < player.position.x) {
+            ctx.scale(-1, 1);
+            ctx.drawImage(this.currentImage, -this.position.x - this.width, this.position.y, this.width, this.height);
+        } else {
+            ctx.drawImage(this.currentImage, this.position.x, this.position.y, this.width, this.height);
+        }
+        ctx.restore();
     }
 }
 
 /*
-
-class EnemyHeavy extends Enemy {
-    constructor(position) {
-        super(position, 60, 60, "darkred", "EnemyHeavy", 75, 40, 1, 20);
-    }
-}
-
-class EnemyAerial extends Enemy {
-    constructor(position) {
-        super(position, 40, 40, "brown", "EnemyAerial", 25, 10, 3, 15);
-    }
-}
 
 class ObstacleBox extends GameObject {
     constructor(position) {
@@ -265,8 +386,10 @@ class Ladder extends GameObject {
 
 // Objects for the game
 
-const player = new Player(new Vec(canvasWidth/2, canvasHeight/2));
-const enemy = new EnemyNormal(new Vec(200, 200));
+const player = new Player(new Vec(100, canvasHeight));
+const enemyNormal = new EnemyNormal(new Vec(canvasWidth - 200, canvasHeight));
+const enemyHeavy = new EnemyHeavy(new Vec(canvasWidth - 100, canvasHeight));
+const enemyFly = new EnemyFly(new Vec(canvasWidth - 50, canvasHeight / 4));
 
 // Main function
 
@@ -341,18 +464,15 @@ function drawScene(newTime) {
 
     // Draw elements
     player.draw(ctx);
-    enemy.draw(ctx);
+    enemyNormal.draw(ctx);
+    enemyHeavy.draw(ctx);
+    enemyFly.draw(ctx);
 
     // Update the properties of the objects
     player.update(deltaTime);
-    enemy.update(deltaTime);
-
-    // Check for collisions
-
-    // Check if player is attacked by enemy
-    if (boxOverlap(player, enemy)) {
-        enemy.attack(player);
-    }
+    enemyNormal.update(deltaTime);
+    enemyHeavy.update(deltaTime);
+    enemyFly.update(deltaTime);
 
     // Call the function again
     oldTime = newTime;

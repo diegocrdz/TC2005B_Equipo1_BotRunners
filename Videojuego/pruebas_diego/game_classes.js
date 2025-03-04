@@ -67,8 +67,10 @@ class BaseCharacter extends GameObject {
         this.animationTimer = 0;
     }
 
-    move(direction) {
-        this.position = this.position.plus(direction.times(this.speed));
+    attack(target) {
+        setTimeout(() => {
+            target.takeDamage(this.damage);
+        }, 500); // 500 milliseconds delay
     }
 
     takeDamage(amount) {
@@ -82,7 +84,6 @@ class BaseCharacter extends GameObject {
         console.log(`${this.type} ha sido eliminado.`);
     }
 
-    // Empty update method that will be overridden by subclasses
     update(deltaTime) {
         this.position = this.position.plus(this.velocity.times(deltaTime)); // d = v * t
 
@@ -120,6 +121,7 @@ class BaseCharacter extends GameObject {
 
     // Draw the character on the canvas
     draw(ctx) {
+        ctx.imageSmoothingEnabled = false; // Disable image smoothing
         ctx.save(); // Saves the current state of the context
     
         if (!this.facingRight) {
