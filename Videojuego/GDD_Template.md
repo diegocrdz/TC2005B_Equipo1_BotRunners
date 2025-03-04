@@ -61,6 +61,7 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
     3. [Levels](#levels)
     4. [Items](#items)
     5. [GUI Elements](#gui-elements)
+    5. [Screens](#screens-1)
 9. [List of Assets](#list-of-assets)
     1. [Graphical](#graphical)
     2. [Audio](#audio)
@@ -559,6 +560,18 @@ Skippy es un robot dieseñado para combatir en una competencia de robótica. Des
 
 ### **Items**
 
+![Items](img/melee_1.png)
+>Arma cuerpo a cuerpo: Brazo robótico de Skippy. Este es el arma inicial del jugador y se utiliza para atacar a los enemigos en combate cuerpo a cuerpo.
+
+![Items](img/melee_2.png)
+>Arma cuerpo a cueropo: Llave de acero. Esta arma se desbloquea al completar el primer nivel y aumenta el daño del jugador en un 20%.
+
+![Items](img/gun_1.png)
+>Arma a distancia: Pistola láser lenta. Esta arma se desbloquea al completar el segundo nivel y aumenta el daño del jugador en un 30%.
+
+![Items](img/gun_2.png)
+>Arma a distancia: Pistola láser rápida. Esta arma se desbloquea al completar el tercer nivel y aumenta el daño del jugador en un 40%.
+
 ### **GUI Elements**
 
 **Recorrido del jugador:**
@@ -575,6 +588,29 @@ El jugador puede ver su barra de salud, barra de experiencia y objeto de curaci�
 
 >El jugador puede seleccionar una habilidad aleatoria tras subir de nivel.
 ![GUI 4](img/gui_4.png)
+
+### **Screens**
+
+**Menú Principal:**
+
+>El menú principal muestra las opciones de juego, configuración y estadísticas.
+![Main Menu](img/main_menu.jpg)
+
+**Menú de Configuración/Opciones:**
+
+>El menú de configuración muestra las opciones para ajustar el audio global de sonido y música.
+![Settings Menu](img/settings_menu.jpg)
+
+**Menú de pausa:**
+
+>El menú de pausa muestra las opciones para continuar o salir del juego.
+![Pause Menu](img/pause_menu.jpg)
+
+**Menú de estadísticas:**
+
+>El menú de estadísticas contiene 2 secciones: Estadísticas del jugador y mejores puntuaciones.
+![Stats Menu](img/stats_menu_2.jpg)
+![Stats Menu](img/stats_menu_1.jpg)
 
 ## _List of Assets_
 
