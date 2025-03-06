@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 ---
-## 🚀 New Task / Issue
+## 🚀 Nueva Tarea / Issue
 Acerca de: Structured issue description for GitHub Projects
 Título: "[TITLE] Brief description of the problem or task"
 Asignados: 
