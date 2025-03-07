@@ -1,85 +1,87 @@
+# **Overclocked** :robot::wrench::zap:
+
+## _Documento de Diseño de Videojuego_ :video_game:
+### _Game Design Document_
+
+
 ![Logo Tec](img/logo_tec.png)
 >*Logo del Tecnológico de Monterrey*
-
-# **Overclocked** :robot:
-
-## _Game Design Document_
 
 ![Logo de Overclocked](img/logo_overclocked.png)
 >*Logo de Overclocked*
 
 ---
 
-##### **Copyright notice / author information / boring legal stuff nobody likes**
+##### **Aviso de derechos de autor / información del autor** :warning:
 
 Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2025 como parte de la materia TC2005B: Construcción de software y toma de decisiones en el Tecnológico de Monterrey, Campus Santa Fe.
 
-**Profesores:**
+**Profesores:** :mortar_board:
 - **Desarrollo de videojuegos:** Gilberto Echeverría Furió
 - **Desarrollo Web:** Octavio Navarro Hinojosa
 - **Base de datos, Análisis y modelación de sistemas de software:** Esteban Castillo Juarez
 
-**Autores del videojuego - Equipo BotRunners**
+**Autores del videojuego - Equipo BotRunners** :robot:
 - Diego Córdova Rodríguez, A01781166
 - Lorena Estefanía Chewtat Torres, A01785378
 - Eder Jezrael Cantero Moreno, A01785888
 
-## _Index_
+## :bookmark_tabs: _Índice_
 
 ---
 
-1. [Index](#index)
-2. [Game Design](#game-design)
-    1. [Summary](#summary)
-    2. [Gameplay](#gameplay)
-    3. [Mindset](#mindset)
-3. [Technical](#technical)
-    1. [Screens](#screens)
-    2. [Controls](#controls)
-    3. [Mechanics](#mechanics)
-4. [Level Design](#level-design)
-    1. [Themes](#themes)
-        1. Ambience
-        2. Objects
-            1. Ambient
-            2. Interactive
-        3. Challenges
+1. [Índice](#índice)
+2. [Diseño del juego](#diseño-del-juego)
+    1. [Resumen](#Resumen)
+    2. [Jugabilidad](#jugabilidad)
+    3. [Mentalidad](#mentalidad)
+3. [Técnico](#técnico)
+    1. [Pantallas](#pantallas)
+    2. [Controles](#controles)
+    3. [Mecánicas](#mecánicas)
+4. [Diseño de niveles](#diseño-de-niveles)
+    1. [Temas](#temas)
+        1. [Ambientación](#ambientación)
+        2. [Objetos](#objetos)
+            1. [Ambiente](#ambiente)
+            2. [Interactivos](#interactivos)
+        3. [Retos](#retos)
     2. [Game Flow](#game-flow)
-5. [Development](#development)
-    1. [Abstract Classes](#abstract-classes--components)
-    2. [Derived Classes](#derived-classes--component-compositions)
-6. [Graphics](#graphics)
-    1. [Style Attributes](#style-attributes)
-    2. [Graphics Needed](#graphics-needed)
-7. [Sounds/Music](#soundsmusic)
-    1. [Style Attributes](#style-attributes-1)
-    2. [Sounds Needed](#sounds-needed)
-    3. [Music Needed](#music-needed)
-8. [Illustrations](#illustrations)
-    1. [Main Character](#main-character)
-    2. [Enemies](#enemies)
-    3. [Levels](#levels)
+5. [Desarrollo](#desarrollo)
+    1. [Clases abstractas](#clases-abstractas--componentes)
+    2. [Clases derivadas](#clases-derivadas--composiciones-de-componentes)
+6. [Gráficos](#gráficos)
+    1. [Atributos de estilo](#atributos-de-estilo)
+    2. [Gráficos necesarios](#gráficos-necesarios)
+7. [Sonido/Música](#sonidomúsica)
+    1. [Atributos de estilo](#atributos-de-estilo-1)
+    2. [Sonidos necesarios](#sonidos-necesarios)
+    3. [Música necesaria](#música-necesaria)
+8. [Ilustraciones](#ilustraciones)
+    1. [Personaje principal](#personaje-principal)
+    2. [Enemigos](#enemigos)
+    3. [Niveles](#niveles)
     4. [Items](#items)
-    5. [GUI Elements](#gui-elements)
-    5. [Screens](#screens-1)
-9. [List of Assets](#list-of-assets)
-    1. [Graphical](#graphical)
+    5. [Elementos GUI](#elementos-gui)
+    5. [Pantallas](#pantallas-1)
+9. [Lista de assets](#lista-de-assets)
+    1. [Gráficos](#gráficos-1)
     2. [Audio](#audio)
-10. [Schedule](#schedule)
+10. [Cronograma](#cronograma)
 
-## _Game Design_
+## _Diseño del juego_
 
 ---
 
-### **Summary**
+### **Resumen**
 
 [Sum up your game idea in 2 sentences. A kind of elevator pitch. Keep it simple!]: #
 
 Overclocked es roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
 
-Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear mejoras aleatorias para potenciar tus estadísticas de fuerza, resistencia, velocidad o habilidades de movimiento. Tras completar cada uno de los 3 niveles, desbloqueas armas permanentes que te permitirán reducir el tiempo en el que terminas el juego, ¿Tienes la habilidad para convertirte en el robot definitivo?
+Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear mejoras aleatorias para potenciar tus estadísticas de fuerza, resistencia, velocidad o habilidades de movimiento. Tras completar cada uno de los 3 niveles, desbloqueas armas permanentes que te permitirán reducir el tiempo en el que terminas el juego, ¿Tienes la habilidad para ser el mejor en la competencia de robots?
 
-### **Gameplay**
+### **Jugabilidad**
 
 [What should the gameplay be like? What is the goal of the game, and what kind of obstacles are in the way? What tactics should the player use to overcome them?]: #
 
@@ -122,7 +124,7 @@ Además, el juego fomenta ser completado en el menor tiempo posible, por lo que 
 - **Combate agresivo:** Si los jugadores logran adoptar una forma de combate agresiva, pueden lograr un menor tiempo para completar el juego a la vez que suben más niveles y desbloquean mejores habilidades.
 - **Decisiones estratégicas:** Probar diferentes combinaciones de habilidades al momento de subir niveles. Esto permite que cada jugador tenga una experiencia diferente de juego y optimicen su forma ideal de jugar.
 
-### **Mindset**
+### **Mentalidad**
 
 [What kind of mindset do you want to provoke in the player? Do you want them to feel powerful, or weak? Adventurous, or nervous? Hurried, or calm? How do you intend to provoke those emotions?]: #
 
@@ -132,11 +134,11 @@ Para provocar estas emociones de rapidez y exploración, el juego muestra en tod
 
 Se busca que el videojuego provoque un deseo por explorar, combatir y completar el juego en el menor tiempo posible, de forma apresurada.
 
-## _Technical_
+## _Técnico_
 
 ---
 
-### **Screens**
+### **Pantallas**
 
 1. Pantalla principal
     1. Opciones
@@ -151,7 +153,7 @@ Se busca que el videojuego provoque un deseo por explorar, combatir y completar 
 9. Fin del juego
 10. (Regresa a la pantalla principal)
 
-### **Controls**
+### **Controles**
 
 [How will the player interact with the game? Will they be able to choose the controls? What kind of in-game events are they going to be able to trigger, and how? (e.g. pressing buttons, opening doors, etc.)]:#
 
@@ -170,7 +172,7 @@ Los jugadores serán capaces de elegir entre dos armas principales: Cuerpo a cue
 
 Los botones que deberán ser presionados para abrir la sala del jefe de cada piso se activarán si el jugador se acerca lo suficiente a estos, por lo que no tienen una tecla asignada de activación.
 
-### **Mechanics**
+### **Mecánicas**
 
 [Are there any interesting mechanics? If so, how are you going to accomplish them? Physics, algorithms, etc.]:#
 
@@ -250,14 +252,14 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 - Doble salto: El jugador es capaz de utilizar la habilidad de doble salto una vez la desbloquee al presionar la tecla “w” dos veces, lo cual le permitirá saltar el doble de distancia, ejecutando de nuevo la misma animación del salto normal.
 - Esquivar: El jugador es capaz de desplazarse rápidamente en muy poco tiempo al presionar la tecla shift, lo cual puede usar para esquivar ataques de enemigos o acortar su tiempo de la partida.
 
-## _Level Design_
+## _Diseño de niveles_
 
 ---
 
-### **Themes**
+### **Temas**
 
 1. Escuela
-    1. Ambiente
+    1. Ambientaci
         1. Competencia, tenso, activo
     2. Objetos
         1. _Ambiente_
@@ -309,10 +311,12 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 
 ### **Game Flow**
 
-1. El jugador inicia en una sala vacía de laboratorio.
+El juego se desarrolla en 3 niveles distintos, cada uno con un jefe final que el jugador debe derrotar para avanzar al siguiente nivel. A continuación se describe el flujo de juego de Overclocked, comenzando desde el nivel 1:
+
+1. El jugador inicia en una sala vacía de una escuela (nivel 1).
 2. Pared a la izquierda, el jugador debe avanzar a la derecha y saltar una caja.
 3. La pared muestra un letrero que muestra las direcciones en las que puede avanzar el jugador.
-4. El jugador avanza a la derecha y salta la caja de madera/metal en el suelo.
+4. El jugador avanza a la derecha y salta la caja de madera el suelo.
 5. El jugador entra en la segunda sala por el extremo izquierdo.
 6. El jugador encuentra un enemigo estático en el extremo derecho.
 7. El jugador observa en la pared un letrero que le indica cómo seleccionar su arma cuerpo a cuerpo y cómo utilizarla.
@@ -341,11 +345,19 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 22. Se muestra la tabla de las mejores 5 puntuaciones de tiempo.
 22. El jugador es devuelto al menú principal.
 
-## _Development_
+Cada vez que el jugador avanza de nivel, el juego se vuelve más dificil, pues los enemigos tienen un incremento en su salud y daño en un 10%. De la misma forma, conforme el jugador sube de nivel, necesita derrotar más enemigos para seguir subiendo, lo que dificulta que este se vuelva más fuerte que los enemigos y los jefes finales, generando un reto constante para el jugador.
+
+En este ciclo de juego se busca que el jugador se sienta motivado a completar el juego en el menor tiempo posible; sin embargo, este debe aprender a dominar las mecánicas del juego y utilizar las habilidades desbloqueables de forma estratégica para lograrlo.
+
+Los niveles tienen una duración estimada de 5 minutos cada uno, por lo que el jugador deberá completar el juego en un tiempo no mayor a 15 minutos para lograr un récord. De igual forma, el jugador puede repetir el juego las veces que desee para mejorar su tiempo y habilidades.
+
+## _Desarrollo_
 
 ---
 
-### **Abstract Classes / Components**
+### **Clases abstractas / Componentes**
+
+Para el desarrollo del videojuego Overclockes, se deben considerar las siguientes clases abstractas y componentes que se utilizarán para la creación de los elementos del juego:
 
 1. BasePhysics: Física del juego, colisiones, movimiento, gravedad.
     1. BasePlayer: Control de jugador, experiencia, armas, habilidades.
@@ -359,7 +371,11 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 7. BaseUI: Control de la interfaz de usuario, como el cronómetro, barra de salud, barra de experiencia, habilidades desbloqueables, etc.
 8. BaseGame: Control principal del juego, carga de niveles, control de la música, sonidos, etc.
 
-### **Derived Classes / Component Compositions**
+**Nota:** Cada una de estas clases abstractas debe ser implementada en el videojuego en clases de JavaScript, las cuales se encargarán de controlar los elementos del juego y su interacción con el jugador.
+
+### **Clases derivadas / Composiciones de componentes**
+
+Se deben considerar las siguientes clases derivadas y composiciones de componentes que se utilizarán para la creación de los elementos del juego:
 
 1. BasePlayer
     1. PlayerMain: Robot controlado por el jugador.
@@ -381,11 +397,13 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 SoundEffect: Efectos de sonido para el juego.
 SoundTrack: Música del juego.
 
-## _Graphics_
+**Nota:** Cada una de estas clases derivadas debe ser implementada en el videojuego en clases de JavaScript, las cuales se encargarán de controlar los elementos del juego y su interacción con el jugador.
+
+## _Gráficos_
 
 ---
 
-### **Style Attributes**
+### **Atributos de estilo**
 
 **Paleta de colores:**
 
@@ -445,7 +463,7 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 - Indicadores: Cuando un jugador se encuentra frente a una escalera, esta cuenta con un letrero que indica una flecha en la dirección en la que el jugador puede subir/bajar/ambos.
 
 
-### **Graphics Needed**
+### **Gráficos necesarios**
 
 1. Personajes
     1. Robots
@@ -469,11 +487,11 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
     1. Botón azul (desbloquea la sala del jefe final de cada nivel)
     2. Puerta de laboratorio (se abre al presionar el botón azul)
 
-## _Sounds/Music_
+## _Sonido/Música_
 
 ---
 
-### **Style Attributes**
+### **Atributos de estilo**
 
 Again, consistency is key. Define that consistency here. What kind of instruments do you want to use in your music? Any particular tempo, key? Influences, genre? Mood?
 
@@ -481,7 +499,7 @@ Stylistically, what kind of sound effects are you looking for? Do you want to ex
 
 Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!
 
-### **Sounds Needed**
+### **Sonidos necesarios**
 
 1. Effectos
     1. Giro de rueda (movimiento del jugador, igual para todo tipo de suelos)
@@ -498,7 +516,7 @@ Remember, auditory feedback should stand out from the music and other sound effe
     4. Golpe exagerado (enemigo derrotado)
     5. Explosión pequeña (jugador derrotado)
 
-### **Music Needed**
+### **Música necesaria**
 
 1. Música lenta-melódica para el menú principal.
 2. Música tenue-lenta para menú de settings(Aplicable a todas las páginas de settings independientemente del nivel) 
@@ -509,11 +527,11 @@ Remember, auditory feedback should stand out from the music and other sound effe
 7. Música feliz-nostálgica(créditos finales).
 *Las canciones del nivel 1 y 2, al llegar al boss del nivel acelerarán su velocidad.
 
-## _Illustrations_
+## _Ilustraciones_
 
 ---
 
-### **Main Character**
+### **Personaje principal**
 
 >Primeros bocetos de Skippy
 ![Bocetos](img/skippy_concept.png)
@@ -536,7 +554,7 @@ Remember, auditory feedback should stand out from the music and other sound effe
 >Ataque a distancia
 ![Shooting sprites](img/skippy_shoot.gif)
 
-### **Enemies**
+### **Enemigos**
 
 >Robot Normal
 ![Robot Normal](img/robot_normal.gif)
@@ -547,7 +565,7 @@ Remember, auditory feedback should stand out from the music and other sound effe
 >Robot Aéreo
 ![Robot áereo](img/robot_fly.gif)
 
-### **Levels**
+### **Niveles**
 
 >Introducción del juego
 ![Intro](img/intro_overclocked.png)
@@ -572,7 +590,7 @@ Skippy es un robot dieseñado para combatir en una competencia de robótica. Des
 ![Items](img/gun_2.png)
 >Arma a distancia: Pistola láser rápida. Esta arma se desbloquea al completar el tercer nivel y aumenta el daño del jugador en un 40%.
 
-### **GUI Elements**
+### **Elementos GUI**
 
 **Recorrido del jugador:**
 
@@ -589,7 +607,7 @@ El jugador puede ver su barra de salud, barra de experiencia y objeto de curaci�
 >El jugador puede seleccionar una habilidad aleatoria tras subir de nivel.
 ![GUI 4](img/gui_4.png)
 
-### **Screens**
+### **Pantallas**
 
 **Menú Principal:**
 
@@ -612,11 +630,11 @@ El jugador puede ver su barra de salud, barra de experiencia y objeto de curaci�
 ![Stats Menu](img/stats_menu_2.jpg)
 ![Stats Menu](img/stats_menu_1.jpg)
 
-## _List of Assets_
+## _Lista de assets_
 
 ---
 
-### **Graphical**
+### **Gráficos**
 
 **Enemigos, obstáculos y objetos:**
 
@@ -660,7 +678,13 @@ El jugador puede ver su barra de salud, barra de experiencia y objeto de curaci�
 
 - [Pink Bloom Synthwave Music Pack](https://davidkbd.itch.io/pink-bloom-synthwave-music-pack)
 
-## _Schedule_
+## _Cronograma_
+
+---
+
+El objetivo del desarrollo del videojuego es completar todos los elementos en los primeros 5 sprints, con un tiempo estimado de 1 mes y medio, con sprints de 1 semana cada uno. Para los 2 sprints finales (sprint 6 y 7), se dedicarán a la correción de errores, así como issues que hayan tenido que ser retomados de sprints anteriores.
+
+A continuación se muestra el cronograma de desarrollo del videojuego:
 
 Sprint 1:
 
@@ -677,7 +701,6 @@ Sprint 2:
 
 3. Desarrollar las clases de jugador y bloques
     1. Físicas/Colisiones (hitbox genérico para todos los bloques)
-3.1. Encontrar físicas de controles agradables
 4. Desarrollar clases derivadas
     1. Bloques
         1. Estáticos
@@ -688,15 +711,38 @@ Sprint 2:
         2. Robot Pesado
         3. Robot Aéreo
         4. Jefe Final
+5. Desarrollar base de datos relacional (MySQL) del juego
+    1. Hacer un diagrama Entidad-Relación UML de la base de datos
+    2. Crear documentación del diagrama para justificar las relaciones entre las tablas
+    3. Crear las tablas de la base de datos:
+        1. Tabla de jugadores
+        2. Tabla de puntuaciones
+        3. Tabla de niveles
+        4. Tabla de enemigos
+        5. Tabla de bloques
+        6. Tabla de objetos
+        7. Tabla de habilidades
+        8. Tabla de armas
+    4. Hacer la conexión a la base de datos en el juego a través de una API
 
 Sprint 3 y 4:
 
-5. Diseño de niveles
+6. Diseño de niveles
     1. Introducir movimiento/salto
     2. Introducir ataque
-    3. Tener en cuenta el paso del jugador, para que pueda practicar entre lecciones.
+    3. Tener en cuenta el paso del jugador, para que pueda practicar entre lecciones
 
 Sprint 5:
 
-6. Diseño de sonidos
-7. Diseño de música
+7. Diseño de sonidos
+8. Diseño de música
+
+Sprint 6:
+
+9. Finalizar página web
+10. Corrección de errores
+
+Sprint 7:
+
+11. Corrección de errores
+12. Entrega final
