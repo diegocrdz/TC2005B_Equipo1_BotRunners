@@ -41,11 +41,8 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
     3. [Mecánicas](#mecánicas)
 4. [Diseño de niveles](#diseño-de-niveles)
     1. [Temas](#temas)
-        1. [Ambientación](#ambientación)
-        2. [Objetos](#objetos)
-            1. [Ambiente](#ambiente)
-            2. [Interactivos](#interactivos)
-        3. [Retos](#retos)
+    2. [Estructura de niveles](#estructura-de-niveles)
+    2. [Retos](#retos)
     2. [Game Flow](#game-flow)
 5. [Desarrollo](#desarrollo)
     1. [Clases abstractas](#clases-abstractas--componentes)
@@ -259,7 +256,7 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 ### **Temas**
 
 1. Escuela
-    1. Ambientaci
+    1. Ambiente
         1. Competencia, tenso, activo
     2. Objetos
         1. _Ambiente_
@@ -308,6 +305,10 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
             5. Robot Pesado (enemigo)
             6. Robot Aéreo (enemigo)
             7. Jefe Final (enemigo)
+
+### **Estructura de niveles**
+
+### **Retos**
 
 ### **Game Flow**
 
