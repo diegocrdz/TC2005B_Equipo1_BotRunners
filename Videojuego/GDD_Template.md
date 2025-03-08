@@ -88,7 +88,7 @@ Overclocked es un juego que incentiva a los jugadores a completar el juego en el
 
 El jugador inicia el videojuego en una sala rectangular de fondo blanco, con un letrero en la pared que indica los controles de movimiento con las teclas “W,A,S,D”. De igual forma, hay un letrero con una flecha hacia la izquierda, guiando al jugador a avanzar en esa dirección.
 
-Al avanzar, el jugador se encuentra con un robot enemigo de categoría Normal (salud y daño equilibrado). En la pared de esta sala, se encuentra un letrero que indica los controles de ataque cuerpo a cuerpo con la tecla “1” y “click derecho” para atacar.
+Al avanzar, el jugador se encuentra con un robot enemigo de categoría Normal (salud y daño equilibrado). En la pared de esta sala, se encuentra un letrero que indica los controles de ataque cuerpo a cuerpo con la tecla “1” y “flecha derecha/izquierda” para atacar.
 
 De esta forma, el jugador continúa avanzando por las salas con obstáculos y enemigos generados de forma aleatoria. El jugador puede encontrarse con enemigos de categoría Normal (salud y daño equilibrado), Pesado (salud y daño elevado) y Aéreo (salud y daño bajo).
 
@@ -160,10 +160,10 @@ Los jugadores son capaces de moverse de izquierda, derecha, arriba (saltar) y ag
 
 **Ataques y curación**
 
-Los jugadores serán capaces de elegir entre dos armas principales: Cuerpo a cuerpo y a distancia. Adicionalmente, el jugador puede seleccionar una poción de curación que solo puede ser utilizada una única vez por nivel y que se regenera al completarlo. Para cambiar de armas/curación, se utilizan los siguientes números del teclado:
+Los jugadores serán capaces de elegir entre dos armas principales: Cuerpo a cuerpo y a distancia. Para utilizar estas, el jugador necesitara presionar ya sea la flecha deecha o izquierda dependiendo la dirección hacia donde quiera realizar el ataque. Adicionalmente, el jugador puede seleccionar una poción de curación que solo puede ser utilizada una única vez por nivel y que se regenera al completarlo. Para cambiar de armas/curación, se utilizan los siguientes números del teclado:
 - Número 1: Seleccionar arma cuerpo a cuerpo
 - Número 2: Seleccionar arma a distancia
-- Número 3: Seleccionar poción de curación
+- Número 3: Usar poción de curación
 
 **Eventos dentro del juego**
 
@@ -179,7 +179,7 @@ Para las físicas de movimiento, deberemos establecer diferentes atributos para 
 
 **Colisiones con enemigos:**
 
-Los jugadores y enemigos deben tener un contenedor definido para delimitar hasta donde llegan. Así, el jugador debe tener un atributo para saber si tiene un arma equipada y está atacando (presionando el “click izquierdo” del ratón). Si esto es así y su contenedor coincide con el de los enemigos, se restará la salud de los enemigos y la cantidad de daño del jugador. De la misma forma, si un jugador no está atacando y su contenedor coincide con el de los enemigos, se restará su salud y la cantidad de daño de los enemigos. Esto mismo aplica para el arma a distancia; cuando un jugador dispare, se creará un rectángulo que si impacta con los enemigos se resta su salud.
+Los jugadores y enemigos deben tener un contenedor definido para delimitar hasta donde llegan. Así, el jugador debe tener un atributo para saber si tiene un arma equipada y está atacando (presionando la flecha derecha/izquierda). Si esto es así y su contenedor coincide con el de los enemigos, se restará la salud de los enemigos y la cantidad de daño del jugador. De la misma forma, si un jugador no está atacando y su contenedor coincide con el de los enemigos, se restará su salud y la cantidad de daño de los enemigos. Esto mismo aplica para el arma a distancia; cuando un jugador dispare, se creará un rectángulo que si impacta con los enemigos se resta su salud.
 
 **Mecánica de tiempo:**
 
@@ -255,14 +255,16 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 
 ### **Temas**
 
+- En el primer nivel, ¡la competencia de robótica ha comenzado!, y la escuela se ha transformado en un campo de batalla donde los mejores competirán. Se quiere evocar el sentimiento de que el jugador esta situado en una competencia escolar de robótica y para esto se utilizaran recursos como:
 1. Escuela
     1. Ambiente
         1. Competencia, tenso, activo
     2. Objetos
         1. _Ambiente_
             1. Letreros para guiar al jugador
-            2. Pizarras
+            2. Pizarras 
             3. Cajas de madera
+            4. 
         2. _Interactivos_
             1. Botón azúl
             2. Puertas
@@ -271,6 +273,8 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
             5. Robot Pesado (enemigo)
             6. Robot Aéreo (enemigo)
             7. Jefe Final (enemigo)
+
+- En el segundo nivel, pasamos al lugar en donde nacen las máquinas, un laboratorio de vanguardia lleno de tecnología secreta de última generación. Se quiere evocar el sentimiento de que el jugador, al pasar del primer nivel, esta situado en el laboratorio donde se crean todos los robots, y para esto se utilizaran recursos como:
 2. Laboratorio
     1. Ambiente
         1. Competencia, tenso, activo
@@ -288,14 +292,16 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
             5. Robot Pesado (enemigo)
             6. Robot Aéreo (enemigo)
             7. Jefe Final (enemigo)
+
+- En el tercer nivel, la competencia llega a su fase final en una fábrica abandonada, un lugar que alguna vez fue el corazón de la producción de robots, pero que ahora es solo un campo de batalla abandonado. Se quiere evocar el sentimiento de que el jugador esta situado en fábrica abandonada para su batalla final, y para esto se utilizaran recursos como:
 3. Fábrica
     1. Ambiente
         1. Competencia, tenso, activo
     2. Objetos
         1. _Ambiente_
             1. Letreros para guiar al jugador
-            2. Cajas de metal
-            3. Tuberías
+            2. Máquinas viejas 
+            3. Tuberías oxidadas
             4. Tubos de ensayo
         2. _Interactivos_
             1. Botón azúl
@@ -306,9 +312,33 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
             6. Robot Aéreo (enemigo)
             7. Jefe Final (enemigo)
 
+- Aunque muchos de los elementos son parecidos, se busca cambiar la estética de los niveles a partir de los colores, cambio de texturas, iluminación, y diferentes elementos del entorno en el que se encuentra situado el nivel. 
+
 ### **Estructura de niveles**
 
+En Overclocked, todos los niveles siguen una estructura base definida, pero cada partida se siente única gracias a la aleatoriedad en su diseño. Cada nivel consta de seis salas principales organizadas de forma lineal, con la primera sala funcionando como el punto de inicio y la última como la sala del jefe final. Sin embargo, dentro de este esquema estructurado, se generan variaciones que afectan tanto la exploración como la dificultad del juego.
+
+A lo largo del nivel, es posible que algunas salas generen ramificaciones, con un máximo de dos por sala. La probabilidad de que una sala tenga una ramificación es del 30%, y si ya cuenta con una, existe un 50% de probabilidad de que aparezca una segunda. No obstante, ni la sala inicial ni la del jefe final pueden generar estas bifurcaciones, asegurando que la progresión principal se mantenga clara y ordenada. 
+
+Dentro de estas ramificaciones, habrá una sala especial que contiene un botón azul. Este botón es clave para el avance, ya que interactuar con él desbloquea el acceso a la sala del jefe final. Si no se activa, el jugador no podrá ingresar a la sala final, lo que obliga a explorar el nivel en busca de esta sala oculta.
+
+Además de las diferentes disposiciónes de las salas, cada partida se diferencia de las demás por la variabilidad en la aparición de obstáculos y enemigos. No solo cambia la cantidad de enemigos, sino también su tipo, lo que puede hacer que algunas partidas sean relativamente fáciles, mientras que otras resulten más desafiantes. Asimismo, la distribución y el número de obstáculos dentro de las salas varía, afectando la manera en que los jugadores deben moverse y adaptarse al entorno.
+
+Gracias a estos elementos, ninguna partida en Overclocked es igual a otra. Aunque la estructura base de los niveles sea la misma, la aleatoriedad en la generación de ramificaciones, enemigos y obstáculos garantiza que cada partida ofrezca una experiencia diferente. Este sistema de variación mantiene el juego dinámico y evita la sensación de repetitividad, motivando a los jugadores a seguir superando nuevos retos en cada partida.
+
 ### **Retos**
+A lo largo de los niveles, los jugadores se enfrentarán a diversos retos que pondrán a prueba su habilidad y estrategia. Estos retos incluyen:
+
+- ##### Enemigos
+El jugador puede encontrarse con diferentes tipos de enemigos, cada uno con las diferentes características descritas anteriormente. Algunos enemigos pueden moverse lento, pero hacer más daño, mientras que otros pueden ser dificiles de atacar. Debido a que la cantidad y ubicación de los enemigos varia en cada partida, esto asegura que el combate nunca pueda ser completamente predecible.
+
+- ##### Obstáculos 
+Además de los enemigos, las salas pueden contener diferentes tipos de obstaculos que afectan la movilidad del jugador y lo retan a usar diferentes habilidades. Estos pueden ser cajas o tuberías, que obligaran al jugador a ssaltar o agacharse mientras esta atacando a los enemigos. Asimismo, esto hara que el campo de visión de los enemigos y el espacio en donde se encuentran sea diferente en cada sala.
+
+- ##### Jefes finales
+Al final de cada nivel, el jugador deberá enfrentarse al jefe final para poder pasar al siguiente nivel y desbloquear nuevas armas. Este jefe es un enemigo mucho mas fuerte que los demás y cuenta con varias fases de combate y habilidades. 
+
+El enfrentamiento con el jefe es el mayor reto del nivel, requiriendo que el jugador haya explorado las diferentes salas para haber mejorado sus habilidades. Además, si el jugador no ha activado el botón azul que se encuentra en una de las salas ramificadas, el acceso a la sala del jefe permanecerá bloqueado. Esto agrega un reto adiccional, debido a que no basta con llegar al final del nivel, sino también haber explorado la mayoría de las salas para encontrar el botón. 
 
 ### **Game Flow**
 
@@ -414,7 +444,7 @@ Para el videojuego Overclocked, se utiliza la siguiente paleta de colores base:
 - Azul claro: #66C7F4
 - Gris: #C1CAD6
 - Blanco: #FFFFFF
-Adicionalmente, los enemigos cuentan con los siguientes colores:
+Adicionalmente, los enemigos cuentan con los siguientes colores actualmente:
 - Robot Normal:
     - Naranja claro: FC683B
     - Naranja medio: #DD442C
@@ -436,7 +466,7 @@ Adicionalmente, los enemigos cuentan con los siguientes colores:
 - Contorno de los enemigos
 - Gris oscuro: #434A5F
 
-De esta forma, Overclocked utiliza tonos claros entre blanco, gris, azul, rojo, naranja y café. Se busca que estos tonos creen una atmósfera minimalista, buscando utilizar tan solo 3 tonos entre colores. Ejemplo de esto es el gris, que solo tiene una variante clara, media y oscura.
+De esta forma, Overclocked utiliza tonos claros entre blanco, gris, azul, rojo, naranja y café. Se busca que estos tonos creen una atmósfera minimalista, buscando utilizar tan solo 3 tonos entre colores. Ejemplo de esto es el gris, que solo tiene una variante clara, media y oscura. Igualmente, entre niveles pueden cambiar algunos colores para que los enemigos combinen con la estética del nivel.
 
 El estilo gráfico del juego es de 32 bits, por lo que se busca que el diseño de los personajes sea minimalista tipo retro. Para esto, los personajes deben contar con bordes negros/gris oscuro que resalten su silueta del ambiente resto de elementos en la pantalla.
 
@@ -459,8 +489,8 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 - Mini-mapa: El jugador cuenta con un mini-mapa disponible en la esquina superior derecha en todo momento para conocer su ubicación en el nivel.
 - Cronómetro: El jugador cuenta con un cronómetro disponible en la esquina superior izquierda en todo momento. Con este elemento, el jugador podrá conocer el tiempo que ha invertido en todo momento en el videojuego.
 - Letreros: En las primeras 2 salas de juego del primer nivel, el jugador puede consultar letreros ubicados en el fondo de la sala con la siguiente información:
-- Nivel 1: Letrero que indica al jugador las teclas para moverse (W,A,S,D).
-- Nivel 2: Letrero que indica al jugador las teclas para atacar (Click derecho del ratón).
+- Sala 1: Letrero que indica al jugador las teclas para moverse (W,A,S,D).
+- Sala 2: Letrero que indica al jugador las teclas para atacar (Flechas izquierda y derecha).
 - Indicadores: Cuando un jugador se encuentra frente a una escalera, esta cuenta con un letrero que indica una flecha en la dirección en la que el jugador puede subir/bajar/ambos.
 
 
@@ -494,11 +524,11 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 
 ### **Atributos de estilo**
 
-Again, consistency is key. Define that consistency here. What kind of instruments do you want to use in your music? Any particular tempo, key? Influences, genre? Mood?
+[Again, consistency is key. Define that consistency here. What kind of instruments do you want to use in your music? Any particular tempo, key? Influences, genre? Mood?]: #
 
-Stylistically, what kind of sound effects are you looking for? Do you want to exaggerate actions with lengthy, cartoony sounds (e.g. mario&#39;s jump), or use just enough to let the player know something happened (e.g. mega man&#39;s landing)? Going for realism? You can use the music style as a bit of a reference too.
+[Stylistically, what kind of sound effects are you looking for? Do you want to exaggerate actions with lengthy, cartoony sounds (e.g. mario&#39;s jump), or use just enough to let the player know something happened (e.g. mega man&#39;s landing)? Going for realism? You can use the music style as a bit of a reference too. ]: #
 
-Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!
+[Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!]: #
 
 ### **Sonidos necesarios**
 
