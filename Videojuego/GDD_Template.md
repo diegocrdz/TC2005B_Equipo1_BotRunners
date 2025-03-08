@@ -324,21 +324,41 @@ Dentro de estas ramificaciones, habrá una sala especial que contiene un botón 
 
 Además de las diferentes disposiciónes de las salas, cada partida se diferencia de las demás por la variabilidad en la aparición de obstáculos y enemigos. No solo cambia la cantidad de enemigos, sino también su tipo, lo que puede hacer que algunas partidas sean relativamente fáciles, mientras que otras resulten más desafiantes. Asimismo, la distribución y el número de obstáculos dentro de las salas varía, afectando la manera en que los jugadores deben moverse y adaptarse al entorno.
 
-Gracias a estos elementos, ninguna partida en Overclocked es igual a otra. Aunque la estructura base de los niveles sea la misma, la aleatoriedad en la generación de ramificaciones, enemigos y obstáculos garantiza que cada partida ofrezca una experiencia diferente. Este sistema de variación mantiene el juego dinámico y evita la sensación de repetitividad, motivando a los jugadores a seguir superando nuevos retos en cada partida.
+Gracias a estos elementos, ninguna partida en Overclocked es igual a la anterior. Aunque la estructura base de los niveles sea la misma, la aleatoriedad en la generación de ramificaciones, enemigos y obstáculos garantiza que cada partida ofrezca una experiencia diferente. Este sistema de variación mantiene el juego dinámico y evita la sensación de repetitividad, motivando a los jugadores a seguir superando nuevos retos en cada partida.
+
+A continuación se muestra un ejemplo de diferentes generaciones de nivel en el juego:
+
+**Ejemplo 1:**
+![Ejemplo 1](img/ej_estructura_nivel_1.png)
+
+En este ejemplo, el jugadr inicia en la sala verde (0) y avanza por las salas del nivel, explorando las diferentes ramificaciones, enfrentándose a enemigos, subiendo de nivel y desbloqueando habilidades. Eventualmente, el jugador encuentra la sala azul (B3) que contiene el botón azul que desbloquea la sala roja que contiene el jefe final (5).
+
+**Ejemplo 2:**
+![Ejemplo 2](img/ej_estructura_nivel_2.png)
+
+En este segundo ejemplo, el jugador repite el proceso del nivel anterior, notando que la estructura de las ramificaciones de las salas es diferente, así como los enemigos y obstáculos que se encuentran dentro de cada una de ellas.
+
+De esta manera, el juego busca que cada partida sea única y ofrezca un reto constante a los jugadores, quienes deberán adaptarse a las diferentes situaciones que se les presenten en cada nivel.
 
 ### **Retos**
+
 A lo largo de los niveles, los jugadores se enfrentarán a diversos retos que pondrán a prueba su habilidad y estrategia. Estos retos incluyen:
 
-- ##### Enemigos
-El jugador puede encontrarse con diferentes tipos de enemigos, cada uno con las diferentes características descritas anteriormente. Algunos enemigos pueden moverse lento, pero hacer más daño, mientras que otros pueden ser dificiles de atacar. Debido a que la cantidad y ubicación de los enemigos varia en cada partida, esto asegura que el combate nunca pueda ser completamente predecible.
+**Enemigos**
 
-- ##### Obstáculos 
-Además de los enemigos, las salas pueden contener diferentes tipos de obstaculos que afectan la movilidad del jugador y lo retan a usar diferentes habilidades. Estos pueden ser cajas o tuberías, que obligaran al jugador a ssaltar o agacharse mientras esta atacando a los enemigos. Asimismo, esto hara que el campo de visión de los enemigos y el espacio en donde se encuentran sea diferente en cada sala.
+El jugador puede encontrarse con diferentes tipos de enemigos (Robot Normal, Pesado, Volador), cada uno con las diferentes características descritas anteriormente. Algunos enemigos pueden moverse lento, pero hacer más daño (Robot Pesado), mientras que otros pueden ser veloces pero débiles (Robot Normal, Aéreo). Debido a que la cantidad y ubicación de los enemigos varia en cada partida, esto asegura que el combate nunca pueda ser completamente predecible.
 
-- ##### Jefes finales
-Al final de cada nivel, el jugador deberá enfrentarse al jefe final para poder pasar al siguiente nivel y desbloquear nuevas armas. Este jefe es un enemigo mucho mas fuerte que los demás y cuenta con varias fases de combate y habilidades. 
+**Obstáculos**
 
-El enfrentamiento con el jefe es el mayor reto del nivel, requiriendo que el jugador haya explorado las diferentes salas para haber mejorado sus habilidades. Además, si el jugador no ha activado el botón azul que se encuentra en una de las salas ramificadas, el acceso a la sala del jefe permanecerá bloqueado. Esto agrega un reto adiccional, debido a que no basta con llegar al final del nivel, sino también haber explorado la mayoría de las salas para encontrar el botón. 
+Además de los enemigos, las salas pueden contener diferentes tipos de obstaculos que afectan la movilidad del jugador y lo retan a usar diferentes habilidades. Estos pueden ser cajas, picos de metal o tuberías, que obligaran al jugador a saltar o agacharse mientras esta atacando a los enemigos. Esto también provoca que el campo de visión de los enemigos y el espacio en donde se encuentran sea diferente en cada sala.
+
+**Jefes finales**
+
+Al final de cada nivel, el jugador deberá enfrentarse al jefe final para poder pasar al siguiente nivel y desbloquear nuevas armas. Este jefe es un enemigo que cuenta con velocidad, salud y daño aumentados, contando con varias fases de combate y habilidades.
+
+El enfrentamiento con el jefe es el mayor reto del nivel, requiriendo que el jugador haya explorado las diferentes salas para haber mejorado sus habilidades. Además, si el jugador no ha activado el botón azul que se encuentra en una de las salas ramificadas, el acceso a la sala del jefe permanecerá bloqueado. Esto agrega un reto adiccional, debido a que no basta con llegar al final del nivel, sino también haber explorado la mayoría de las salas para encontrar el botón.
+
+El jefe es capaz de avanzar en la dirección del jugador (estado normal) o saltar repetidamente en dirección del mismo (estado furioso). El jugador deberá esquivar los ataques del jefe y derrotarlo para avanzar al siguiente nivel.
 
 ### **Game Flow**
 
@@ -444,7 +464,9 @@ Para el videojuego Overclocked, se utiliza la siguiente paleta de colores base:
 - Azul claro: #66C7F4
 - Gris: #C1CAD6
 - Blanco: #FFFFFF
-Adicionalmente, los enemigos cuentan con los siguientes colores actualmente:
+
+Adicionalmente, los enemigos cuentan con los siguientes colores específicos:
+
 - Robot Normal:
     - Naranja claro: FC683B
     - Naranja medio: #DD442C
@@ -476,7 +498,7 @@ Para establecer un estilo determinado y homogéneo a lo largo del videojuego, es
 
 1. Personajes y assets de 32 bits.
 2. Paleta de colores pastel: blanco, gris, azul, rojo, naranja y café.
-3. Personajes llamativos y animados: Cada personaje debe tener una animación atractiva de al menos 3 fotogramas al moverse e interactuar con el jugador.
+3. Personajes llamativos y animados: Cada personaje debe tener una animación atractiva de al menos 2 fotogramas al moverse e interactuar con el jugador.
 4. Silueta oscura: Tanto los personajes como los recursos (assets) del videojuego deben contar con una silueta oscura, separándolos del fondo, escenarios y demás  elementos del videojuego.
 5. El diseño de los personajes debe ser minimalista estilo retro: Para lograr esto, los personajes deben contar con ojos grandes y no más de 7 tonalidades de la paleta de color.
 6. Al tener en cuenta que los robots son la temática del juego, estos deben tener características que enfaticen su función. Ejemplo: El robot del jugador puede moverse y atacar en todas direcciones, por lo que su diseño cuenta con un brazo expandible y una rueda que lo ayuda a trasladarse por los escenarios.
@@ -489,8 +511,8 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 - Mini-mapa: El jugador cuenta con un mini-mapa disponible en la esquina superior derecha en todo momento para conocer su ubicación en el nivel.
 - Cronómetro: El jugador cuenta con un cronómetro disponible en la esquina superior izquierda en todo momento. Con este elemento, el jugador podrá conocer el tiempo que ha invertido en todo momento en el videojuego.
 - Letreros: En las primeras 2 salas de juego del primer nivel, el jugador puede consultar letreros ubicados en el fondo de la sala con la siguiente información:
-- Sala 1: Letrero que indica al jugador las teclas para moverse (W,A,S,D).
-- Sala 2: Letrero que indica al jugador las teclas para atacar (Flechas izquierda y derecha).
+    - Sala 1: Letrero que indica al jugador las teclas para moverse (W,A,S,D).
+    - Sala 2: Letrero que indica al jugador las teclas para atacar (Flechas izquierda y derecha).
 - Indicadores: Cuando un jugador se encuentra frente a una escalera, esta cuenta con un letrero que indica una flecha en la dirección en la que el jugador puede subir/bajar/ambos.
 
 
@@ -564,100 +586,110 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 
 ### **Personaje principal**
 
->Primeros bocetos de Skippy
+Primeros bocetos de Skippy
 ![Bocetos](img/skippy_concept.png)
 
->Idle
+Idle
+
 ![Idle](img/skippy_idle.gif)
 
->Caminar
+Caminar
+
 ![Caminar](img/skippy_walk.gif)
 
->Saltar
+Saltar
+
 ![Jumping sprites](img/skippy_jump.gif)
 
->Agacharse
+Agacharse
 ![Crouching sprites](img/skippy_crouch.gif)
 
->Ataque cuerpo a cuerpo
+Ataque cuerpo a cuerpo
 ![Attacking sprites](img/skippy_attack.gif)
 
->Ataque a distancia
+Ataque a distancia
 ![Shooting sprites](img/skippy_shoot.gif)
 
 ### **Enemigos**
 
->Robot Normal
+Robot Normal
 ![Robot Normal](img/robot_normal.gif)
 
->Robot Pesado
+Robot Pesado
 ![Robot Pesado](img/robot_heavy.gif)
 
->Robot Aéreo
+Robot Aéreo
 ![Robot áereo](img/robot_fly.gif)
 
 ### **Niveles**
 
->Introducción del juego
+Introducción del juego
 ![Intro](img/intro_overclocked.png)
 Skippy es un robot dieseñado para combatir en una competencia de robótica. Después de ser activado, descubre que debe completar una serie de niveles en el menor tiempo posible para ser reconocido como ganador de la competencia. Sin tiempo que perder, Skippy se adentra en el primer nivel de la competencia.
 
 **Estructura de niveles:**
 
 ![Estructura Niveles](img/level_structure.png)
->Los niveles cuentan con una estructura lineal con 1 o 2 bifurcaciones en salas intermedias. Cada sala contiene enemigos y obstáculos aleatorios, así como un botón para abrir la sala del jefe final.
+
+Los niveles cuentan con una estructura lineal con 1 o 2 bifurcaciones en salas intermedias. Cada sala contiene enemigos y obstáculos aleatorios, así como un botón para abrir la sala del jefe final.
 
 ### **Items**
 
 ![Items](img/melee_1.png)
->Arma cuerpo a cuerpo: Brazo robótico de Skippy. Este es el arma inicial del jugador y se utiliza para atacar a los enemigos en combate cuerpo a cuerpo.
+**Arma cuerpo a cuerpo:** Brazo robótico de Skippy. Este es el arma inicial del jugador y se utiliza para atacar a los enemigos en combate cuerpo a cuerpo. Se desbloquea al iniciar el juego y aumenta el daño del jugador en un 0%.
 
 ![Items](img/melee_2.png)
->Arma cuerpo a cueropo: Llave de acero. Esta arma se desbloquea al completar el primer nivel y aumenta el daño del jugador en un 20%.
+**Arma cuerpo a cueropo:** Llave de acero. Esta arma se desbloquea al completar el primer nivel y aumenta el daño del jugador en un 20%.
 
 ![Items](img/gun_1.png)
->Arma a distancia: Pistola láser lenta. Esta arma se desbloquea al completar el segundo nivel y aumenta el daño del jugador en un 30%.
+**Arma a distancia:** Pistola láser lenta. Esta arma se desbloquea al completar el segundo nivel y aumenta el daño del jugador en un 30%.
 
 ![Items](img/gun_2.png)
->Arma a distancia: Pistola láser rápida. Esta arma se desbloquea al completar el tercer nivel y aumenta el daño del jugador en un 40%.
+**Arma a distancia:** Pistola láser rápida. Esta arma se desbloquea al completar el tercer nivel y aumenta el daño del jugador en un 40%.
+
+![Items](img/healing.png)
+**Poción de curación:** Recupera 50% de la salud del jugador. Se recarga al completar un nivel y solo se puede utilizar una vez por cada uno.
+
+![Items](img/xp_orb.png)
+**Orbe de experiencia:** Aumenta el nivel de experiencia del jugador al ser recogido. Se obtiene al derrotar a los enemigos.
 
 ### **Elementos GUI**
 
 **Recorrido del jugador:**
 
->El juego muestra los principales controles de movimiento del jugador, así como un mini-mapa para guiarlo y un cronómetro para medir su tiempo de partida.
+El juego muestra los principales controles de movimiento del jugador, así como un mini-mapa para guiarlo y un cronómetro para medir su tiempo de partida.
 ![GUI 1](img/gui_1.png)
 
->El jugador debe enfrentarse al primer enemigo, seleccionando su arma cuerpo a cuerpo y aprendiendo a atacar.
+El jugador debe enfrentarse al primer enemigo, seleccionando su arma cuerpo a cuerpo y aprendiendo a atacar.
 El jugador puede ver su barra de salud, barra de experiencia y objeto de curación en todo momento.
 ![GUI 2](img/gui_2.png)
 
->El jugador puede subir de nivel de experiencia tras derrotar cada enemigo.
+El jugador puede subir de nivel de experiencia tras derrotar cada enemigo.
 ![GUI 3](img/gui_3.png)
 
->El jugador puede seleccionar una habilidad aleatoria tras subir de nivel.
+El jugador puede seleccionar una habilidad aleatoria tras subir de nivel.
 ![GUI 4](img/gui_4.png)
 
 ### **Pantallas**
 
 **Menú Principal:**
 
->El menú principal muestra las opciones de juego, configuración y estadísticas.
+El menú principal muestra las opciones de juego, configuración y estadísticas.
 ![Main Menu](img/main_menu.jpg)
 
 **Menú de Configuración/Opciones:**
 
->El menú de configuración muestra las opciones para ajustar el audio global de sonido y música.
+El menú de configuración muestra las opciones para ajustar el audio global de sonido y música.
 ![Settings Menu](img/settings_menu.jpg)
 
 **Menú de pausa:**
 
->El menú de pausa muestra las opciones para continuar o salir del juego.
+El menú de pausa muestra las opciones para continuar o salir del juego.
 ![Pause Menu](img/pause_menu.jpg)
 
 **Menú de estadísticas:**
 
->El menú de estadísticas contiene 2 secciones: Estadísticas del jugador y mejores puntuaciones.
+El menú de estadísticas contiene 2 secciones: Estadísticas del jugador y mejores puntuaciones.
 ![Stats Menu](img/stats_menu_2.jpg)
 ![Stats Menu](img/stats_menu_1.jpg)
 
