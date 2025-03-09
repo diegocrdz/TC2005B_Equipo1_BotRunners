@@ -596,7 +596,7 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 
 **Animación caminar:**
 
-![Caminar](img/skippy_walk.gif)
+![Correr](img/skippy_run.gif)
 
 **Animación saltar:**
 
@@ -608,11 +608,31 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 
 **Animación ataque cuerpo a cuerpo:**
 
-![Attacking sprites](img/skippy_attack.gif)
+![Attacking sprites](img/skippy_melee_1.gif)
 
 **Animación ataque a distancia:**
 
-![Shooting sprites](img/skippy_shoot.gif)
+![Shooting sprites](img/skippy_shoot_1.gif)
+
+También se cuenta con animaciones para todas las variantes de armas que el jugador puede desbloquear a lo largo del juego.
+
+**Sprite-Sheets de Skippy con diferentes armas:**
+
+**Brazo de robot:**
+
+![Melee 1](img/skippy_1_x16.png)
+
+**Llave de acero:**
+
+![Melee 2](img/skippy_2_x16.png)
+
+**Pistola lenta:**
+
+![Gun 1](img/skippy_3_x16.png)
+
+**Pistola rápida:**
+
+![Gun 2](img/skippy_4_x16.png)
 
 ### **Enemigos**
 
@@ -620,13 +640,23 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 
 ![Robot Normal](img/robot_normal.gif)
 
+![Robot Normal Sprite-Sheet](img/robot_normal_x16.png)
+
 **Robot Pesado:**
 
 ![Robot Pesado](img/robot_heavy.gif)
 
+![Robot Pesado Sprite-Sheet](img/robot_heavy_x16.png)
+
 **Robot Aéreo:**
 
-![Robot áereo](img/robot_fly.gif)
+![Robot Aéreo](img/robot_fly.gif)
+
+![Robot áereo Sprite-Sheet](img/robot_fly_x16.png)
+
+**Jefe Final:**
+
+![Jefe Final](img/boss_idle.gif)
 
 ### **Niveles**
 
