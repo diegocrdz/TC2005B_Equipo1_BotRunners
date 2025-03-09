@@ -14,12 +14,12 @@
 
 ##### **Aviso de derechos de autor / información del autor** :warning:
 
-Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2025 como parte de la materia TC2005B: Construcción de software y toma de decisiones en el Tecnológico de Monterrey, Campus Santa Fe.
+Este videojuego ha sido desarrollado a lo largo del semestre febrero-junio de 2025 como parte de la materia TC2005B: Construcción de software y toma de decisiones en el Tecnológico de Monterrey, Campus Santa Fe.
 
 **Profesores:** :mortar_board:
 - **Desarrollo de videojuegos:** Gilberto Echeverría Furió
 - **Desarrollo Web:** Octavio Navarro Hinojosa
-- **Base de datos, Análisis y modelación de sistemas de software:** Esteban Castillo Juarez
+- **Base de datos, análisis y modelación de sistemas de software:** Esteban Castillo Juarez
 
 **Autores del videojuego - Equipo BotRunners** :robot:
 - Diego Córdova Rodríguez, A01781166
@@ -35,6 +35,7 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
     1. [Resumen](#Resumen)
     2. [Jugabilidad](#jugabilidad)
     3. [Mentalidad](#mentalidad)
+    4. [Historia](#historia)
 3. [Técnico](#técnico)
     1. [Pantallas](#pantallas)
     2. [Controles](#controles)
@@ -65,6 +66,7 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
     1. [Gráficos](#gráficos-1)
     2. [Audio](#audio)
 10. [Cronograma](#cronograma)
+11. [Conclusiones](#conclusiones)
 
 ## _Diseño del juego_
 
@@ -74,7 +76,7 @@ Este videojuego ha sido desarrollado  a lo largo del semestre febrero-junio de 2
 
 [Sum up your game idea in 2 sentences. A kind of elevator pitch. Keep it simple!]: #
 
-Overclocked es roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
+Overclocked es un videojuego roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
 
 Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear mejoras aleatorias para potenciar tus estadísticas de fuerza, resistencia, velocidad o habilidades de movimiento. Tras completar cada uno de los 3 niveles, desbloqueas armas permanentes que te permitirán reducir el tiempo en el que terminas el juego, ¿Tienes la habilidad para ser el mejor en la competencia de robots?
 
@@ -102,13 +104,22 @@ El objetivo principal del juego es que el jugador complete cada uno de los 3 niv
 
 **Obstáculos y Retos**
 
-Cada nivel cuenta con tres variaciones de enemigos, mismos que cuentan con distintas estadísticas de salud y daño:
-- Robot Normal: Salud - 50 puntos, Daño - 20%
-- Robot Pesado: Salud - 75 puntos, Daño - 40%
-- Robot Aéreo: Salud - 25 puntos, Daño - 10%
+Cada nivel cuenta con tres variaciones de enemigos, los cuales tienen distintas estadísticas de salud y daño:
+- Robot Normal: Salud - 50 puntos, Daño - 20 puntos
+- Robot Pesado: Salud - 75 puntos, Daño - 40 puntos
+- Robot Aéreo: Salud - 25 puntos, Daño - 10 puntos
+- Jefe Final: Salud - 100 puntos, Daño - 50 puntos
+
+Cada enemigo reacciona de forma diferente al jugador:
+- Robot Normal: Se mueve rápidamente hacia el jugador y ataca cuerpo a cuerpo.
+- Robot Pesado: Se mueve lentamente hacia el jugador y ataca cuerpo a cuerpo.
+- Robot Aéreo: Se mantiene en el aire, desplazándose de forma horizontal. Ataca al jugador cuando este se encuentra en su misma altura.
+- Jefe Final: Combina las habilidades de los enemigos anteriores, teniendo 2 fases de combate:
+    - Fase 1 (estado normal): Se activa cuando la salud del jefe es mayor a 20%. Avanza hacia el jugador lentamente y ataca cuerpo a cuerpo.
+    - Fase 2 (estado furioso): Se activa cuando la salud del jefe es menor a 20%. Se desplaza rápidamente hacia el jugador, saltando desde su última posición hasta la del jugador. Ataca cuerpo a cuerpo.
 
 Adicionalmente, el juego cuenta con 3 tipos de obstáculos:
-- Cajas de mader/metal (bloquean el paso del jugador/enemigos)
+- Cajas de madera/metal (bloquean el paso del jugador/enemigos)
 - Picos de metal (dañan al jugador si este se acerca)
 - Tuberías de metal (bloquean el paso del jugador/enemigos)
 
@@ -130,6 +141,36 @@ Overclocked -al igual que una competencia de robótica- fomenta la competitivida
 Para provocar estas emociones de rapidez y exploración, el juego muestra en todo momento el mejor tiempo para completar cada nivel, así como el tiempo actual del jugador. De igual forma, la música es enérgica y rápida, lo que permite que los jugadores sientan que deben avanzar en todo momento.
 
 Se busca que el videojuego provoque un deseo por explorar, combatir y completar el juego en el menor tiempo posible, de forma apresurada.
+
+### **Historia**
+
+La historia de Overclocked es simple y directa: El jugador encarna a un pequeño robot llamado "Skippy" que ha sido creado para competir en una competencia de robótica. En esta competencia, robots como Skippy buscar los botones azules que activan la sala del jefe final de cada nivel.
+
+De esta forma, cada robot que Skippy encuentra es un participante más de la competencia. Para que cualquier robot pueda avanzar a la siguiente etapa, se debe derrotar al jefe final de cada nivel, diseñado por los organizadores de la competencia para poner a prueba las habilidades de los robots.
+
+**El pasado de Skippy**
+
+Skippy no conoce nada de su pasado, ya que fue creado para participar en la competencia de robótica. Sin embargo, ha sido construido con diversos atributos que lo hacen único y especial al resto de robots. Skippy cuenta con un brazo robótico que le permite atacar a sus enemigos, así como con la capacidad moverse rápidamente gracias a su llanta en la parte inferior.
+
+El diseño escalable de Skippy le permite mejorar sus habilidades a lo largo de la competencia, siendo capaz de obtener doble salto, esquivar (dash) y armas a distancia que le permiten ser más eficiente en combate.
+
+El origen de la competencia de robótica, así como sus organizadores y colaboradores es desconocido para Skippy, quien solo busca completar la competencia en el menor tiempo posible y demostrar que es el mejor en la competencia.
+
+**¿Cómo se cuenta la historia?**
+
+La historia de Overclocked se contará a través de un breve cómic al inicio del juego, donde se muestra la información básica de la competencia y el objetivo de Skippy.
+
+![Introducción del juego](img/intro_overclocked.png)
+
+En este cómic, Skippy es activado por primera vez y se le informa que ha sido creado para competir en la competencia de robótica. A partir de este momento, se le informa al jugador que debe avanzar por los diferentes niveles, derrotar a los enemigos y jefes finales, completando los tres niveles en el menor tiempo posible.
+
+De esta forma, el jugador es capaz de entender la historia y el objetivo del juego sin la necesidad de tener una narrativa extensa.
+
+**Elementos clave de la historia**
+
+- **Ambiente:** Los diferentes niveles dle juego (escuela, laboratorio, fábrica) no son más que escenarios de la competencia de robótica. Cada nivel representa una etapa diferente de la misma.
+- **Música:** La música del juego es enérgica, lo que permite que los jugadores sientan la necesidad de avanzar rápidamente por los niveles.
+- **Diseño de niveles:** Los diferentes enemigos y obstáculos que se encuentran en los niveles son parte de la competencia de robótica, diseñados para poner a prueba las habilidades de los robots participantes.
 
 ## _Técnico_
 
@@ -160,7 +201,7 @@ Los jugadores son capaces de moverse de izquierda, derecha, arriba (saltar) y ag
 
 **Ataques y curación**
 
-Los jugadores serán capaces de elegir entre dos armas principales: Cuerpo a cuerpo y a distancia. Para utilizar estas, el jugador necesitara presionar ya sea la flecha deecha o izquierda dependiendo la dirección hacia donde quiera realizar el ataque. Adicionalmente, el jugador puede seleccionar una poción de curación que solo puede ser utilizada una única vez por nivel y que se regenera al completarlo. Para cambiar de armas/curación, se utilizan los siguientes números del teclado:
+Los jugadores serán capaces de elegir entre dos armas principales: cuerpo a cuerpo y a distancia. Para utilizar estas, el jugador necesitará presionar ya sea la flecha derecha o izquierda dependiendo la dirección hacia donde quiera realizar el ataque. Adicionalmente, el jugador puede seleccionar una poción de curación que solo puede ser utilizada una única vez por nivel y que se regenera al completarlo. Para cambiar de armas/curación, se utilizan los siguientes números del teclado:
 - Número 1: Seleccionar arma cuerpo a cuerpo
 - Número 2: Seleccionar arma a distancia
 - Número 3: Usar poción de curación
@@ -168,6 +209,8 @@ Los jugadores serán capaces de elegir entre dos armas principales: Cuerpo a cue
 **Eventos dentro del juego**
 
 Los botones que deberán ser presionados para abrir la sala del jefe de cada piso se activarán si el jugador se acerca lo suficiente a estos, por lo que no tienen una tecla asignada de activación.
+
+Cuando el jugador se encuentra frente a una escalera, el jugador podrá subir o bajar presionando la tecla "W" o "S", respectivamente. Esto desplazará al jugador en la dirección de la escalera, sin necesidad de presionar otra tecla adicional. Estas acciones se realizan de forma automática al momento de colisionar con la escalera.
 
 ### **Mecánicas**
 
@@ -354,7 +397,7 @@ Además de los enemigos, las salas pueden contener diferentes tipos de obstaculo
 
 **Jefes finales**
 
-Al final de cada nivel, el jugador deberá enfrentarse al jefe final para poder pasar al siguiente nivel y desbloquear nuevas armas. Este jefe es un enemigo que cuenta con velocidad, salud y daño aumentados, contando con varias fases de combate y habilidades.
+Al final de cada nivel, el jugador deberá enfrentarse al jefe final para poder pasar al siguiente nivel y desbloquear nuevas armas. Este jefe es un enemigo que cuenta con velocidad, salud y daño aumentados, además de varias fases de combate y habilidades.
 
 El enfrentamiento con el jefe es el mayor reto del nivel, requiriendo que el jugador haya explorado las diferentes salas para haber mejorado sus habilidades. Además, si el jugador no ha activado el botón azul que se encuentra en una de las salas ramificadas, el acceso a la sala del jefe permanecerá bloqueado. Esto agrega un reto adiccional, debido a que no basta con llegar al final del nivel, sino también haber explorado la mayoría de las salas para encontrar el botón.
 
@@ -515,7 +558,6 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
     - Sala 2: Letrero que indica al jugador las teclas para atacar (Flechas izquierda y derecha).
 - Indicadores: Cuando un jugador se encuentra frente a una escalera, esta cuenta con un letrero que indica una flecha en la dirección en la que el jugador puede subir/bajar/ambos.
 
-
 ### **Gráficos necesarios**
 
 1. Personajes
@@ -552,6 +594,18 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 
 [Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!]: #
 
+Overclocked busca apegarse a un juego roguelite competitivo, por lo que la música y los efectos de sonido deben reflejar la tensión de la competencia del juego. Para lograr esto, se debe seguir un estilo musical enérgico y rápido, con efectos de sonido que resalten las acciones del jugador y enemigos.
+
+La música seguirá un estilo retro con sintetizadores y sonidos electrónicos/digitales, similar a videojuegos como Mega Man, Metroid o Drive Ahead. Todos estos videojuegos cuentan con música rápida y enérgica que mantiene al jugador en constante movimiento y tensión, además de tener una estética pixel art que se asemeja a la de Overclocked.
+
+Por un lado, la música del juego debe ser rápida y enérgica, con un tempo de 120-140 BPM y una tonalidad mayor para evocar la sensación de competencia y acción. Se busca que la música sea melódica y pegajosa, con un estilo que combine elementos de música electrónica.
+
+Por otro lado, la música de los menús debe ser más lenta y melódica, con un tempo de 80-100 BPM y una tonalidad menor para crear un contraste con la música de los niveles. Se busca que la música de los menús sea relajante y nostálgica, sin dejar de lado la estética mecánica del juego. Debido a esto, una de las principales inspiraciones para la música del juego es la banda sonora de Mario Kart DS.
+
+Estilísticamente, los efectos de sonido deben ser claros y concisos, con una duración corta y un volumen adecuado para que el jugador pueda identificarlos fácilmente. Se busca que los efectos de sonido resalten las acciones del jugador y enemigos, como saltar, atacar, recibir daño, abrir puertas, etc. Estos efectos deben evitar el realismo, optando por un enfoque más caricaturesco que se ajuste al estilo retro del juego.
+
+Además, los efectos de sonido deben ser distintos entre sí para que el jugador pueda identificarlos fácilmente y asociarlos con diferentes acciones, lo que es importante para la retroalimentación del jugador. Por ejemplo, el sonido de un salto debe ser diferente al de atacar o reibir daño, para que el jugador pueda distinguir entre las diferentes acciones que se realizan.
+
 ### **Sonidos necesarios**
 
 1. Effectos
@@ -568,17 +622,20 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
     3. Presionar botón
     4. Golpe exagerado (enemigo derrotado)
     5. Explosión pequeña (jugador derrotado)
+    6. Recoger orbe de experiencia
+    7. Subir escaleras
 
 ### **Música necesaria**
 
 1. Música lenta-melódica para el menú principal.
-2. Música tenue-lenta para menú de settings(Aplicable a todas las páginas de settings independientemente del nivel) 
-3. Música rápida-enérgica con efectos de sonido que evoquen a escritura o a un salón de clases(nivel 1).
-4. Música rápida-enérgica, con efectos de sonido de química, sonidos genéricos de ciencia (nivel dos).
-5. Música lúgubre, efectos de sonido mecánicos, eco, alta reverberación (nivel 3).
-6.Música épica, con sonidos cyberpunk-mecánicos (Final boss).
+2. Música tenue-lenta para menú de configuración (Aplicable a todas las páginas del menú, independientemente del nivel) 
+3. Música rápida-enérgica con efectos de sonido que evoquen a escritura o a un salón de clases (Nivel 1).
+4. Música rápida-enérgica, con efectos de sonido de química, sonidos genéricos de ciencia (Nivel 2).
+5. Música lúgubre, efectos de sonido mecánicos, eco, alta reverberación (Nivel 3).
+6.Música épica, con sonidos cyberpunk-mecánicos (Jefe final).
 7. Música feliz-nostálgica(créditos finales).
-*Las canciones del nivel 1 y 2, al llegar al boss del nivel acelerarán su velocidad.
+
+**Nota:** La música del nivel 1 y 2 aumentarán su velocidad al llegar al jefe final del nivel, aumentando la tensión del juego. La música del nivel 3 será más lenta y lúgubre, resaltando el ambiente de fábrica abandonada.
 
 ## _Ilustraciones_
 
@@ -658,13 +715,15 @@ También se cuenta con animaciones para todas las variantes de armas que el juga
 
 ![Jefe Final](img/boss_idle.gif)
 
+*Para conocer más sobre los enemigos, visita la sección [Jugabilidad](#jugabilidad).*
+
 ### **Niveles**
 
 **Introducción del juego:**
 
 ![Intro](img/intro_overclocked.png)
 
-Skippy es un robot dieseñado para combatir en una competencia de robótica. Después de ser activado, descubre que debe completar una serie de niveles en el menor tiempo posible para ser reconocido como ganador de la competencia. Sin tiempo que perder, Skippy se adentra en el primer nivel de la competencia.
+Skippy es un robot dieseñado para combatir en una competencia de robótica. Después de ser activado, descubre que debe completar una serie de niveles en el menor tiempo posible para ser reconocido como ganador de la competencia. Sin tiempo que perder, Skippy se adentra en el primer nivel de la competencia. *Para conocer más sobre la historia de Skippy, visita la sección [Historia](#historia).*
 
 **Estructura de niveles:**
 
@@ -698,6 +757,8 @@ Los niveles cuentan con una estructura lineal con 1 o 2 bifurcaciones en salas i
 
 **Orbe de experiencia:** Aumenta el nivel de experiencia del jugador al ser recogido. Se obtiene al derrotar a los enemigos.
 
+*Para conocer más sobre los items, visita la sección [Controles](#controles).*
+
 ### **Elementos GUI**
 
 **Recorrido del jugador:**
@@ -718,6 +779,8 @@ El jugador puede subir de nivel de experiencia tras derrotar cada enemigo.
 El jugador puede seleccionar una habilidad aleatoria tras subir de nivel.
 
 ![GUI 4](img/gui_4.png)
+
+*Para conocer más sobre los elementos GUI, visita la sección [Jugabilidad](#jugabilidad).*
 
 ### **Pantallas**
 
@@ -745,6 +808,8 @@ El menú de estadísticas contiene 2 secciones: Estadísticas del jugador y mejo
 
 ![Stats Menu](img/stats_menu_2.jpg)
 ![Stats Menu](img/stats_menu_1.jpg)
+
+*Para conocer más sobre las pantallas del juego, visita la sección [Pantallas](#pantallas).*
 
 ## _Lista de assets_
 
@@ -862,3 +927,28 @@ Sprint 7:
 
 11. Corrección de errores
 12. Entrega final
+
+Para el control de tareas y seguimiento del desarrollo del videojuego, se utilizará la herramienta GitHub Projects, creando un tablero Kanban con las siguientes columnas:
+- Sprint backlog: Tareas que se deben completar en el sprint actual.
+- Pendiente: Tareas que se deben comppletar actualmente.
+- En proceso: Tareas que se están completando actualmente.
+- En revisión: Tareas que se han completado y están en revisión por parte del equipo y profesores.
+- Finalizado: Tareas que se han completado con éxito.
+
+**Aclaraciones**
+
+- Este cronograma es una primera aproximación al desarrollo del videojuego, por lo que puede sufrir modificaciones a lo largo del proceso.
+    - Para tener una mejor aproximación al tiempo de desarrollo, se realizarán historias de usuario para cada aspecto del juego (Videojuego, Base de datos, Página web).
+    - Se realizarán reuniones con los profesores y el equipo de desarrollo para revisar el avance del proyecto y realizar ajustes en caso de ser necesario.
+    - Se realizarán diagramas de casos de uso y tablas descriptivas para tener una visión más clara de las tareas a realizar.
+    - Se realizará un diagrama Entidad-Relación UML para la base de datos del juego, con el fin de tener una estructura clara de las tablas y sus relaciones.
+- El desarrollo del videojuego se realizará en JavaScript, mientras que la base de datos se creará en MySQL y se conectará a través de una API.
+- El diseño de la página web se realizará en HTML, CSS y JavaScript.
+
+## _Conclusiones_
+
+---
+
+Overclocked es un videojuego roguelite 2D con elementos retro, de acción y exploración en el que el jugador encarna un robot llamado Skippy en una competencia de robótica. El jugador debe completar 3 niveles generados de forma aleatoria para ganar la competencia, desbloqueando nuevas armas y habilidades en el camino.
+
+El videojuego cuenta con un sistema de niveles, enemigos, jefes finales, armas y habilidades que buscan ofrecer una experiencia de juego desafiante. Además, el videojuego amlacena en la base de datos las estadísticas de cada jugador y los mejores 5 tiempos registrados en completar el juego, permitiendo al jugador competir con otros jugadores y mejorar su tiempo récord.
