@@ -14,3 +14,8 @@
 ## Descripción
 
 Repositorio grupal para la materia TC2005B - Construcción de software y toma de decisiones
+
+## Contenido
+
+- [GDD Overclocked](Videojuego/GDD_Template.md)
+- [Presentación-Idea Overclocked](Videojuego/Presentacion_Overclocked.pdf)
