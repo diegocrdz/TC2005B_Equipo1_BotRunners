@@ -144,7 +144,7 @@ Se busca que el videojuego provoque un deseo por explorar, combatir y completar 
 
 ### **Historia**
 
-La historia de Overclocked es simple y directa: El jugador encarna a un pequeño robot llamado "Skippy" que ha sido creado para competir en una competencia de robótica. En esta competencia, robots como Skippy buscar los botones azules que activan la sala del jefe final de cada nivel.
+La historia de Overclocked es simple y directa: El jugador encarna a un pequeño robot llamado "Skippy" que ha sido creado para competir en una competencia de robótica. En esta competencia, robots como Skippy buscan los botones azules que activan la sala del jefe final de cada nivel.
 
 De esta forma, cada robot que Skippy encuentra es un participante más de la competencia. Para que cualquier robot pueda avanzar a la siguiente etapa, se debe derrotar al jefe final de cada nivel, diseñado por los organizadores de la competencia para poner a prueba las habilidades de los robots.
 
@@ -168,7 +168,7 @@ De esta forma, el jugador es capaz de entender la historia y el objetivo del jue
 
 **Elementos clave de la historia**
 
-- **Ambiente:** Los diferentes niveles dle juego (escuela, laboratorio, fábrica) no son más que escenarios de la competencia de robótica. Cada nivel representa una etapa diferente de la misma.
+- **Ambiente:** Los diferentes niveles del juego (escuela, laboratorio, fábrica) no son más que escenarios de la competencia de robótica. Cada nivel representa una etapa diferente de la misma.
 - **Música:** La música del juego es enérgica, lo que permite que los jugadores sientan la necesidad de avanzar rápidamente por los niveles.
 - **Diseño de niveles:** Los diferentes enemigos y obstáculos que se encuentran en los niveles son parte de la competencia de robótica, diseñados para poner a prueba las habilidades de los robots participantes.
 
@@ -178,18 +178,29 @@ De esta forma, el jugador es capaz de entender la historia y el objetivo del jue
 
 ### **Pantallas**
 
-1. Pantalla principal
-    1. Opciones
-    2. Estadísticas
-    3. Puntuación
-    4. Acceder (Iniciar sesión/Registrarse)
-2. Historia del juego (imagen)
-3. Juego - Nivel 1
-4. Juego - Nivel 2
-7. Juego - Nivel 3
-8. Pantalla de puntuación
-9. Fin del juego
-10. (Regresa a la pantalla principal)
+1. Pantalla principal: Muestran las opciones que el jugador puede seleccionar al iniciar el juego.
+    1. Jugar: Inicia el juego desde el primer nivel.
+    2. Opciones: Permite al jugador modificar el volumen de la música y efectos de sonido.
+    3. Estadísticas: Muestra las estadísticas del jugador
+        - Tiempo de partida
+        - Número de muertes
+        - Enemigos derrotados
+        - Número total de daño infligido y recibido
+        - Número de partidas completadas.
+    4. Puntuaciones: Muestra los jugadores con los mejores tiempos en completar el juego.
+        - Nombre del jugador
+        - Tiempo en completar el juego
+    5. Acceder: Permite al jugador iniciar sesión o registrarse.
+2. Historia del juego (imagen): Muestra la historia del juego a través de un cómic.
+3. Juego - Nivel 1: Muestra el primer nivel del juego, con el jugador en la primera sala.
+4. Juego - Nivel 2: Muestra el segundo nivel del juego, con el jugador en la primera sala.
+7. Juego - Nivel 3: Muestra el tercer nivel del juego, con el jugador en la primera sala.
+8. Pantalla de puntuación: Muestra el tiempo en el que el jugador completó el juego y si logró superar su mejor tiempo. Se muestran estadísticas del jugador, así como las habilidades desbloqueadas.
+9. Pantalla de derrota: Muestra un mensaje de derrota cuando el jugador pierde todos sus puntos de salud. Le permite reiniciar el nivel o regresar a la pantalla principal.
+10. Pantalla de victoria: Muestra un mensaje de victoria cuando el jugador completa el juego. Le permite regresar a la pantalla principal.
+11. Pausa: Muestra las opciones de pausa. Permite que el jugador continúe, ajuste el volumen o regrese a la pantalla principal.
+
+*Para ver los bocetos de las pantallas, revisar la sección [Elementos GUI](#elementos-gui).*
 
 ### **Controles**
 
@@ -298,7 +309,7 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 
 ### **Temas**
 
-- En el primer nivel, ¡la competencia de robótica ha comenzado!, y la escuela se ha transformado en un campo de batalla donde los mejores competirán. Se quiere evocar el sentimiento de que el jugador esta situado en una competencia escolar de robótica y para esto se utilizaran recursos como:
+- En el primer nivel, ¡la competencia de robótica ha comenzado!, y la escuela se ha transformado en un campo de batalla donde los mejores competirán. Se quiere evocar el sentimiento de que el jugador esta situado en una competencia escolar de robótica y para esto se utilizarán recursos como:
 1. Escuela
     1. Ambiente
         1. Competencia, tenso, activo
@@ -389,11 +400,11 @@ A lo largo de los niveles, los jugadores se enfrentarán a diversos retos que po
 
 **Enemigos**
 
-El jugador puede encontrarse con diferentes tipos de enemigos (Robot Normal, Pesado, Volador), cada uno con las diferentes características descritas anteriormente. Algunos enemigos pueden moverse lento, pero hacer más daño (Robot Pesado), mientras que otros pueden ser veloces pero débiles (Robot Normal, Aéreo). Debido a que la cantidad y ubicación de los enemigos varia en cada partida, esto asegura que el combate nunca pueda ser completamente predecible.
+El jugador puede encontrarse con diferentes tipos de enemigos (Robot Normal, Pesado, Volador), cada uno con las diferentes características descritas anteriormente. Algunos enemigos pueden moverse lento, pero hacer más daño (Robot Pesado), mientras que otros pueden ser veloces pero débiles (Robot Normal, Aéreo). Debido a que la cantidad y ubicación de los enemigos varía en cada partida, esto asegura que el combate nunca pueda ser completamente predecible.
 
 **Obstáculos**
 
-Además de los enemigos, las salas pueden contener diferentes tipos de obstaculos que afectan la movilidad del jugador y lo retan a usar diferentes habilidades. Estos pueden ser cajas, picos de metal o tuberías, que obligaran al jugador a saltar o agacharse mientras esta atacando a los enemigos. Esto también provoca que el campo de visión de los enemigos y el espacio en donde se encuentran sea diferente en cada sala.
+Además de los enemigos, las salas pueden contener diferentes tipos de obstaculos que afectan la movilidad del jugador y lo retan a usar diferentes habilidades. Estos pueden ser cajas, picos de metal o tuberías, que obligarán al jugador a saltar o agacharse mientras está atacando a los enemigos. Esto también provoca que el campo de visión de los enemigos y el espacio en donde se encuentran sea diferente en cada sala.
 
 **Jefes finales**
 
@@ -594,7 +605,7 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 
 [Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!]: #
 
-Overclocked busca apegarse a un juego roguelite competitivo, por lo que la música y los efectos de sonido deben reflejar la tensión de la competencia del juego. Para lograr esto, se debe seguir un estilo musical enérgico y rápido, con efectos de sonido que resalten las acciones del jugador y enemigos.
+Overclocked busca apegarse a un juego roguelite competitivo, por lo que la música y los efectos de sonido deben reflejar la tensión de la competencia dentro del juego. Para lograr esto, se debe seguir un estilo musical enérgico y rápido, con efectos de sonido que resalten las acciones del jugador y enemigos.
 
 La música seguirá un estilo retro con sintetizadores y sonidos electrónicos/digitales, similar a videojuegos como Mega Man, Metroid o Drive Ahead. Todos estos videojuegos cuentan con música rápida y enérgica que mantiene al jugador en constante movimiento y tensión, además de tener una estética pixel art que se asemeja a la de Overclocked.
 
@@ -897,7 +908,7 @@ Sprint 2:
     2. Crear documentación del diagrama para justificar las relaciones entre las tablas
     3. Crear las tablas de la base de datos:
         1. Tabla de jugadores
-        2. Tabla de puntuaciones
+        2. Tabla de estadísticas
         3. Tabla de niveles
         4. Tabla de enemigos
         5. Tabla de bloques
@@ -944,6 +955,7 @@ Para el control de tareas y seguimiento del desarrollo del videojuego, se utiliz
     - Se realizará un diagrama Entidad-Relación UML para la base de datos del juego, con el fin de tener una estructura clara de las tablas y sus relaciones.
 - El desarrollo del videojuego se realizará en JavaScript, mientras que la base de datos se creará en MySQL y se conectará a través de una API.
 - El diseño de la página web se realizará en HTML, CSS y JavaScript.
+- La tabla de las mejores 5 puntuaciones de tiempo se almacenará en la base de datos y se basa en el tiempo de partida de cada jugador.
 
 ## _Conclusiones_
 
@@ -951,4 +963,4 @@ Para el control de tareas y seguimiento del desarrollo del videojuego, se utiliz
 
 Overclocked es un videojuego roguelite 2D con elementos retro, de acción y exploración en el que el jugador encarna un robot llamado Skippy en una competencia de robótica. El jugador debe completar 3 niveles generados de forma aleatoria para ganar la competencia, desbloqueando nuevas armas y habilidades en el camino.
 
-El videojuego cuenta con un sistema de niveles, enemigos, jefes finales, armas y habilidades que buscan ofrecer una experiencia de juego desafiante. Además, el videojuego amlacena en la base de datos las estadísticas de cada jugador y los mejores 5 tiempos registrados en completar el juego, permitiendo al jugador competir con otros jugadores y mejorar su tiempo récord.
+El videojuego cuenta con un sistema de niveles, enemigos, jefes finales, armas y habilidades que buscan ofrecer una experiencia de juego desafiante. Además, el videojuego almacena en la base de datos las estadísticas de cada jugador y los mejores 5 tiempos registrados en completar el juego, permitiendo al jugador competir con otros jugadores y mejorar su tiempo récord.
