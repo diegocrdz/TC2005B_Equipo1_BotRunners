@@ -229,7 +229,7 @@ Cuando el jugador se encuentra frente a una escalera, el jugador podrá subir o 
 
 **Colisiones con objetos sólidos:**
 
-Para las físicas de movimiento, deberemos establecer diferentes atributos para nuestros elementos. Los obstáculos (cajas y tuberías), paredes, techo y suelo de los niveles deben contener una cierta etiqueta que nos permitan identificarlos como objetos sólidos. De esta forma, cuando un personaje, sea el jugador o un enemigo, colisione con un objeto sólido, este no podrá atravesarlo, sino que se detendrá al tocarlo, y tendrá que decidir como esquivar el objeto, ya sea saltando o agachandose.
+Para las físicas de movimiento, deberemos establecer diferentes atributos para nuestros elementos. Los obstáculos (cajas, tuberías y picos de metal), paredes, techo y suelo de los niveles deben contener una cierta etiqueta que nos permitan identificarlos como objetos sólidos. De esta forma, cuando un personaje, sea el jugador o un enemigo, colisione con un objeto sólido, este no podrá atravesarlo, sino que se detendrá al tocarlo, y tendrá que decidir como esquivar el objeto, ya sea saltando o agachandose.
 
 **Colisiones con enemigos:**
 
@@ -385,7 +385,7 @@ A continuación se muestra un ejemplo de diferentes generaciones de nivel en el 
 **Ejemplo 1:**
 ![Ejemplo 1](img/ej_estructura_nivel_1.png)
 
-En este ejemplo, el jugadr inicia en la sala verde (0) y avanza por las salas del nivel, explorando las diferentes ramificaciones, enfrentándose a enemigos, subiendo de nivel y desbloqueando habilidades. Eventualmente, el jugador encuentra la sala azul (B3) que contiene el botón azul que desbloquea la sala roja que contiene el jefe final (5).
+En este ejemplo, el jugador inicia en la sala verde (0) y avanza por las salas del nivel, explorando las diferentes ramificaciones, enfrentándose a enemigos, subiendo de nivel y desbloqueando habilidades. Eventualmente, el jugador encuentra la sala azul (B3) que contiene el botón azul que desbloquea la sala roja que contiene el jefe final (5).
 
 **Ejemplo 2:**
 ![Ejemplo 2](img/ej_estructura_nivel_2.png)
@@ -404,7 +404,7 @@ El jugador puede encontrarse con diferentes tipos de enemigos (Robot Normal, Pes
 
 **Obstáculos**
 
-Además de los enemigos, las salas pueden contener diferentes tipos de obstaculos que afectan la movilidad del jugador y lo retan a usar diferentes habilidades. Estos pueden ser cajas, picos de metal o tuberías, que obligarán al jugador a saltar o agacharse mientras está atacando a los enemigos. Esto también provoca que el campo de visión de los enemigos y el espacio en donde se encuentran sea diferente en cada sala.
+Además de los enemigos, las salas pueden contener diferentes tipos de obstaculos que afectan la movilidad del jugador y lo retan a usar diferentes habilidades. Estos pueden ser cajas o tuberías, que obligarán al jugador a saltar o agacharse mientras está atacando a los enemigos. Esto también provoca que el campo de visión de los enemigos y el espacio en donde se encuentran sea diferente en cada sala.
 
 **Jefes finales**
 
@@ -436,12 +436,12 @@ El juego se desarrolla en 3 niveles distintos, cada uno con un jefe final que el
 16. El jugador busca la sala del jefe final del nivel (si no la ha encontrado), entra y lo derrota.
 17. Tras derrotar al jefe, el jugador sube de nivel de experiencia automáticamente y el jugador es capaz de desbloquear una nueva habilidad aleatoria.
 18. Tras derrotar a cada jefe de cada uno de los 3 niveles, el jugador obtiene un arma permanente.
-    1. Espada.
+    1. Llave de metal
     2. Pistola láser que dispara lento.
     3. Pistola láser que dispara rápido.
 19. El jugador obtiene una poción de curación de un solo uso para el siguiente nivel.
 20. El jugador avanza al siguiente nivel y repite el proceso.
-21. Si el jugador termina el juego, se muestran las estadísticas del jugador:
+21. Si el jugador termina el juego, se muestra un cómic final donde se muestran las estadísticas del jugador:
     - Tiempo de partida
     - Número de muertes
     - Enemigos derrotados
@@ -525,22 +525,22 @@ Adicionalmente, los enemigos cuentan con los siguientes colores específicos:
     - Naranja claro: FC683B
     - Naranja medio: #DD442C
     - Naranja oscuro: #7E3125
-    - Gris claro: #DCELE7
+    - Gris claro: #DCE1E7
     - Gris medio: #959AB1
 - Robot Pesado:
     - Azul claro: #2CC5F6
     - Azul oscuro: #1490C3
     - Naranja oscuro: #7E3125
-    - Gris claro: #DCELE7
+    - Gris claro: #DCE1E7
     - Gris medio: #959AB1
 - Robot Aéreo:
     - Café claro: #F4AC66
     - Café medio: #CB815E
     - Café oscuro: #6F3E43
-    - Gris claro: #DCELE7
+    - Gris claro: #DCE1E7
     - Gris medio: #959AB1
-- Contorno de los enemigos
-- Gris oscuro: #434A5F
+
+- Contorno de los enemigos:  #434A5F
 
 De esta forma, Overclocked utiliza tonos claros entre blanco, gris, azul, rojo, naranja y café. Se busca que estos tonos creen una atmósfera minimalista, buscando utilizar tan solo 3 tonos entre colores. Ejemplo de esto es el gris, que solo tiene una variante clara, media y oscura. Igualmente, entre niveles pueden cambiar algunos colores para que los enemigos combinen con la estética del nivel.
 
@@ -591,7 +591,7 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
     3. Letreros
 4. Otros
     1. Botón azul (desbloquea la sala del jefe final de cada nivel)
-    2. Puerta de laboratorio (se abre al presionar el botón azul)
+    2. Puerta de la sala final (se abre al presionar el botón azul)
 
 ## _Sonido/Música_
 
@@ -646,7 +646,7 @@ Además, los efectos de sonido deben ser distintos entre sí para que el jugador
 6.Música épica, con sonidos cyberpunk-mecánicos (Jefe final).
 7. Música feliz-nostálgica(créditos finales).
 
-**Nota:** La música del nivel 1 y 2 aumentarán su velocidad al llegar al jefe final del nivel, aumentando la tensión del juego. La música del nivel 3 será más lenta y lúgubre, resaltando el ambiente de fábrica abandonada.
+**Nota:** La música del los niveles cambiara al llegar al jefe final del nivel, aumentando la tensión del juego. La música del nivel 3 será más lenta y lúgubre, resaltando el ambiente de fábrica abandonada.
 
 ## _Ilustraciones_
 
@@ -834,6 +834,8 @@ El menú de estadísticas contiene 2 secciones: Estadísticas del jugador y mejo
 
 - [Pixel platformer Industrial Expansion](https://www.kenney.nl/assets/pixel-platformer-industrial-expansion)
 
+- [School Daze: Mood Mosaic](https://fatigus.itch.io/school-daze)
+
 - [Tech dungeon: Roguelite](https://trevor-pupkin.itch.io/tech-dungeon-roguelite)
 
 - [Laboratory pixel art tileset](https://marceles.itch.io/land-of-pixels-laboratory-tileset-pixel-art)
@@ -866,9 +868,36 @@ El menú de estadísticas contiene 2 secciones: Estadísticas del jugador y mejo
 
 **Música:**
 
-- [Music Assets](https://tallbeard.itch.io/music-loop-bundle)
+Paquete de canciones: [Music Assets](https://tallbeard.itch.io/music-loop-bundle)
 
-- [Pink Bloom Synthwave Music Pack](https://davidkbd.itch.io/pink-bloom-synthwave-music-pack)
+- Menú principal: Pista no. 2
+
+- Pantalla de configuración: Pista no. 9
+
+- Pantalla de pausa: Pista no. 11
+
+- Pantalla de ganar: Pista no. 37
+
+- Pantalla de muerte: Pista no. 28
+
+
+
+- Nivel 1: Pista no. 14
+
+    -  Jefe final: Pista no. 5
+
+- Nivel 2: Pista no. 22
+
+    -  Jefe final: Pista no. 20
+
+- Nivel 3: Pista no. 24/31
+    -  Jefe final: [0 TOP](https://pixabay.com/es/music/electronico-0-top-battle-game-bgm-264625/) / [The Final Boss Battle](https://pixabay.com/music/upbeat-the-final-boss-battle-158700/)
+
+
+
+
+
+
 
 ## _Cronograma_
 
