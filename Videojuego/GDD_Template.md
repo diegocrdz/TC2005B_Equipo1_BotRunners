@@ -74,8 +74,6 @@ Este videojuego ha sido desarrollado a lo largo del semestre febrero-junio de 20
 
 ### **Resumen**
 
-[Sum up your game idea in 2 sentences. A kind of elevator pitch. Keep it simple!]: #
-
 Overclocked es un videojuego roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
 
 Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear mejoras aleatorias para potenciar tus estadísticas de fuerza, resistencia, velocidad o habilidades de movimiento. Tras completar cada uno de los 3 niveles, desbloqueas armas permanentes que te permitirán reducir el tiempo en el que terminas el juego, ¿Tienes la habilidad para ser el mejor en la competencia de robots?
@@ -88,7 +86,7 @@ Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear 
 
 Overclocked es un juego que incentiva a los jugadores a completar el juego en el menor tiempo posible. El jugador encarna un pequeño robot llamado “Skippy”, quien cuenta con un brazo robótico como arma inicial para enfrentarse a los demás robots de la competencia.
 
-El jugador inicia el videojuego en una sala rectangular de fondo blanco, con un letrero en la pared que indica los controles de movimiento con las teclas “W,A,S,D”. De igual forma, hay un letrero con una flecha hacia la izquierda, guiando al jugador a avanzar en esa dirección.
+El jugador inicia el videojuego en una sala rectangular de fondo blanco, con un letrero en la pared que indica los controles de movimiento con las teclas “W,A,S,D”. De igual forma, hay un letrero con una flecha hacia la derecha, guiando al jugador a avanzar en esa dirección.
 
 Al avanzar, el jugador se encuentra con un robot enemigo de categoría Normal (salud y daño equilibrado). En la pared de esta sala, se encuentra un letrero que indica los controles de ataque cuerpo a cuerpo con la tecla “1” y “flecha derecha/izquierda” para atacar.
 
@@ -123,7 +121,7 @@ Adicionalmente, el juego cuenta con 3 tipos de obstáculos:
 - Picos de metal (dañan al jugador si este se acerca)
 - Tuberías de metal (bloquean el paso del jugador/enemigos)
 
-Además, el juego fomenta ser completado en el menor tiempo posible, por lo que el contador de tiempo representa un reto al cual ser vencido. La generación aleatoria de mapas y opciones de habilidades temporales (escogiendo una habilidad de tres después de subir de nivel) fomenta la estrategia y planeación de parte del jugador.
+Además, el juego fomenta ser completado en el menor tiempo posible, por lo que el contador de tiempo representa un reto al cual ser vencido. La generación aleatoria de niveles y opciones de habilidades temporales (escogiendo una habilidad de tres después de subir de nivel) fomenta la estrategia y planeación de parte del jugador.
 
 **Tácticas para completar el juego**
 
@@ -133,8 +131,6 @@ Además, el juego fomenta ser completado en el menor tiempo posible, por lo que 
 - **Decisiones estratégicas:** Probar diferentes combinaciones de habilidades al momento de subir niveles. Esto permite que cada jugador tenga una experiencia diferente de juego y optimicen su forma ideal de jugar.
 
 ### **Mentalidad**
-
-[What kind of mindset do you want to provoke in the player? Do you want them to feel powerful, or weak? Adventurous, or nervous? Hurried, or calm? How do you intend to provoke those emotions?]: #
 
 Overclocked -al igual que una competencia de robótica- fomenta la competitividad, donde solo los mejores son reconocidos por su esfuerzo. De esta forma, el juego busca que los jugadores tengan un deseo por explorar y navegar rápidamente los niveles, en un tiempo no mayor a 5 minutos por cada uno. El juego busca provocar un ambiente apresurado y enérgico en todo momento.
 
@@ -154,7 +150,7 @@ Skippy no conoce nada de su pasado, ya que fue creado para participar en la comp
 
 El diseño escalable de Skippy le permite mejorar sus habilidades a lo largo de la competencia, siendo capaz de obtener doble salto, esquivar (dash) y armas a distancia que le permiten ser más eficiente en combate.
 
-El origen de la competencia de robótica, así como sus organizadores y colaboradores es desconocido para Skippy, quien solo busca completar la competencia en el menor tiempo posible y demostrar que es el mejor en la competencia.
+El origen de la competencia de robótica, así como sus organizadores y colaboradores es desconocido para Skippy, quien solo busca completar la competencia en el menor tiempo posible y demostrar que es el mejor en esta.
 
 **¿Cómo se cuenta la historia?**
 
@@ -168,9 +164,9 @@ De esta forma, el jugador es capaz de entender la historia y el objetivo del jue
 
 **Elementos clave de la historia**
 
-- **Ambiente:** Los diferentes niveles del juego (escuela, laboratorio, fábrica) no son más que escenarios de la competencia de robótica. Cada nivel representa una etapa diferente de la misma.
-- **Música:** La música del juego es enérgica, lo que permite que los jugadores sientan la necesidad de avanzar rápidamente por los niveles.
-- **Diseño de niveles:** Los diferentes enemigos y obstáculos que se encuentran en los niveles son parte de la competencia de robótica, diseñados para poner a prueba las habilidades de los robots participantes.
+- **Ambiente:** Los diferentes niveles del juego (escuela, laboratorio, fábrica) no son más que escenarios de la competencia de robótica. Cada nivel representa una etapa diferente de la misma. Para ver más detalles sobre los niveles, revisar la sección [Diseño de niveles](#diseño-de-niveles).
+- **Música:** La música del juego es enérgica, lo que permite que los jugadores sientan la necesidad de avanzar rápidamente por los niveles. Para ver más detalles sobre la música, revisar la sección [Sonido/Música](#sonidomúsica).
+- **Diseño de niveles:** Los diferentes enemigos y obstáculos que se encuentran en los niveles son parte de la competencia de robótica, diseñados para poner a prueba las habilidades de los robots participantes. Para ver más detalles sobre los enemigos y obstáculos, revisar la sección [Jugabilidad](#jugabilidad).
 
 ## _Técnico_
 
@@ -178,10 +174,10 @@ De esta forma, el jugador es capaz de entender la historia y el objetivo del jue
 
 ### **Pantallas**
 
-1. Pantalla principal: Muestran las opciones que el jugador puede seleccionar al iniciar el juego.
+1. Pantalla principal: Muestra las opciones que el jugador puede seleccionar al iniciar el juego.
     1. Jugar: Inicia el juego desde el primer nivel.
     2. Opciones: Permite al jugador modificar el volumen de la música y efectos de sonido.
-    3. Estadísticas: Muestra las estadísticas del jugador
+    3. Estadísticas: Muestra las estadísticas del jugador.
         - Tiempo de partida
         - Número de muertes
         - Enemigos derrotados
@@ -189,7 +185,7 @@ De esta forma, el jugador es capaz de entender la historia y el objetivo del jue
         - Número de partidas completadas.
     4. Puntuaciones: Muestra los jugadores con los mejores tiempos en completar el juego.
         - Nombre del jugador
-        - Tiempo en completar el juego
+        - Tiempo en completar el juego.
     5. Acceder: Permite al jugador iniciar sesión o registrarse.
 2. Historia del juego (imagen): Muestra la historia del juego a través de un cómic.
 3. Juego - Nivel 1: Muestra el primer nivel del juego, con el jugador en la primera sala.
@@ -203,8 +199,6 @@ De esta forma, el jugador es capaz de entender la historia y el objetivo del jue
 *Para ver los bocetos de las pantallas, revisar la sección [Elementos GUI](#elementos-gui).*
 
 ### **Controles**
-
-[How will the player interact with the game? Will they be able to choose the controls? What kind of in-game events are they going to be able to trigger, and how? (e.g. pressing buttons, opening doors, etc.)]:#
 
 **Movimiento básico**
 
@@ -225,8 +219,6 @@ Cuando el jugador se encuentra frente a una escalera, el jugador podrá subir o 
 
 ### **Mecánicas**
 
-[Are there any interesting mechanics? If so, how are you going to accomplish them? Physics, algorithms, etc.]:#
-
 **Colisiones con objetos sólidos:**
 
 Para las físicas de movimiento, deberemos establecer diferentes atributos para nuestros elementos. Los obstáculos (cajas, tuberías y picos de metal), paredes, techo y suelo de los niveles deben contener una cierta etiqueta que nos permitan identificarlos como objetos sólidos. De esta forma, cuando un personaje, sea el jugador o un enemigo, colisione con un objeto sólido, este no podrá atravesarlo, sino que se detendrá al tocarlo, y tendrá que decidir como esquivar el objeto, ya sea saltando o agachandose.
@@ -237,7 +229,7 @@ Los jugadores y enemigos deben tener un contenedor definido para delimitar hasta
 
 **Mecánica de tiempo:**
 
-Esta mecánica consiste en un contador de tiempo que incrementa con el tiempo de juego en cada partida de los jugadores. Para implementar esta mecánica y hacer nuestro juego más interesante, pondremos un cronómetro en la esquina superior izquierda de la pantalla. Al hacer esto, crearemos una atmósfera de presión, lo cual hará que el jugador busque siempre terminar el juego en un menor tiempo posible y romper su récord actual.
+Esta mecánica consiste en un contador de tiempo que incrementa con el tiempo de juego en cada partida de los jugadores. Para implementar esta mecánica y hacer nuestro juego más interesante, pondremos un cronómetro en la esquina superior derecha de la pantalla. Al hacer esto, crearemos una atmósfera de presión, lo cual hará que el jugador busque siempre terminar el juego en un menor tiempo posible y romper su récord actual.
 
 **Subir/bajar escaleras:**
 
@@ -260,7 +252,7 @@ En un inicio, el jugador solo posee el brazo de su robot como arma cuerpo a cuer
 Para lograr agregar cada una de estas armas al juego, consideramos los siguientes aspectos:
 - Para el arma inicial (brazo del robot), el robot tiene animaciones básicas (moverse, saltar, agacharse, atacar).
 - Para la llave de acero, el robot cuenta con animaciones adicionales para mostrar el arma (moverse, saltar, agacharse, atacar).
-- Para la pistola láser lenta y rápida, las animaciones del arma principal (llave de acero) se mantienen, lanzando proyectiles (rectángulos pequeños de color rojo) al atacar con la pistola láser.
+- Para la pistola láser lenta y rápida, las animaciones del arma principal (llave de acero) se mantienen, lanzando proyectiles (rectángulos pequeños de color azul) al atacar con la pistola láser.
 
 Cada una de estas armas se desbloquea de forma permanente para todas las partidas del jugador.
 
@@ -275,10 +267,10 @@ En el nivel de experiencia 0, el jugador debe conseguir 100 puntos de experienci
 - Así sucesivamente hasta llegar al nivel 10, el cual necesitará 245 puntos.
 
 Cada enemigo otorga un porcentaje diferente de experiencia al jugador:
-- Robot Normal: +10% de experiencia
-- Robot Pesado: + 20% de experiencia
-- Robot Aéreo: +15% de experiencia
-- Jefe Final: +100% de experiencia (1 nivel completo)
+- Robot Normal: +10 puntos experiencia
+- Robot Pesado: + 20 puntos de experiencia
+- Robot Aéreo: +15 puntos de experiencia
+- Jefe Final: +100 puntos de experiencia (1 nivel completo)
 
 Al subir de nivel, el jugador podrá elegir una de tres opciones aleatorias para mejorar su personaje. La lista completa de habilidades a desbloquear por el jugador es la siguiente:
 - +10% de ataque
@@ -309,7 +301,10 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
 
 ### **Temas**
 
-- En el primer nivel, ¡la competencia de robótica ha comenzado!, y la escuela se ha transformado en un campo de batalla donde los mejores competirán. Se quiere evocar el sentimiento de que el jugador esta situado en una competencia escolar de robótica y para esto se utilizarán recursos como:
+**Nivel 1: Escuela**
+
+En el primer nivel, ¡la competencia de robótica ha comenzado!, y la escuela se ha transformado en un campo de batalla donde los mejores robots competirán. Se quiere evocar el sentimiento de que el jugador esta situado en una competencia escolar de robótica y para esto se utilizarán recursos como:
+
 1. Escuela
     1. Ambiente
         1. Competencia, tenso, activo
@@ -318,7 +313,6 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
             1. Letreros para guiar al jugador
             2. Pizarras 
             3. Cajas de madera
-            4. 
         2. _Interactivos_
             1. Botón azúl
             2. Puertas
@@ -328,7 +322,10 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
             6. Robot Aéreo (enemigo)
             7. Jefe Final (enemigo)
 
-- En el segundo nivel, pasamos al lugar en donde nacen las máquinas, un laboratorio de vanguardia lleno de tecnología secreta de última generación. Se quiere evocar el sentimiento de que el jugador, al pasar del primer nivel, esta situado en el laboratorio donde se crean todos los robots, y para esto se utilizaran recursos como:
+**Nivel 2: Laboratorio**
+
+En el segundo nivel, pasamos al lugar en donde nacen las máquinas, un laboratorio de vanguardia lleno de tecnología secreta de última generación. Se quiere evocar el sentimiento de que el jugador, al pasar del primer nivel, esta situado en el laboratorio donde se crean todos los robots, y para esto se utilizaran recursos como:
+
 2. Laboratorio
     1. Ambiente
         1. Competencia, tenso, activo
@@ -347,7 +344,10 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
             6. Robot Aéreo (enemigo)
             7. Jefe Final (enemigo)
 
-- En el tercer nivel, la competencia llega a su fase final en una fábrica abandonada, un lugar que alguna vez fue el corazón de la producción de robots, pero que ahora es solo un campo de batalla abandonado. Se quiere evocar el sentimiento de que el jugador esta situado en fábrica abandonada para su batalla final, y para esto se utilizaran recursos como:
+**Nivel 3: Fábrica abandonada**
+
+En el tercer nivel, la competencia llega a su fase final en una fábrica abandonada, un lugar que alguna vez fue el corazón de la producción de robots, pero que ahora es solo un campo de batalla abandonado. Se quiere evocar el sentimiento de que el jugador esta preparándose para su batalla final. Para esto se utilizaran recursos como:
+
 3. Fábrica
     1. Ambiente
         1. Competencia, tenso, activo
@@ -366,7 +366,7 @@ El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a
             6. Robot Aéreo (enemigo)
             7. Jefe Final (enemigo)
 
-- Aunque muchos de los elementos son parecidos, se busca cambiar la estética de los niveles a partir de los colores, cambio de texturas, iluminación, y diferentes elementos del entorno en el que se encuentra situado el nivel. 
+Aunque muchos de los elementos son similares dentro de los niveles, como los letreros, escaleras, botones o puertas, se busca cambiar la estética de los niveles a partir de los cambios de texturas, elementos situados en el fondo de las salas y color del ambiente. De esta forma, se busca que el jugador sienta que está avanzando en la competencia y que cada nivel es más desafiante que el anterior.
 
 ### **Estructura de niveles**
 
@@ -400,15 +400,15 @@ A lo largo de los niveles, los jugadores se enfrentarán a diversos retos que po
 
 **Enemigos**
 
-El jugador puede encontrarse con diferentes tipos de enemigos (Robot Normal, Pesado, Volador), cada uno con las diferentes características descritas anteriormente. Algunos enemigos pueden moverse lento, pero hacer más daño (Robot Pesado), mientras que otros pueden ser veloces pero débiles (Robot Normal, Aéreo). Debido a que la cantidad y ubicación de los enemigos varía en cada partida, esto asegura que el combate nunca pueda ser completamente predecible.
+El jugador puede encontrarse con diferentes tipos de enemigos (Robot Normal, Pesado, Volador), cada uno con las diferentes características descritas anteriormente. Algunos enemigos pueden moverse lento, pero hacer más daño (Robot Pesado), mientras que otros pueden ser veloces pero débiles (Robot Normal, Aéreo). Debido a que la cantidad y ubicación de los enemigos varía en cada partida, esto asegura que el combate nunca pueda ser completamente predecible. Para conocer los detalles de salud, daño, comportamiento y experiencia que otorgan los enemigos, revisar la sección [Jugabilidad](#jugabilidad).
 
 **Obstáculos**
 
-Además de los enemigos, las salas pueden contener diferentes tipos de obstaculos que afectan la movilidad del jugador y lo retan a usar diferentes habilidades. Estos pueden ser cajas o tuberías, que obligarán al jugador a saltar o agacharse mientras está atacando a los enemigos. Esto también provoca que el campo de visión de los enemigos y el espacio en donde se encuentran sea diferente en cada sala.
+Además de los enemigos, las salas pueden contener diferentes tipos de obstaculos que afectan la movilidad del jugador y lo retan a usar diferentes habilidades. Estos pueden ser cajas, tuberías o picos de metal, que obligarán al jugador a saltar o agacharse mientras está atacando a los enemigos. Esto también provoca que el campo de visión de los enemigos y el espacio en donde se encuentran sea diferente en cada sala.
 
 **Jefes finales**
 
-Al final de cada nivel, el jugador deberá enfrentarse al jefe final para poder pasar al siguiente nivel y desbloquear nuevas armas. Este jefe es un enemigo que cuenta con velocidad, salud y daño aumentados, además de varias fases de combate y habilidades.
+Al final de cada nivel, el jugador deberá enfrentarse al jefe final para poder pasar al siguiente nivel y desbloquear nuevas armas. Este jefe es un enemigo que cuenta con velocidad, salud y daño aumentados, además de varias fases de combate y habilidades. Estas fases se activan conforme la salud del jefe disminuye. Para conocer más detalles sobre los jefes finales, revisar la sección [Jugabilidad](#jugabilidad).
 
 El enfrentamiento con el jefe es el mayor reto del nivel, requiriendo que el jugador haya explorado las diferentes salas para haber mejorado sus habilidades. Además, si el jugador no ha activado el botón azul que se encuentra en una de las salas ramificadas, el acceso a la sala del jefe permanecerá bloqueado. Esto agrega un reto adiccional, debido a que no basta con llegar al final del nivel, sino también haber explorado la mayoría de las salas para encontrar el botón.
 
@@ -499,8 +499,8 @@ Se deben considerar las siguientes clases derivadas y composiciones de component
 5. BaseInteractable
     1. InteractableButton: Botón ubicado en una sala aleatoria por nivel. Desbloquea la puerta “ObstacleGate” para que el jugador pueda acceder a la sala del jefe final de cada nivel.
 6. BaseSound: Control de los sonidos/música del juego.
-SoundEffect: Efectos de sonido para el juego.
-SoundTrack: Música del juego.
+    1. SoundEffect: Efectos de sonido para el juego.
+    2. SoundTrack: Música del juego.
 
 **Nota:** Cada una de estas clases derivadas debe ser implementada en el videojuego en clases de JavaScript, las cuales se encargarán de controlar los elementos del juego y su interacción con el jugador.
 
@@ -518,6 +518,8 @@ Para el videojuego Overclocked, se utiliza la siguiente paleta de colores base:
 - Azul claro: #66C7F4
 - Gris: #C1CAD6
 - Blanco: #FFFFFF
+
+Estos colores se utilizan para los elementos principales del juego, como el jugador (Skippy), obstáculos, interfaz de usuario y objetos interactivos del juego.
 
 Adicionalmente, los enemigos cuentan con los siguientes colores específicos:
 
@@ -539,12 +541,11 @@ Adicionalmente, los enemigos cuentan con los siguientes colores específicos:
     - Café oscuro: #6F3E43
     - Gris claro: #DCE1E7
     - Gris medio: #959AB1
-
 - Contorno de los enemigos:  #434A5F
 
 De esta forma, Overclocked utiliza tonos claros entre blanco, gris, azul, rojo, naranja y café. Se busca que estos tonos creen una atmósfera minimalista, buscando utilizar tan solo 3 tonos entre colores. Ejemplo de esto es el gris, que solo tiene una variante clara, media y oscura. Igualmente, entre niveles pueden cambiar algunos colores para que los enemigos combinen con la estética del nivel.
 
-El estilo gráfico del juego es de 32 bits, por lo que se busca que el diseño de los personajes sea minimalista tipo retro. Para esto, los personajes deben contar con bordes negros/gris oscuro que resalten su silueta del ambiente resto de elementos en la pantalla.
+El estilo gráfico del juego es de 32 bits, por lo que se busca que el diseño de los personajes sea minimalista, estilo retro. Para esto, los personajes deben contar con bordes negros/gris oscuro que resalten su silueta del ambiente resto de elementos en la pantalla.
 
 **Reglas de diseño de Overclocked:**
 
@@ -598,12 +599,6 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
 ---
 
 ### **Atributos de estilo**
-
-[Again, consistency is key. Define that consistency here. What kind of instruments do you want to use in your music? Any particular tempo, key? Influences, genre? Mood?]: #
-
-[Stylistically, what kind of sound effects are you looking for? Do you want to exaggerate actions with lengthy, cartoony sounds (e.g. mario&#39;s jump), or use just enough to let the player know something happened (e.g. mega man&#39;s landing)? Going for realism? You can use the music style as a bit of a reference too. ]: #
-
-[Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!]: #
 
 Overclocked busca apegarse a un juego roguelite competitivo, por lo que la música y los efectos de sonido deben reflejar la tensión de la competencia dentro del juego. Para lograr esto, se debe seguir un estilo musical enérgico y rápido, con efectos de sonido que resalten las acciones del jugador y enemigos.
 
@@ -724,7 +719,9 @@ También se cuenta con animaciones para todas las variantes de armas que el juga
 
 **Jefe Final:**
 
-![Jefe Final](img/boss_idle.gif)
+![Jefe Final](img/robot_boss.gif)
+
+![Jefe Final Sprite-Sheet](img/robot_boss_x16.png)
 
 *Para conocer más sobre los enemigos, visita la sección [Jugabilidad](#jugabilidad).*
 
@@ -740,7 +737,7 @@ Skippy es un robot dieseñado para combatir en una competencia de robótica. Des
 
 ![Estructura Niveles](img/level_structure.png)
 
-Los niveles cuentan con una estructura lineal con 1 o 2 bifurcaciones en salas intermedias. Cada sala contiene enemigos y obstáculos aleatorios, así como un botón para abrir la sala del jefe final.
+Los niveles cuentan con una estructura lineal con 1 o 2 bifurcaciones en salas intermedias. Cada sala contiene enemigos y obstáculos aleatorios, así como un botón para abrir la sala del jefe final. Para conocer más sobre la estructura de los niveles, visita la sección [Estructura de niveles](#estructura-de-niveles).
 
 ### **Items**
 
@@ -768,7 +765,7 @@ Los niveles cuentan con una estructura lineal con 1 o 2 bifurcaciones en salas i
 
 **Orbe de experiencia:** Aumenta el nivel de experiencia del jugador al ser recogido. Se obtiene al derrotar a los enemigos.
 
-*Para conocer más sobre los items, visita la sección [Controles](#controles).*
+*Para conocer más sobre los items y armas desbloqueables, visita la sección [Mecánicas](#mecánicas).*
 
 ### **Elementos GUI**
 
@@ -868,36 +865,19 @@ El menú de estadísticas contiene 2 secciones: Estadísticas del jugador y mejo
 
 **Música:**
 
-Paquete de canciones: [Music Assets](https://tallbeard.itch.io/music-loop-bundle)
+Paquete de canciones: [Music Loop Bundle](https://tallbeard.itch.io/music-loop-bundle)
 
-- Menú principal: Pista no. 2
-
-- Pantalla de configuración: Pista no. 9
-
-- Pantalla de pausa: Pista no. 11
-
-- Pantalla de ganar: Pista no. 37
-
-- Pantalla de muerte: Pista no. 28
-
-
-
-- Nivel 1: Pista no. 14
-
-    -  Jefe final: Pista no. 5
-
-- Nivel 2: Pista no. 22
-
-    -  Jefe final: Pista no. 20
-
-- Nivel 3: Pista no. 24/31
+- **Menú principal:** Pista no. 2
+- **Pantalla de configuración:** Pista no. 9
+- **Pantalla de pausa:** Pista no. 11
+- **Pantalla de victoria:** Pista no. 37
+- **Pantalla de muerte:** Pista no. 28
+- **Nivel 1:** Pista no. 14
+    -  **Jefe final:** Pista no. 5
+- **Nivel 2:** Pista no. 22
+    -  **Jefe final:** Pista no. 20
+- **Nivel 3:** Pista no. 24/31
     -  Jefe final: [0 TOP](https://pixabay.com/es/music/electronico-0-top-battle-game-bgm-264625/) / [The Final Boss Battle](https://pixabay.com/music/upbeat-the-final-boss-battle-158700/)
-
-
-
-
-
-
 
 ## _Cronograma_
 
