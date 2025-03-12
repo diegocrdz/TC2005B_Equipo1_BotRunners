@@ -17,8 +17,8 @@ let oldTime;
 
 // Variables for the character
 const playerSpeed = 0.5; // Movement speed
-const gravity = 0.1; // Gravity force
-const jumpForce = 2.8; // Jump force
+const gravity = 0.02; // Gravity force
+const jumpForce = 1.3; // Jump force
 
 // Class for the main character in the game
 class Player extends GameObject {
@@ -29,6 +29,16 @@ class Player extends GameObject {
         this.isJumping = false;
         this.isCrouching = false;
         this.isFacingRight = true;
+        this.isAttacking = false;
+
+        // Animation properties
+        this.frameCount = 10; // Number of frames in the sprite sheet
+        this.frameIndex = 0; // Current frame index
+        this.frameDuration = 100; // Time in milliseconds
+        this.lastFrameTime = 0; // Last frame time
+
+        // Player properties
+        this.cooldown = 100; // Attack cooldown
     }
 
     jump() {
@@ -46,7 +56,6 @@ class Player extends GameObject {
             return;
         }
         else {
-            this.height = this.height / 2;
             this.isCrouching = true;
         }
     }
@@ -55,8 +64,16 @@ class Player extends GameObject {
             return;
         }
         else {
-            this.height = this.height * 2;
             this.isCrouching = false;
+        }
+    }
+
+    attack() {
+        if (this.isAttacking) {
+            return;
+        }
+        else {
+            this.isAttacking = true;
         }
     }
 
@@ -90,6 +107,50 @@ class Player extends GameObject {
         } else {
             this.spriteRect = new Rect(0, 0, 24, 24);
         }
+
+        // Update animation
+        this.updateAnimation(deltaTime);
+    }
+
+    updateAnimation(deltaTime) {
+        // Animation properties
+        const frameWidth = 24; // Width of each frame
+        const frameHeight = 24; // Height of each frame
+        const spritePath = "../assets/characters/skippy/skippy_1.png";
+
+        // Update the frame index based on the time passed
+        this.lastFrameTime += deltaTime;
+        if (this.lastFrameTime >= this.frameDuration) {
+            this.frameIndex = (this.frameIndex + 1) % this.frameCount;
+            this.lastFrameTime = 0;
+        }
+
+        // Determine the frame count based on the player's state
+        if (this.velocity.x == 0 && !this.isJumping && !this.isCrouching) { // Idle animation
+            this.frameCount = 2;
+            this.frameIndex = this.frameIndex % 2;
+        }
+        else if (this.isJumping) { // Jumping animation
+            this.frameCount = 2;
+            this.frameIndex = (this.frameIndex % 2) + 4;
+        }
+        else if (this.velocity.x != 0 && !this.isCrouching) { // Walking animation
+            this.frameCount = 2;
+            this.frameIndex = (this.frameIndex % 2) + 2;
+        }
+        else if (this.isCrouching) { // Crouching animation
+            this.frameCount = 2;
+            this.frameIndex = (this.frameIndex % 2) + 6;
+        }
+        
+        if (this.isAttacking) { // Attacking animation
+            this.frameCount = 2;
+            this.frameIndex = (this.frameIndex % 2) + 8;
+        }
+
+        // Set the sprite based on the frame index
+        const frameX = this.frameIndex * frameWidth;
+        this.setSprite(spritePath, new Rect(frameX, 0, frameWidth, frameHeight));
     }
 
     draw(ctx) {
@@ -134,8 +195,8 @@ class Game {
         // Create player
         this.player = new Player(new Vec(20, canvasHeight), 100, 100, "blue");
         //this.player.setSprite('../assets/sprites/link_front.png')
-        this.player.setSprite("../assets/characters/skippy/skippy_1.png",
-                              new Rect(0, 0, 24, 24));
+        //this.player.setSprite("../assets/characters/skippy/skippy_1.png",
+        //                      new Rect(0, 0, 24, 24));
         
         // Create player
         this.enemy = new Enemy(new Vec(100, canvasHeight), 100, 100, "blue");
@@ -170,7 +231,7 @@ class Game {
 
     createEventListeners() {
         window.addEventListener('keydown', (event) => {
-            if (event.key == 'w') {
+            if (event.key == 'w' && !this.player.isJumping) {
                 this.player.jump();
             } else if (event.key == 'a') {
                 this.player.velocity.x = -playerSpeed;
@@ -178,19 +239,27 @@ class Game {
                 this.player.crouch();
             } else if (event.key == 'd') {
                 this.player.velocity.x = playerSpeed;
+            } else if (event.key == 'ArrowLeft') {
+                this.player.isFacingRight = false;
+                this.player.attack();
+            }
+            else if (event.key == 'ArrowRight') {
+                this.player.isFacingRight = true;
+                this.player.attack();
             }
         });
 
         window.addEventListener('keyup', (event) => {
             if (event.key == 'w') {
-                this.player.velocity.y = 0;
+                this.player.velocity.y *= 0.5; // Reduce the jump height
             } else if (event.key == 'a') {
                 this.player.velocity.x = 0;
             } else if (event.key == 's') {
                 this.player.stopCrouching();
-                this.player.velocity.y = 0;
             } else if (event.key == 'd') {
                 this.player.velocity.x = 0;
+            } else if (event.key == 'ArrowLeft' || event.key == 'ArrowRight') {
+                this.player.isAttacking = false;
             }
         });
     }
