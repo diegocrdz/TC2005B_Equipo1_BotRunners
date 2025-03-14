@@ -1,0 +1,46 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #DCE1E7; /* Fondo de la página web */
+}
+
+div {
+    padding: 1vh 5vw; /* Relleno arriba-abajo, izquierda-derecha */
+}
+
+/* Header */
+header {
+    display: flex; /* Muestra los elementos en línea */
+    flex-direction: row;
+    justify-content: space-between; /* Alinea los elementos a los extremos */
+    align-items: center; /* Alinea los elementos verticalmente */
+    background-color: #959AB1;
+    color: #fff;
+    padding: 1vh 5vw; /* Relleno arriba-abajo, izquierda-derecha */
+}
+/* Menú de navegación */
+header nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; /* Alinea los elementos a los extremos */
+    gap: 20px; /* Espacio entre elementos */
+}
+header img {
+    width: 40vw; /* El ancho de la imagen se ajusta al tamaño de la ventana */
+    max-width: 400px; /* Ancho máximo de la imagen */
+    height: auto; /* La altura se ajusta automáticamente */
+}
+
+/* Footer */
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #959AB1;
+    padding: 1vh 5vw; /* Relleno arriba-abajo, izquierda-derecha */
+}
