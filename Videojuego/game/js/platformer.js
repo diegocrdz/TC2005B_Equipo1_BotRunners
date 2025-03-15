@@ -23,6 +23,7 @@ let level;
 // Each unit in the level file will be drawn as these many square pixels
 const scale = 32;
 const levelWidth = Math.ceil(canvasWidth / scale);
+const levelHeight = Math.ceil(canvasHeight / scale);
 
 // The project works only with very small values for velocities and acceleration
 const walkSpeed = 0.01;
@@ -42,7 +43,7 @@ class Player extends AnimatedObject {
         this.isCrouching = false;
         this.isAttacking = false;
 
-        this.attackCooldown = 500;
+        this.attackCooldown = 400;
 
         // Player properties
         this.health = 100;
@@ -50,6 +51,7 @@ class Player extends AnimatedObject {
         this.resistance = 0;
         this.xp = 0;
         this.xpToNextLevel = 100;
+        this.level = 0;
 
         // Movement variables to define directions and animations
         this.movement = {
@@ -93,7 +95,12 @@ class Player extends AnimatedObject {
                         repeat: false,
                         duration: 20,
                         right: [0, 1],
-                        left: [2, 3] }
+                        left: [2, 3] },
+            hit:    { status: false,
+                        repeat: false,
+                        duration: 500,
+                        right: [10],
+                        left: [21] }
         };
     }
 
@@ -204,9 +211,9 @@ class Player extends AnimatedObject {
             // Otherwise switch to the idle animation
             } else {
                 if (this.isFacingRight) {
-                    this.setAnimation(0, 0, false, 100);
+                    this.setAnimation(...rightData.idleFrames, rightData.repeat, rightData.duration);
                 } else {
-                    this.setAnimation(32, 32, false, 100);
+                    this.setAnimation(...leftData.idleFrames, leftData.repeat, leftData.duration);
                 }
             }
         }
@@ -248,6 +255,15 @@ class Player extends AnimatedObject {
             setTimeout(() => {
                 this.isInvulnerable = false;
             }, 1000); // Cooldown period of 1 second
+        }
+    }
+
+    gainXp(amount) {
+        this.xp += amount;
+        if (this.xp >= this.xpToNextLevel) {
+            this.level++;
+            this.xp = 0;
+            this.xpToNextLevel += 15;
         }
     }
 
@@ -298,9 +314,9 @@ class Enemy extends AnimatedObject {
             hit: { 
                 status: false,
                 repeat: false,
-                duration: 100,
-                right: [2],
-                left: [5]
+                duration: 500,
+                right: [5],
+                left: [2]
             },
         };
     }
@@ -374,27 +390,29 @@ class Enemy extends AnimatedObject {
     startMovement(direction) {
         const dirData = this.movement[direction];
         dirData.status = true;
+        this.velocity[dirData.axis] = dirData.sign * this.speed;
         this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
     }
-
     stopMovement(direction) {
         const dirData = this.movement[direction];
         dirData.status = false;
+        this.velocity[dirData.axis] = 0;
         this.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
     }
 
-    takeDamage(amount) {
+    takeDamage(amount, cooldown) {
         if (this.isInvulnerable) return;
-
-        this.health -= amount;
+    
+        this.health -= amount; // Reduce health by the damage amount
+        this.playHitAnimation(); // Play hit animation if still alive
+    
         if (this.health <= 0) {
-            this.die();
+            this.die(); // Kill the enemy if health is 0 or less
         } else {
-            this.isInvulnerable = true;
-            this.playHitAnimation();
+            this.isInvulnerable = true; // Make the enemy invulnerable for a short time
             setTimeout(() => {
                 this.isInvulnerable = false;
-            }, 1000); // Cooldown period of 1 second
+            }, cooldown); // Cooldown period
         }
     }
 
@@ -588,6 +606,10 @@ class Level {
                     //actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "floor";
+                } else if (actor.type == "door") {
+                    //actor.setSprite(item.sprite, item.rect);
+                    this.actors.push(actor);
+                    cellType = "door";
                 }
                 return cellType;
             });
@@ -650,6 +672,7 @@ class Game {
     constructor(state, level) {
         this.state = state;
         this.level = level;
+        this.levelNumber = 0;
         this.player = level.player;
         this.enemy = level.enemy;
         this.actors = level.actors;
@@ -657,10 +680,66 @@ class Game {
         this.labelMoney = new TextLabel(20, canvasHeight - 30,
                                         "30px Ubuntu Mono", "white");
 
-        this.labelDebug = new TextLabel(canvasWidth - 250, canvasHeight - 30,
+        this.labelDebug = new TextLabel(20, canvasHeight - 60,
                                         "20px Ubuntu Mono", "white");
 
-        this.labelLife = new TextLabel(canvasWidth - 250, 20, "30px Ubuntu Mono", "white");
+        this.labelLife = new TextLabel(canvasWidth - 120, canvasHeight - 20, "20px Ubuntu Mono", "white");
+
+        this.labelLevel = new TextLabel(canvasWidth - 120, canvasHeight - 50, "20px Ubuntu Mono", "white");
+
+        // Health bar for the player
+        this.playerHealthBar = (ctx, scale) => {
+            const barWidth = 260; // Width of the health bar
+            const barHeight = 10; // Height of the health bar
+            const x = canvasWidth / 2; // X position of the health bar
+            const y = canvasHeight - 30; // Y position (above the player)
+
+            // Calculate the width of the health portion
+            const healthWidth = (this.player.health / 100) * barWidth;
+
+            // Draw the background (red bar)
+            ctx.fillStyle = "black";
+
+            ctx.fillRect(x, y, barWidth, barHeight);
+
+            // Draw the foreground (green bar)
+            ctx.fillStyle = "green";
+
+            ctx.fillRect(x, y, healthWidth, barHeight);
+
+            // Draw a border around the health bar
+            ctx.strokeStyle = "black";
+            // Make the border bigger
+            ctx.lineWidth = 3;
+            ctx.strokeRect(x, y, barWidth, barHeight);
+        };
+
+        // Experience bar for the player
+        this.playerXpBar = (ctx, scale) => {
+            const barWidth = 260; // Width of the health bar
+            const barHeight = 10; // Height of the health bar
+            const x = canvasWidth / 2; // X position of the health bar
+            const y = canvasHeight - 60; // Y position (above the player)
+
+            // Calculate the width of the health portion
+            const xpWidth = (this.player.xp / this.player.xpToNextLevel) * barWidth;
+
+            // Draw the background (red bar)
+            ctx.fillStyle = "black";
+
+            ctx.fillRect(x, y, barWidth, barHeight);
+
+            // Draw the foreground (green bar)
+            ctx.fillStyle = "lightblue";
+
+            ctx.fillRect(x, y, xpWidth, barHeight);
+
+            // Draw a border around the health bar
+            ctx.strokeStyle = "black";
+            // Make the border bigger
+            ctx.lineWidth = 3;
+            ctx.strokeRect(x, y, barWidth, barHeight);
+        };
 
         console.log(`############ LEVEL ${level} START ###################`);
     }
@@ -693,10 +772,32 @@ class Game {
                 
                 // Check if the player is attacking
                 if (this.player.isAttacking) {
-                    actor.takeDamage(this.player.damage);
+                    actor.takeDamage(this.player.damage, this.player.attackCooldown);
+                    if (actor.health <= 0) {
+                        this.player.gainXp(actor.xp_reward);
+                    }
                 }
                 else {
                     this.player.takeDamage(actor.damage);
+                }
+            }
+
+            // Check for collisions with doors
+            if (actor.type == 'door' && overlapRectangles(this.player, actor)) {
+                // Determine if it's the previous or next level based on player's position
+
+                if (this.player.position.x > actor.position.x) {
+                    this.level = new Level(GAME_LEVELS[--this.levelNumber]);
+                    console.log(this.levelNumber);
+
+                    this.player.position = new Vec(levelWidth - this.player.size.x - 2, 12);
+                    this.actors = this.level.actors;
+                } else if (this.player.position.x < actor.position.x) {
+                    this.level = new Level(GAME_LEVELS[++this.levelNumber]);
+                    console.log(this.levelNumber);
+
+                    this.player.position = new Vec(1, 12);
+                    this.actors = this.level.actors;
                 }
             }
         }
@@ -724,10 +825,18 @@ class Game {
     
         // Draw the player on top of everything else
         this.player.draw(ctx, scale);
-    
+
+        // Draw the labels
         this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
         this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
         this.labelLife.draw(ctx, `Health: ${this.player.health}`);
+        this.labelLevel.draw(ctx, `Lvl. ${this.player.level}`);
+
+        // Draw the player's health bar
+        this.playerHealthBar(ctx, scale);
+
+        // Draw the player's experience bar
+        this.playerXpBar(ctx, scale);
     }
 }
 
@@ -776,6 +885,10 @@ const levelChars = {
           rect: new Rect(0, 0, 32, 32),
           sheetCols: 8,
           startFrame: [0, 7]},
+    "D": {objClass: GameObject,
+          label: "door",
+          sprite: '../../assets/interactable/ladder_1.png',
+          rect: new Rect(0, 0, 18, 18)},
 };
 
 
