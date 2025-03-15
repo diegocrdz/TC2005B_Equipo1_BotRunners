@@ -60,6 +60,9 @@ class GameObject {
 
     draw(ctx, scale) {
         if (this.spriteImage) {
+            // Dont pixelate the sprites
+            ctx.imageSmoothingEnabled = false;
+
             // Draw a sprite if the object has one defined
             if (this.spriteRect) {
                 ctx.drawImage(this.spriteImage,

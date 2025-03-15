@@ -45,7 +45,6 @@ function generateRandomLevel(width, height, numObstacles, numRewards, numEnemies
 
 let GAME_LEVELS = [
     // width, height, numObstacles, numRewards, numEnemies, numHeavyEnemies, numFlyingEnemies
-    generateRandomLevel(levelWidth, 10, 20, 5, 1, 0, 0),
     generateRandomLevel(levelWidth, 16, 10, 1, 1, 1, 1)
 ];
 

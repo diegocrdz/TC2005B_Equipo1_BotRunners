@@ -44,6 +44,13 @@ class Player extends AnimatedObject {
 
         this.attackCooldown = 500;
 
+        // Player properties
+        this.health = 100;
+        this.damage = 20;
+        this.resistance = 0;
+        this.xp = 0;
+        this.xpToNextLevel = 100;
+
         // Movement variables to define directions and animations
         this.movement = {
             right:  { status: false,
@@ -229,6 +236,29 @@ class Player extends AnimatedObject {
             this.isAttacking = false;
         }, this.attackCooldown);
     }
+
+    takeDamage(amount) {
+        if (this.isInvulnerable) return;
+
+        this.health -= amount * (1 - this.resistance);
+        if (this.health <= 0) {
+            this.die();
+        } else {
+            this.isInvulnerable = true;
+            setTimeout(() => {
+                this.isInvulnerable = false;
+            }, 1000); // Cooldown period of 1 second
+        }
+    }
+
+    die() {
+        console.log("Player died");
+        // Eliminate the player from the game
+        game.state = 'lost';
+        // Restart the game
+        gameStart();
+    }
+    
 }
 
 class Enemy extends AnimatedObject {
@@ -237,8 +267,10 @@ class Enemy extends AnimatedObject {
         this.isFacingRight = false; // Default direction is left
 
         this.health = 0;
+        this.maxHealth = 0;
         this.damage = 0;
         this.xp_reward = 0;
+        this.attackCooldown = 500;
 
         this.speed = 0;
         this.velocity = new Vec(this.speed, 0.0);
@@ -271,6 +303,31 @@ class Enemy extends AnimatedObject {
                 left: [5]
             },
         };
+    }
+
+    // Draw the health bar above the enemy
+    drawHealthBar(ctx, scale) {
+        const barWidth = this.size.x * scale; // Width of the health bar
+        const barHeight = 6; // Height of the health bar
+        const x = this.position.x * scale; // X position of the health bar
+        const y = (this.position.y - 0.1) * scale; // Y position (above the enemy)
+
+        // Calculate the width of the health portion
+        const healthWidth = (this.health / this.maxHealth) * barWidth;
+
+        // Draw the background (red bar)
+        ctx.fillStyle = "black";
+        ctx.fillRect(x, y, barWidth, barHeight);
+
+        // Draw the foreground (green bar)
+        ctx.fillStyle = "red";
+        ctx.fillRect(x, y, healthWidth, barHeight);
+
+        // Optional: Draw a border around the health bar
+        ctx.strokeStyle = "black";
+        // Make the border bigger
+        ctx.lineWidth = 3;
+        ctx.strokeRect(x, y, barWidth, barHeight);
     }
 
     update(level, deltaTime) {
@@ -327,11 +384,17 @@ class Enemy extends AnimatedObject {
     }
 
     takeDamage(amount) {
+        if (this.isInvulnerable) return;
+
         this.health -= amount;
         if (this.health <= 0) {
             this.die();
         } else {
+            this.isInvulnerable = true;
             this.playHitAnimation();
+            setTimeout(() => {
+                this.isInvulnerable = false;
+            }, 1000); // Cooldown period of 1 second
         }
     }
 
@@ -354,6 +417,7 @@ class NormalEnemy extends Enemy {
         super("red", width, height, x, y, "enemy");
 
         this.health = 50;
+        this.maxHealth = 50;
         this.damage = 20;
         this.xp_reward = 10;
 
@@ -367,6 +431,7 @@ class HeavyEnemy extends Enemy {
         super("red", width, height, x, y, "enemy");
 
         this.health = 75;
+        this.maxHealth = 75;
         this.damage = 40;
         this.xp_reward = 20;
 
@@ -380,6 +445,7 @@ class FlyingEnemy extends Enemy {
         super("red", width, height, x, y, "enemy");
 
         this.health = 25;
+        this.maxHealth = 25;
         this.damage = 10;
         this.xp_reward = 15;
 
@@ -594,6 +660,8 @@ class Game {
         this.labelDebug = new TextLabel(canvasWidth - 250, canvasHeight - 30,
                                         "20px Ubuntu Mono", "white");
 
+        this.labelLife = new TextLabel(canvasWidth - 250, 20, "30px Ubuntu Mono", "white");
+
         console.log(`############ LEVEL ${level} START ###################`);
     }
 
@@ -619,6 +687,18 @@ class Game {
                     this.actors = this.actors.filter(item => item !== actor);
                 }
             }
+
+            // Check for collisions with enemies
+            if (actor.type == 'enemy' && overlapRectangles(this.player, actor)) {
+                
+                // Check if the player is attacking
+                if (this.player.isAttacking) {
+                    actor.takeDamage(this.player.damage);
+                }
+                else {
+                    this.player.takeDamage(actor.damage);
+                }
+            }
         }
     }
 
@@ -631,17 +711,23 @@ class Game {
         }
     
         // Then draw the rest of the actors
-        for (let actor of this.actors) {
-            if (actor.type !== 'floor') {
-                actor.draw(ctx, scale);
+    for (let actor of this.actors) {
+        if (actor.type !== 'floor') {
+            actor.draw(ctx, scale);
+
+            // Draw health bar for enemies
+            if (actor.type === 'enemy') {
+                actor.drawHealthBar(ctx, scale);
             }
         }
+    }
     
         // Draw the player on top of everything else
         this.player.draw(ctx, scale);
     
         this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
         this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
+        this.labelLife.draw(ctx, `Health: ${this.player.health}`);
     }
 }
 
@@ -711,7 +797,7 @@ function init() {
 
 function gameStart() {
     // Register the game object, which creates all other objects
-    game = new Game('playing', new Level(GAME_LEVELS[1]));
+    game = new Game('playing', new Level(GAME_LEVELS[0]));
 
     setEventListeners();
 
