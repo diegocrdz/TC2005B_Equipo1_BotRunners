@@ -46,6 +46,7 @@ class Player extends AnimatedObject {
         this.isCrouching = false;
         this.isAttacking = false;
         this.isHit = false;
+        this.hasUsedPotion = false; // Track if the health potion has been used
 
         // Player properties
         this.health = 100;
@@ -288,6 +289,17 @@ class Player extends AnimatedObject {
         setTimeout(() => {
             this.isHit = false;
         }, hitData.duration);
+    }
+
+    useHealthPotion() {
+        if (!this.hasUsedPotion && this.health < 100) {
+            this.health += 50; // Increase health by 50 points
+            if (this.health > 100) {
+                this.health = 100; // Cap health at 100
+            }
+            this.hasUsedPotion = true; // Mark the potion as used
+            game.potionImage.src = '../assets/sprites/potion_empty.png'; // Change the sprite to the empty potion
+        }
     }
     
 }
