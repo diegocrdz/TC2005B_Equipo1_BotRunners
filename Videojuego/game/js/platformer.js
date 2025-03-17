@@ -14,6 +14,7 @@ let ctx;
 // The time at the previous frame
 let frameStart;
 
+// Variables for the game
 let game;
 let player;
 let enemy;
@@ -22,28 +23,29 @@ let level;
 // Scale of the whole world, to be applied to all objects
 // Each unit in the level file will be drawn as these many square pixels
 const scale = 32;
-const levelWidth = Math.ceil(canvasWidth / scale);
-const levelHeight = Math.ceil(canvasHeight / scale);
+const levelWidth = Math.floor(canvasWidth / scale);
+const levelHeight = Math.floor(canvasHeight / scale);
 
 // The project works only with very small values for velocities and acceleration
 const walkSpeed = 0.01;
 const initialJumpSpeed = -0.03;
 const gravity = 0.0000981;
 
-let debugJump = false;
+// let debugJump = false;
 
+// Class that represents a player of the game
 class Player extends AnimatedObject {
     constructor(_color, width, height, x, y, _type) {
         super("green", width, height, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
         this.money = 0;
 
+        // Player state variables
         this.isFacingRight = true;
         this.isJumping = false;
         this.isCrouching = false;
         this.isAttacking = false;
-
-        this.attackCooldown = 400;
+        this.isHit = false;
 
         // Player properties
         this.health = 100;
@@ -52,6 +54,7 @@ class Player extends AnimatedObject {
         this.xp = 0;
         this.xpToNextLevel = 100;
         this.level = 0;
+        this.attackCooldown = 400;
 
         // Movement variables to define directions and animations
         this.movement = {
@@ -60,8 +63,6 @@ class Player extends AnimatedObject {
                       sign: 1,
                       repeat: true,
                       duration: 100,
-                      //moveFrames: [24, 31],
-                      //idleFrames: [0, 0] },
                       moveFrames: [2, 3],
                       idleFrames: [0, 1] },
             left:   { status: false,
@@ -69,24 +70,16 @@ class Player extends AnimatedObject {
                       sign: -1,
                       repeat: true,
                       duration: 100,
-                      //moveFrames: [56, 63],
-                      //idleFrames: [32, 32] },
                       moveFrames: [13, 14],
                       idleFrames: [11, 12] },
             jump:   { status: false,
                       repeat: true,
                       duration: 100,
-                      //right: [6, 7],
-                      //left: [38, 39] },
                       right: [4, 5],
                       left: [15, 16] },
             crouch: { status: false,
                       repeat: true,
                       duration: 100,
-                      //right: [1, 1],
-                      //left: [33, 33],
-                      //upRight: [0, 0],
-                      //upLeft: [32, 32] },
                       right: [6, 7],
                       left: [17, 18],
                       upRight: [0, 1],
@@ -98,49 +91,52 @@ class Player extends AnimatedObject {
                         left: [2, 3] },
             hit:    { status: false,
                         repeat: false,
-                        duration: 500,
-                        right: [10],
-                        left: [21] }
+                        duration: 50,
+                        right: [10, 10],
+                        left: [21, 21] }
         };
     }
 
     update(level, deltaTime) {
-        //console.log("Pos: (%5.2f, %5.2f) | Vel: (%5.2f, %5.2f) | isJumping: %d",
-        //            this.position.x, this.position.y, this.velocity.x, this.velocity.y, this.isJumping);
 
         // Make the character fall constantly because of gravity
         this.velocity.y = this.velocity.y + gravity * deltaTime;
 
+        // New variables for the velocity of the player
         let velX = this.velocity.x;
         let velY = this.velocity.y;
 
         // Find out where the player should end if it moves
-        let newXPosition = this.position.plus(new Vec(velX * deltaTime, 0));
+        let newXPosition = this.position.plus(new Vec(velX * deltaTime, 0)); // d = v * t
         // Move only if the player does not move inside a wall
         if (!level.contact(newXPosition, this.size, 'wall')) {
             this.position = newXPosition;
         }
 
         // Find out where the player should end if it moves
-        let newYPosition = this.position.plus(new Vec(0, velY * deltaTime));
+        let newYPosition = this.position.plus(new Vec(0, velY * deltaTime)); // d = v * t
         // Move only if the player does not move inside a wall
         if (!level.contact(newYPosition, this.size, 'wall')) {
             this.position = newYPosition;
         } else {
-            this.land();
+            this.land(); 
         }
 
         this.updateFrame(deltaTime);
     }
 
+    // Start moving the player in a certain direction
     startMovement(direction) {
         const dirData = this.movement[direction];
-        this.isFacingRight = direction == "right";
-        if (!dirData.status) {
+        this.isFacingRight = direction == "right"; // Check if the direction is right
+        if (!dirData.status) { // If the player is not already moving
             dirData.status = true;
-            this.velocity[dirData.axis] = dirData.sign * walkSpeed;
+            this.velocity[dirData.axis] = dirData.sign * walkSpeed; // Set the velocity
 
-            if (this.isCrouching) {
+            if (this.isHit) { // If the player is hit, keep the hit animation
+                this.hit();
+            }
+            else if (this.isCrouching) { // If the player is crouching, keep crouching
                 this.crouch();
             }
             else {
@@ -158,7 +154,6 @@ class Player extends AnimatedObject {
 
     crouch() {
         this.isCrouching = true;
-        // this.velocity.x = 0;
         const crouchData = this.movement.crouch;
         if (this.isFacingRight) {
             this.setAnimation(...crouchData.right, crouchData.repeat, crouchData.duration);
@@ -248,6 +243,8 @@ class Player extends AnimatedObject {
         if (this.isInvulnerable) return;
 
         this.health -= amount * (1 - this.resistance);
+        this.hit();
+
         if (this.health <= 0) {
             this.die();
         } else {
@@ -269,10 +266,25 @@ class Player extends AnimatedObject {
 
     die() {
         console.log("Player died");
-        // Eliminate the player from the game
-        game.state = 'lost';
-        // Restart the game
-        gameStart();
+        restartGame();
+    }
+
+    hit() {
+        if (this.isHit) return; // Prevent re-triggering the hit animation if already playing
+    
+        this.isHit = true;
+        const hitData = this.movement.hit;
+    
+        if (this.isFacingRight) {
+            this.setAnimation(...hitData.right, hitData.repeat, hitData.duration);
+        } else {
+            this.setAnimation(...hitData.left, hitData.repeat, hitData.duration);
+        }
+    
+        // Reset the isHit flag after the animation duration
+        setTimeout(() => {
+            this.isHit = false;
+        }, hitData.duration);
     }
     
 }
@@ -281,6 +293,7 @@ class Enemy extends AnimatedObject {
     constructor(_color, width, height, x, y, _type) {
         super("red", width, height, x, y, "enemy");
         this.isFacingRight = false; // Default direction is left
+        this.isHit = false;
 
         this.health = 0;
         this.maxHealth = 0;
@@ -300,7 +313,7 @@ class Enemy extends AnimatedObject {
                 repeat: true,
                 duration: 100,
                 moveFrames: [0, 1],
-                idleFrames: [0]
+                idleFrames: [0, 1]
             },
             left: {
                 status: false,
@@ -309,14 +322,14 @@ class Enemy extends AnimatedObject {
                 repeat: true,
                 duration: 100,
                 moveFrames: [3, 4],
-                idleFrames: [3]
+                idleFrames: [3, 4]
             },
             hit: { 
                 status: false,
-                repeat: false,
-                duration: 500,
-                right: [5],
-                left: [2]
+                repeat: true,
+                duration: 200,
+                right: [5, 5],
+                left: [2, 2]
             },
         };
     }
@@ -397,14 +410,18 @@ class Enemy extends AnimatedObject {
         const dirData = this.movement[direction];
         dirData.status = false;
         this.velocity[dirData.axis] = 0;
-        this.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
+
+        if (this.isHit) {
+            this.hit();
+        } else {
+            this.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
+        }
     }
 
     takeDamage(amount, cooldown) {
         if (this.isInvulnerable) return;
     
         this.health -= amount; // Reduce health by the damage amount
-        this.playHitAnimation(); // Play hit animation if still alive
     
         if (this.health <= 0) {
             this.die(); // Kill the enemy if health is 0 or less
@@ -416,23 +433,38 @@ class Enemy extends AnimatedObject {
         }
     }
 
-    playHitAnimation() {
+    die() {
+        // Eliminate the enemy from the actor list
+        game.actors = game.actors.filter(actor => actor !== this);
+        
+        // Eliminate the enemies from the level. The player is supposed to kill every enemy to pass each level.
+        GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('N', '.');
+        GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('H', '.');
+        GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('F', '.');
+    }
+
+    hit() {
+        if (this.isHit) return; // Prevent re-triggering the hit animation if already playing
+    
+        this.isHit = true;
         const hitData = this.movement.hit;
+        
         if (this.isFacingRight) {
             this.setAnimation(...hitData.right, hitData.repeat, hitData.duration);
         } else {
             this.setAnimation(...hitData.left, hitData.repeat, hitData.duration);
         }
-    }
 
-    die() {
-        game.actors = game.actors.filter(actor => actor !== this);
+        // Reset the isHit flag after the animation duration
+        setTimeout(() => {
+            this.isHit = false;
+        }, hitData.duration);
     }
 }
 
 class NormalEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
-        super("red", width, height, x, y, "enemy");
+        super("red", width, height, x, y, "N");
 
         this.health = 50;
         this.maxHealth = 50;
@@ -446,7 +478,7 @@ class NormalEnemy extends Enemy {
 
 class HeavyEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
-        super("red", width, height, x, y, "enemy");
+        super("red", width, height, x, y, "H");
 
         this.health = 75;
         this.maxHealth = 75;
@@ -460,7 +492,7 @@ class HeavyEnemy extends Enemy {
 
 class FlyingEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
-        super("red", width, height, x, y, "enemy");
+        super("red", width, height, x, y, "F");
 
         this.health = 25;
         this.maxHealth = 25;
@@ -478,8 +510,8 @@ class FlyingEnemy extends Enemy {
                 sign: 1,
                 repeat: true,
                 duration: 100,
-                moveFrames: [0, 1, 2],
-                idleFrames: [0]
+                moveFrames: [4, 5, 6],
+                idleFrames: [4]
             },
             left: {
                 status: false,
@@ -487,8 +519,8 @@ class FlyingEnemy extends Enemy {
                 sign: -1,
                 repeat: true,
                 duration: 100,
-                moveFrames: [4, 5, 6],
-                idleFrames: [4]
+                moveFrames: [0, 1, 2],
+                idleFrames: [0]
             },
             hit: { 
                 status: false,
@@ -573,7 +605,10 @@ class Level {
 
                     actor.setSprite(item.sprite, item.rect);
                     actor.sheetCols = item.sheetCols;
-                    actor.setAnimation(...item.startFrame, false, 100);
+
+                    const dirData = actor.movement["right"];
+                    actor.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
+
                     this.player = actor;
                     cellType = "empty";
                 } else if (actor.type == "coin") {
@@ -593,7 +628,10 @@ class Level {
 
                     actor.setSprite(item.sprite, item.rect);
                     actor.sheetCols = item.sheetCols;
-                    actor.setAnimation(...item.startFrame, false, 100);
+
+                    const dirData = actor.movement["right"];
+                    actor.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
+
                     this.actors.push(actor);
                     cellType = "empty";
                 } else if (actor.type == "wall") {
@@ -610,6 +648,18 @@ class Level {
                     //actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "door";
+                } else if (actor.type == "box") {
+                    this.addBackgroundFloor(x, y);
+                    actor.position = actor.position.plus(new Vec(0, -2));
+                    actor.size = new Vec(3, 3);
+
+                    actor.setSprite(item.sprite, item.rect);
+                    this.actors.push(actor);
+                    cellType = "box";
+                } else if (actor.type == "ladder") {
+                    actor.setSprite(item.sprite, item.rect);
+                    this.actors.push(actor);
+                    cellType = "empty";
                 }
                 return cellType;
             });
@@ -676,6 +726,7 @@ class Game {
         this.player = level.player;
         this.enemy = level.enemy;
         this.actors = level.actors;
+        this.paused = false; // Game starts unpaused
 
         this.labelMoney = new TextLabel(20, canvasHeight - 30,
                                         "30px Ubuntu Mono", "white");
@@ -683,16 +734,16 @@ class Game {
         this.labelDebug = new TextLabel(20, canvasHeight - 60,
                                         "20px Ubuntu Mono", "white");
 
-        this.labelLife = new TextLabel(canvasWidth - 120, canvasHeight - 20, "20px Ubuntu Mono", "white");
+        this.labelLife = new TextLabel(canvasWidth - 120, canvasHeight - 50, "20px Ubuntu Mono", "white");
 
-        this.labelLevel = new TextLabel(canvasWidth - 120, canvasHeight - 50, "20px Ubuntu Mono", "white");
+        this.labelLevel = new TextLabel(canvasWidth - 120, canvasHeight - 20, "20px Ubuntu Mono", "white");
 
         // Health bar for the player
         this.playerHealthBar = (ctx, scale) => {
             const barWidth = 260; // Width of the health bar
             const barHeight = 10; // Height of the health bar
             const x = canvasWidth / 2; // X position of the health bar
-            const y = canvasHeight - 30; // Y position (above the player)
+            const y = canvasHeight - 60; // Y position (above the player)
 
             // Calculate the width of the health portion
             const healthWidth = (this.player.health / 100) * barWidth;
@@ -703,7 +754,7 @@ class Game {
             ctx.fillRect(x, y, barWidth, barHeight);
 
             // Draw the foreground (green bar)
-            ctx.fillStyle = "green";
+            ctx.fillStyle = "lightgreen";
 
             ctx.fillRect(x, y, healthWidth, barHeight);
 
@@ -719,7 +770,7 @@ class Game {
             const barWidth = 260; // Width of the health bar
             const barHeight = 10; // Height of the health bar
             const x = canvasWidth / 2; // X position of the health bar
-            const y = canvasHeight - 60; // Y position (above the player)
+            const y = canvasHeight - 30; // Y position (above the player)
 
             // Calculate the width of the health portion
             const xpWidth = (this.player.xp / this.player.xpToNextLevel) * barWidth;
@@ -730,7 +781,7 @@ class Game {
             ctx.fillRect(x, y, barWidth, barHeight);
 
             // Draw the foreground (green bar)
-            ctx.fillStyle = "lightblue";
+            ctx.fillStyle = "yellow";
 
             ctx.fillRect(x, y, xpWidth, barHeight);
 
@@ -764,41 +815,31 @@ class Game {
                 } else if (actor.type == 'coin') {
                     this.player.money += 1;
                     this.actors = this.actors.filter(item => item !== actor);
-                }
-            }
-
-            // Check for collisions with enemies
-            if (actor.type == 'enemy' && overlapRectangles(this.player, actor)) {
-                
-                // Check if the player is attacking
-                if (this.player.isAttacking) {
-                    actor.takeDamage(this.player.damage, this.player.attackCooldown);
-                    if (actor.health <= 0) {
-                        this.player.gainXp(actor.xp_reward);
+                } else if (actor.type == 'enemy') {
+                    // Check if the player is attacking
+                    if (this.player.isAttacking) {
+                        actor.takeDamage(this.player.damage, this.player.attackCooldown);
+                        if (actor.health <= 0) {
+                            this.player.gainXp(actor.xp_reward);
+                        }
                     }
-                }
-                else {
-                    this.player.takeDamage(actor.damage);
-                }
-            }
-
-            // Check for collisions with doors
-            if (actor.type == 'door' && overlapRectangles(this.player, actor)) {
-                // Determine if it's the previous or next level based on player's position
-
-                if (this.player.position.x > actor.position.x) {
-                    this.level = new Level(GAME_LEVELS[--this.levelNumber]);
-                    console.log(this.levelNumber);
-
-                    this.player.position = new Vec(levelWidth - this.player.size.x - 2, 12);
-                    this.actors = this.level.actors;
-                } else if (this.player.position.x < actor.position.x) {
-                    this.level = new Level(GAME_LEVELS[++this.levelNumber]);
-                    console.log(this.levelNumber);
-
-                    this.player.position = new Vec(1, 12);
+                    else {
+                        this.player.takeDamage(actor.damage);
+                    }
+                } else if (actor.type == 'door') {
+                    // Determinar si es el nivel anterior o siguiente
+                    if (this.player.position.x > actor.position.x) {
+                        this.level = new Level(GAME_LEVELS[--this.levelNumber]);
+                        this.player.position = new Vec(levelWidth - this.player.size.x - 2, 12);
+                        console.log(GAME_LEVELS[this.levelNumber]);
+                    } else if (this.player.position.x < actor.position.x) {
+                        this.level = new Level(GAME_LEVELS[++this.levelNumber]);
+                        this.player.position = new Vec(1, 12);
+                        console.log(GAME_LEVELS[this.levelNumber]);
+                    }
                     this.actors = this.level.actors;
                 }
+
             }
         }
     }
@@ -812,17 +853,17 @@ class Game {
         }
     
         // Then draw the rest of the actors
-    for (let actor of this.actors) {
-        if (actor.type !== 'floor') {
-            actor.draw(ctx, scale);
+        for (let actor of this.actors) {
+            if (actor.type !== 'floor') {
+                actor.draw(ctx, scale);
 
-            // Draw health bar for enemies
-            if (actor.type === 'enemy') {
-                actor.drawHealthBar(ctx, scale);
+                // Draw health bar for enemies
+                if (actor.type === 'enemy') {
+                    actor.drawHealthBar(ctx, scale);
+                }
             }
         }
-    }
-    
+        
         // Draw the player on top of everything else
         this.player.draw(ctx, scale);
 
@@ -838,6 +879,11 @@ class Game {
         // Draw the player's experience bar
         this.playerXpBar(ctx, scale);
     }
+
+    togglePause() {
+        this.paused = !this.paused;
+        console.log(this.paused ? "Game paused" : "Game resumed");
+    }
 }
 
 
@@ -851,15 +897,14 @@ const levelChars = {
           rect: new Rect(12, 17, 32, 32)},
     "#": {objClass: GameObject,
           label: "wall",
-          sprite: '../assets/sprites/box_2.png',
+          sprite: '../../assets/blocks/marble_packed.png',
           rect: new Rect(0, 0, 18, 18)},
     "@": {objClass: Player,
           label: "player",
           //sprite: '../assets/sprites/hero/redpants_left_right.png',
-          sprite: '../assets/sprites/hero/skippy_1.png',
+          sprite: '../../assets/characters/skippy/skippy_1.png',
           rect: new Rect(0, 0, 24, 24), // Size of each frame
-          //sheetCols: 8,
-          sheetCols: 20,
+          sheetCols: 22,
           startFrame: [0, 0]},
     "N": {objClass: NormalEnemy,
           label: "enemy",
@@ -889,6 +934,14 @@ const levelChars = {
           label: "door",
           sprite: '../../assets/interactable/ladder_1.png',
           rect: new Rect(0, 0, 18, 18)},
+    "B": {objClass: GameObject,
+          label: "wall",
+          sprite: '../../assets/obstacles/box_1.png',
+          rect: new Rect(0, 0, 18, 18)},
+    "L": {objClass: GameObject,
+          label: "ladder",
+          sprite: '../../assets/interactable/ladder_1.png',
+          rect: new Rect(0, 0, 18, 18)}
 };
 
 
@@ -918,6 +971,13 @@ function gameStart() {
     updateCanvas(document.timeline.currentTime);
 }
 
+function restartGame() {
+    // Reset the game state
+    game = new Game('playing', new Level(GAME_LEVELS[0]));
+    frameStart = undefined; // Reset the frame start time
+    console.log("Game restarted!");
+}
+
 function setEventListeners() {
     window.addEventListener("keydown", event => {
         if (event.key == 'w') {
@@ -942,6 +1002,11 @@ function setEventListeners() {
             game.player.isFacingRight = true;
             game.player.attack();
         }
+
+        // Pause the game
+        if (event.key == 'p') {
+            game.togglePause();
+        }
     });
 
     window.addEventListener("keyup", event => {
@@ -963,11 +1028,16 @@ function updateCanvas(frameTime) {
         frameStart = frameTime;
     }
     let deltaTime = frameTime - frameStart;
-    //console.log(`Delta Time: ${deltaTime}`);
+    
+    if (!game.paused) { // Skip updates if the game is paused
+        let deltaTime = frameTime - frameStart;
 
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    game.update(deltaTime);
-    game.draw(ctx, scale);
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        game.update(deltaTime);
+        game.draw(ctx, scale);
+
+        frameStart = frameTime; // Update time for the next frame
+    }
 
     // Update time for the next frame
     frameStart = frameTime;
