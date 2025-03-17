@@ -56,6 +56,9 @@ class Player extends AnimatedObject {
         this.level = 0;
         this.attackCooldown = 400;
 
+        // Track if the health potion has been used
+        this.hasUsedPotion = false;
+
         // Movement variables to define directions and animations
         this.movement = {
             right:  { status: false,
@@ -410,12 +413,7 @@ class Enemy extends AnimatedObject {
         const dirData = this.movement[direction];
         dirData.status = false;
         this.velocity[dirData.axis] = 0;
-
-        if (this.isHit) {
-            this.hit();
-        } else {
-            this.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
-        }
+        this.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
     }
 
     takeDamage(amount, cooldown) {
@@ -765,6 +763,19 @@ class Game {
             ctx.strokeRect(x, y, barWidth, barHeight);
         };
 
+        // Load the health potion image
+        this.potionImage = new Image();
+        this.potionImage.src = '../assets/sprites/potion_full.png'; // Ruta del sprite de la poción de salud
+
+        // Method to draw the health potion
+        this.drawHealthPotion = (ctx) => {
+            const potionX = (canvasWidth / 2) - 70; // Posición X de la poción (al lado de la barra de vida)
+            const potionY = canvasHeight - 70; // Posición Y de la poción (alineada con la barra de vida)
+            const potionWidth = 60; // Ancho del sprite de la poción
+            const potionHeight = 60; // Alto del sprite de la poción
+            ctx.drawImage(this.potionImage, potionX, potionY, potionWidth, potionHeight);
+        };
+
         // Experience bar for the player
         this.playerXpBar = (ctx, scale) => {
             const barWidth = 260; // Width of the health bar
@@ -878,6 +889,9 @@ class Game {
 
         // Draw the player's experience bar
         this.playerXpBar(ctx, scale);
+
+        // Draw the health potion
+        this.drawHealthPotion(ctx);
     }
 
     togglePause() {
@@ -1006,6 +1020,11 @@ function setEventListeners() {
         // Pause the game
         if (event.key == 'p') {
             game.togglePause();
+        }
+
+        // Use health potion
+        if (event.key == '3') {
+            game.player.useHealthPotion();
         }
     });
 
