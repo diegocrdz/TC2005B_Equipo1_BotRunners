@@ -238,7 +238,7 @@ class Player extends AnimatedObject {
             
             let dashDistance = 5; // Total dash distance
             let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
-            let step = 1; // Number of pixels that move in each frame
+            let step = 0.6; // Number of pixels that move in each frame
             let moved = 0; // Tracks how many pixels the player has moved
     
             let dashMove = () => {
@@ -262,7 +262,7 @@ class Player extends AnimatedObject {
             
             setTimeout(() => {
                 this.isDashing = false;
-            }, 5000); //5000ms cooldown
+            }, 5000); // 5 second cooldown
         }
     }
 
@@ -292,7 +292,17 @@ class Player extends AnimatedObject {
     }
 
     takeDamage(amount) {
-        if (this.isInvulnerable || this.isDashing) return; //dashing makes you invulnerable
+        if (this.isInvulnerable) return; // Dashing makes you invulnerable
+
+        // If the player is dashing, cancel the dash and activate invulnerability for 1 second
+        if (this.isDashing) {
+            this.isDashing = false;
+            this.isInvulnerable = true;
+            setTimeout(() => {
+                this.isInvulnerable = false;
+            }, 1000); // Cooldown period of 1 second
+            return; // Prevent taking damage after dashing
+        }
 
         this.health -= amount * (1 - this.resistance);
         this.hit();
