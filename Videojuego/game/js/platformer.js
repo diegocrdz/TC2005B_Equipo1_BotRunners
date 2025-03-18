@@ -50,6 +50,7 @@ class Player extends AnimatedObject {
 
         // Player properties
         this.health = 100;
+        this.maxHealth = 100;
         this.damage = 20;
         this.resistance = 0;
         this.xp = 0;
@@ -226,7 +227,7 @@ class Player extends AnimatedObject {
         let originalSize = this.size.x;
 
         // Change to the attack sprite and rect
-        this.setSprite('../assets/sprites/hero/skippy_attack_1.png', new Rect(0, 0, 32, 24));
+        this.setSprite('../../assets/characters/skippy/skippy_attack_1.png', new Rect(0, 0, 32, 24));
         this.size.x = 4; // Adjust the size to match the new sprite
 
         if (this.isFacingRight) {
@@ -236,10 +237,10 @@ class Player extends AnimatedObject {
         }
 
         setTimeout(() => {
-            // Restore the original sprite and rect
-            this.setSprite('../assets/sprites/hero/skippy_1.png', new Rect(0, 0, 24, 24));
-            this.size.x = originalSize; // Adjust the size to match the new sprite
             this.isAttacking = false;
+            this.size.x = originalSize; // Adjust the size to match the new sprite
+            // Restore the original sprite and rect
+            this.setSprite('../../assets/characters/skippy/skippy_1.png', new Rect(0, 0, 24, 24));
         }, this.attackCooldown);
     }
 
@@ -293,7 +294,10 @@ class Player extends AnimatedObject {
 
     useHealthPotion() {
         if (!this.hasUsedPotion && this.health < 100) {
-            this.health += 50; // Increase health by 50 points
+
+            let increase = (this.maxHealth * 50) / 100; // Calculate 50% of the max health
+
+            this.health += increase; // Increase health
             if (this.health > 100) {
                 this.health = 100; // Cap health at 100
             }
@@ -301,7 +305,6 @@ class Player extends AnimatedObject {
             game.potionImage.src = '../assets/sprites/potion_empty.png'; // Change the sprite to the empty potion
         }
     }
-    
 }
 
 class Enemy extends AnimatedObject {
@@ -512,7 +515,7 @@ class FlyingEnemy extends Enemy {
         this.speed = 0.002;
         this.velocity = new Vec(this.speed, 0);
 
-        // Movement variables to define directions and animations
+        // Define movement directions for flying enemies
         this.movement = {
             right: { 
                 status: false,
@@ -520,8 +523,8 @@ class FlyingEnemy extends Enemy {
                 sign: 1,
                 repeat: true,
                 duration: 100,
-                moveFrames: [4, 5, 6],
-                idleFrames: [4]
+                moveFrames: [3, 4],
+                idleFrames: [3, 4]
             },
             left: {
                 status: false,
@@ -529,57 +532,32 @@ class FlyingEnemy extends Enemy {
                 sign: -1,
                 repeat: true,
                 duration: 100,
-                moveFrames: [0, 1, 2],
-                idleFrames: [0]
-            },
-            hit: { 
-                status: false,
-                repeat: false,
-                duration: 100,
-                right: [3],
-                left: [7]
-            },
+                moveFrames: [0, 1],
+                idleFrames: [0, 1]
+            }
         };
     }
 
     update(level, deltaTime) {
 
         let velX = this.velocity.x;
-        let velY = this.velocity.y;
 
         // Reverse direction if the enemy hits a wall
         let newXPosition = this.position.plus(new Vec(velX * deltaTime, 0));
         if (level.contact(newXPosition, this.size, 'wall')) {
             this.velocity.x = -this.velocity.x; // Reverse direction
-            this.isFacingRight = !this.isFacingRight; // Update facing direction
-            if (this.isFacingRight) {
-                this.startMovement("right");
-            } else {
-                this.startMovement("left");
-            }
+            this.startMovement(this.velocity.x > 0 ? "right" : "left"); // Update animation direction
         } else {
             this.position = newXPosition;
-        }
-
-        // Find out where the enemy should end if it moves vertically
-        let newYPosition = this.position.plus(new Vec(0, velY * deltaTime));
-        if (!level.contact(newYPosition, this.size, 'wall')) {
-            this.position = newYPosition;
-        } else {
-            this.velocity.y = 0; // Stop vertical movement on collision
         }
 
         this.updateFrame(deltaTime);
     }
 }
 
-class Coin extends AnimatedObject {
+class Coin extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super("yellow", width, height, x, y, "coin");
-    }
-
-    update(_level, deltaTime) {
-        this.updateFrame(deltaTime);
     }
 }
 
@@ -626,8 +604,6 @@ class Level {
                     this.addBackgroundFloor(x, y);
 
                     actor.setSprite(item.sprite, item.rect);
-                    actor.sheetCols = item.sheetCols;
-                    actor.setAnimation(...item.startFrame, true, 100);
                     this.actors.push(actor);
                     cellType = "empty";
                 } else if (actor.type == "enemy") {
@@ -777,7 +753,7 @@ class Game {
 
         // Load the health potion image
         this.potionImage = new Image();
-        this.potionImage.src = '../assets/sprites/potion_full.png'; // Ruta del sprite de la poción de salud
+        this.potionImage.src = '../assets/sprites/potion_full.png'; // Load the full potion sprite
 
         // Method to draw the health potion
         this.drawHealthPotion = (ctx) => {
@@ -834,32 +810,36 @@ class Game {
                 //console.log(`Collision of ${this.player.type} with ${actor.type}`);
                 if (actor.type == 'wall') {
                     //console.log("Hit a wall");
-
                 } else if (actor.type == 'coin') {
-                    this.player.money += 1;
-                    this.actors = this.actors.filter(item => item !== actor);
+                    this.player.gainXp(5); // Gain 5 experience points
+                    GAME_LEVELS[this.levelNumber] = GAME_LEVELS[this.levelNumber].replace('$', '.'); // Remove the coin from the level
+                    this.actors = this.actors.filter(item => item !== actor); // Remove the coin from the actors list
                 } else if (actor.type == 'enemy') {
                     // Check if the player is attacking
-                    if (this.player.isAttacking) {
+                    if (this.player.isAttacking) { // If the player is attacking, deal damage to the enemy
                         actor.takeDamage(this.player.damage, this.player.attackCooldown);
                         if (actor.health <= 0) {
                             this.player.gainXp(actor.xp_reward);
                         }
                     }
-                    else {
+                    else { // If the player is not attacking, the enemy deals damage to the player
                         this.player.takeDamage(actor.damage);
                     }
                 } else if (actor.type == 'door') {
-                    // Determinar si es el nivel anterior o siguiente
-                    if (this.player.position.x > actor.position.x) {
+                    
+                    if (this.player.position.x > actor.position.x) { // If the door is on the left
+
                         this.level = new Level(GAME_LEVELS[--this.levelNumber]);
-                        this.player.position = new Vec(levelWidth - this.player.size.x - 2, 12);
-                        console.log(GAME_LEVELS[this.levelNumber]);
-                    } else if (this.player.position.x < actor.position.x) {
+                        this.level.player = this.player; // Keep the player in the new level
+                        this.player.position = new Vec(levelWidth - this.player.size.x - 2, 12); // Set the player at the left of the door
+
+                    } else if (this.player.position.x < actor.position.x) { // If the door is on the right
+
                         this.level = new Level(GAME_LEVELS[++this.levelNumber]);
-                        this.player.position = new Vec(1, 12);
-                        console.log(GAME_LEVELS[this.levelNumber]);
+                        this.level.player = this.player; // Keep the player in the new level
+                        this.player.position = new Vec(1, 12); // Set the player at the right of the door
                     }
+                    // Update the actors list
                     this.actors = this.level.actors;
                 }
 
@@ -870,14 +850,14 @@ class Game {
     draw(ctx, scale) {
         // First draw the background tiles
         for (let actor of this.actors) {
-            if (actor.type === 'floor') {
+            if (actor.type === 'floor' || actor.type === 'wall') {
                 actor.draw(ctx, scale);
             }
         }
     
         // Then draw the rest of the actors
         for (let actor of this.actors) {
-            if (actor.type !== 'floor') {
+            if (actor.type !== 'floor' && actor.type !== 'wall') {
                 actor.draw(ctx, scale);
 
                 // Draw health bar for enemies
@@ -906,12 +886,38 @@ class Game {
         this.drawHealthPotion(ctx);
     }
 
+    // Pause or resume the game
     togglePause() {
         this.paused = !this.paused;
         console.log(this.paused ? "Game paused" : "Game resumed");
     }
-}
 
+    // Increase the stats of the enemies depending on the level of the game
+    adjustDificulty() {
+
+        // Vairable to increase the stats of the enemies
+        let increase = 0;
+
+        // Increase the stats of the enemies depending on the level of the game
+        if (this.levelNumber == 1) {
+            increase = 10;
+        }
+        else if (this.levelNumber == 2) {
+            increase = 20;
+        }
+
+        // Increase the stats of the enemies
+        for (let actor of this.level.actors) {
+            if (actor.type === 'enemy') {
+                actor.maxHealth += increase;
+                actor.health += increase;
+                actor.damage += increase;
+            }
+        }
+
+        console.log("Difficulty increased by " + increase);
+    }
+}
 
 // Object with the characters that appear in the level description strings
 // and their corresponding objects
@@ -927,7 +933,6 @@ const levelChars = {
           rect: new Rect(0, 0, 18, 18)},
     "@": {objClass: Player,
           label: "player",
-          //sprite: '../assets/sprites/hero/redpants_left_right.png',
           sprite: '../../assets/characters/skippy/skippy_1.png',
           rect: new Rect(0, 0, 24, 24), // Size of each frame
           sheetCols: 22,
@@ -952,7 +957,7 @@ const levelChars = {
           startFrame: [0, 0]},
     "$": {objClass: Coin,
           label: "collectible",
-          sprite: '../assets/sprites/coin_gold.png',
+          sprite: '../../assets/objects/xp_orb.png',
           rect: new Rect(0, 0, 32, 32),
           sheetCols: 8,
           startFrame: [0, 7]},
