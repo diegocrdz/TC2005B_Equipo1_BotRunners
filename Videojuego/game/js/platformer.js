@@ -20,6 +20,8 @@ let player;
 let enemy;
 let level;
 
+let abilities = [];
+
 // Scale of the whole world, to be applied to all objects
 // Each unit in the level file will be drawn as these many square pixels
 const scale = 32;
@@ -47,7 +49,9 @@ class Player extends AnimatedObject {
         this.isJumping = false;
         this.isCrouching = false;
         this.isAttacking = false;
+        this.canDoubleJump = true;
         this.isDoubleJumping = true; // double jump
+        this.canDash = true;
         this.isDashing =  false; //dash
 
         this.isHit = false;
@@ -197,7 +201,7 @@ class Player extends AnimatedObject {
     }
 
     doubleJump(){
-        if(this.njumps < 1){ //Lets the player only jump two times
+        if(this.njumps < 1 && this.canDoubleJump){ //Lets the player only jump two times
             this.isJumping = false;
             this.jump;
             this.njumps++;
@@ -233,37 +237,42 @@ class Player extends AnimatedObject {
     }
 
     dash(level) {
-        if (!this.isDashing) {
-            this.isDashing = true;
-            
-            let dashDistance = 5; // Total dash distance
-            let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
-            let step = 0.6; // Number of pixels that move in each frame
-            let moved = 0; // Tracks how many pixels the player has moved
-    
-            let dashMove = () => {
-                if (moved < dashDistance) {
-                    let newXPosition = this.position.plus(new Vec(direction * step, 0)); //Calculates new position
-    
-                    // If there's a collision, the dash stops
-                    if (level.contact(newXPosition, this.size, 'wall')) {
-                        this.isDashing = false;
-                        return;
+        if(this.canDash){
+            if (!this.isDashing) {
+                this.isDashing = true;
+                this.canDash = false;
+                
+                let dashDistance = 5; // Total dash distance
+                let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
+                let step = 0.6; // Number of pixels that move in each frame
+                let moved = 0; // Tracks how many pixels the player has moved
+        
+                let dashMove = () => {
+                    if (moved < dashDistance) {
+                        let newXPosition = this.position.plus(new Vec(direction * step, 0)); //Calculates new position
+        
+                        // If there's a collision, the dash stops
+                        if (level.contact(newXPosition, this.size, 'wall')) {
+                            this.isDashing = false;
+                            return;
+                        }
+        
+                        this.position = newXPosition;
+                        moved += step;
+        
+                        requestAnimationFrame(dashMove); //Continues the dash "animation" in the next frame
                     }
-    
-                    this.position = newXPosition;
-                    moved += step;
-    
-                    requestAnimationFrame(dashMove); //Continues the dash "animation" in the next frame
-                }
-            };
-    
-            dashMove(); //initiates animated dash
-            
-            setTimeout(() => {
-                this.isDashing = false;
-            }, 5000); // 5 second cooldown
+                };
+        
+                dashMove(); //initiates animated dash
+                
+                setTimeout(() => {
+                    this.isDashing = false;
+                    this.canDash = true;
+                }, 5000); // 5 second cooldown
+            }
         }
+        
     }
 
     attack() {
@@ -323,6 +332,31 @@ class Player extends AnimatedObject {
             this.level++;
             this.xp = 0;
             this.xpToNextLevel += 15;
+        }
+    }
+
+    gainAbility(ability){
+        if (ability == "damage")
+        {
+            this.damage += 10;
+        }
+        else if(ability = "health")
+        {
+            this.health += 10;
+        }
+        else if(ability = "resistance")
+        {
+            this.resistance += 10;
+        }
+        else if(ability = "double jump" && abilities.find(ability))
+        {
+            this.canDoubleJump = true;
+            abilities.splice(ability, 1);
+        }
+        else if(ability = "dash" && abilities.find(ability))
+        {
+            this.canDash = true;
+            abilities.splice(ability, 1);
         }
     }
 
@@ -504,6 +538,16 @@ class Enemy extends AnimatedObject {
     }
 
     die() {
+        let x = this.position.x + 1;
+        let y = this.position.y + 2;
+        
+        // Crear una nueva moneda (usada como orbe de experiencia)
+        let expCoin = new Coin("yellow", 1, 1, x, y, "$");
+        expCoin.xp_value = this.xp_reward; // Asigna el valor de experiencia del enemigo
+    
+        // Agregar la moneda a la lista de actores (¡No al string de nivel!)
+        game.actors.push(expCoin);
+
         // Eliminate the enemy from the actor list
         game.actors = game.actors.filter(actor => actor !== this);
         
@@ -615,7 +659,17 @@ class FlyingEnemy extends Enemy {
 class Coin extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super("yellow", width, height, x, y, "coin");
-    }
+
+        this.setSprite('../../assets/objects/xp_orb.png', new Rect(0, 0, 32, 32));
+
+        this.xp_value = 5;
+        this.isCollectible = false;
+
+        setTimeout(() => {
+            this.isCollectible = true;
+        }, 1000);
+    }   
+
 }
 
 class Level {
@@ -867,8 +921,8 @@ class Game {
                 //console.log(`Collision of ${this.player.type} with ${actor.type}`);
                 if (actor.type == 'wall') {
                     //console.log("Hit a wall");
-                } else if (actor.type == 'coin') {
-                    this.player.gainXp(5); // Gain 5 experience points
+                } else if (actor.type == 'coin' && actor.isCollectible) {
+                    this.player.gainXp(actor.xp_value); // Gain 5 experience points
                     GAME_LEVELS[this.levelNumber] = GAME_LEVELS[this.levelNumber].replace('$', '.'); // Remove the coin from the level
                     this.actors = this.actors.filter(item => item !== actor); // Remove the coin from the actors list
                 } else if (actor.type == 'enemy') {
@@ -876,7 +930,7 @@ class Game {
                     if (this.player.isAttacking) { // If the player is attacking, deal damage to the enemy
                         actor.takeDamage(this.player.damage, this.player.attackCooldown);
                         if (actor.health <= 0) {
-                            this.player.gainXp(actor.xp_reward);
+                            actor.die();
                         }
                     }
                     else { // If the player is not attacking, the enemy deals damage to the player
