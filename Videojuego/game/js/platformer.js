@@ -40,11 +40,16 @@ class Player extends AnimatedObject {
         this.velocity = new Vec(0.0, 0.0);
         this.money = 0;
 
+        this.njumps = 0; //counter for double jumping
+
         // Player state variables
         this.isFacingRight = true;
         this.isJumping = false;
         this.isCrouching = false;
         this.isAttacking = false;
+        this.isDoubleJumping = true; // double jump
+        this.isDashing =  false; //dash
+
         this.isHit = false;
         this.hasUsedPotion = false; // Track if the health potion has been used
 
@@ -188,8 +193,15 @@ class Player extends AnimatedObject {
             } else {
                 this.setAnimation(...jumpData.left, jumpData.repeat, jumpData.duration);
             }
-            //debugJump = true;
         }
+    }
+
+    doubleJump(){
+        if(this.njumps < 1){ //Lets the player only jump two times
+            this.isJumping = false;
+            this.jump;
+            this.njumps++;
+        }    
     }
 
     land() {
@@ -201,6 +213,7 @@ class Player extends AnimatedObject {
         if (this.isJumping) {
             // Reset the jump variable
             this.isJumping = false;
+            this.njumps = 0;
             const leftData = this.movement["left"];
             const rightData = this.movement["right"];
             // Continue the running animation if the player is moving
@@ -216,6 +229,40 @@ class Player extends AnimatedObject {
                     this.setAnimation(...leftData.idleFrames, leftData.repeat, leftData.duration);
                 }
             }
+        }
+    }
+
+    dash(level) {
+        if (!this.isDashing) {
+            this.isDashing = true;
+            
+            let dashDistance = 5; // Total dash distance
+            let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
+            let step = 1; // Number of pixels that move in each frame
+            let moved = 0; // Tracks how many pixels the player has moved
+    
+            let dashMove = () => {
+                if (moved < dashDistance) {
+                    let newXPosition = this.position.plus(new Vec(direction * step, 0)); //Calculates new position
+    
+                    // If there's a collision, the dash stops
+                    if (level.contact(newXPosition, this.size, 'wall')) {
+                        this.isDashing = false;
+                        return;
+                    }
+    
+                    this.position = newXPosition;
+                    moved += step;
+    
+                    requestAnimationFrame(dashMove); //Continues the dash "animation" in the next frame
+                }
+            };
+    
+            dashMove(); //initiates animated dash
+            
+            setTimeout(() => {
+                this.isDashing = false;
+            }, 5000); //5000ms cooldown
         }
     }
 
@@ -245,7 +292,7 @@ class Player extends AnimatedObject {
     }
 
     takeDamage(amount) {
-        if (this.isInvulnerable) return;
+        if (this.isInvulnerable || this.isDashing) return; //dashing makes you invulnerable
 
         this.health -= amount * (1 - this.resistance);
         this.hit();
@@ -1011,8 +1058,8 @@ function restartGame() {
 
 function setEventListeners() {
     window.addEventListener("keydown", event => {
-        if (event.key == 'w') {
-            game.player.jump();
+        if (event.key == 'w'){
+            game.player.jump(); 
         }
         if (event.key == 'a') {
             game.player.startMovement("left");
@@ -1022,6 +1069,14 @@ function setEventListeners() {
         }
         if (event.key == 's') {
             game.player.crouch();
+        }
+
+        if(event.key == 'w' && game.player.isJumping){ //falta poner que no se pase del limite
+            game.player.doubleJump();
+        }
+
+        if(event.shiftKey){
+            game.player.dash(game.level);
         }
 
         // Attack
