@@ -20,7 +20,7 @@ let player;
 let enemy;
 let level;
 
-let abilities = [];
+let abilities = ["damage", "health", "resistance", "double jump", "dash"]; // List of abilities that the player can gain
 
 // Scale of the whole world, to be applied to all objects
 // Each unit in the level file will be drawn as these many square pixels
@@ -49,9 +49,11 @@ class Player extends AnimatedObject {
         this.isJumping = false;
         this.isCrouching = false;
         this.isAttacking = false;
-        this.canDoubleJump = true;
-        this.isDoubleJumping = true; // double jump
-        this.canDash = true;
+
+        this.canDoubleJump = false;
+        this.isDoubleJumping = false; // double jump
+
+        this.canDash = false;
         this.isDashing =  false; //dash
 
         this.isHit = false;
@@ -313,7 +315,7 @@ class Player extends AnimatedObject {
             return; // Prevent taking damage after dashing
         }
 
-        this.health -= amount * (1 - this.resistance);
+        this.health -= amount + this.resistance; // Reduce health by the damage amount
         this.hit();
 
         if (this.health <= 0) {
@@ -332,31 +334,46 @@ class Player extends AnimatedObject {
             this.level++;
             this.xp = 0;
             this.xpToNextLevel += 15;
+            this.selectRandomAbility();
         }
     }
 
-    gainAbility(ability){
+    selectRandomAbility() {
+        for (let ability of abilities) {
+            let random = Math.floor(Math.random() * abilities.length);
+            let selectedAbility = abilities[random];
+            this.gainAbility(selectedAbility);
+            break;
+        }
+    }
+
+    gainAbility(ability) {
         if (ability == "damage")
         {
             this.damage += 10;
+            console.log("Damage increased to " + this.damage);
         }
-        else if(ability = "health")
+        else if(ability == "health")
         {
-            this.health += 10;
+            this.maxHealth += 10;
+            console.log("Max health increased to " + this.maxHealth);
         }
-        else if(ability = "resistance")
+        else if(ability == "resistance")
         {
             this.resistance += 10;
+            console.log("Resistance increased to " + this.resistance);
         }
-        else if(ability = "double jump" && abilities.find(ability))
+        else if(ability == "double jump" && abilities.includes(ability))
         {
             this.canDoubleJump = true;
-            abilities.splice(ability, 1);
+            abilities.splice(abilities.indexOf(ability), 1);
+            console.log("Double jump ability gained");
         }
-        else if(ability = "dash" && abilities.find(ability))
+        else if(ability == "dash" && abilities.includes(ability))
         {
             this.canDash = true;
-            abilities.splice(ability, 1);
+            abilities.splice(abilities.indexOf(ability), 1);
+            console.log("Dash ability gained");
         }
     }
 
@@ -389,8 +406,8 @@ class Player extends AnimatedObject {
             let increase = (this.maxHealth * 50) / 100; // Calculate 50% of the max health
 
             this.health += increase; // Increase health
-            if (this.health > 100) {
-                this.health = 100; // Cap health at 100
+            if (this.health > this.maxHealth) {
+                this.health = this.maxHealth; // Cap health at the max value
             }
             this.hasUsedPotion = true; // Mark the potion as used
             game.potionImage.src = '../assets/sprites/potion_empty.png'; // Change the sprite to the empty potion
@@ -538,14 +555,16 @@ class Enemy extends AnimatedObject {
     }
 
     die() {
+        // Get the position of the enemy
         let x = this.position.x + 1;
-        let y = this.position.y + 2;
+        let y = this.position.y;
         
-        // Crear una nueva moneda (usada como orbe de experiencia)
+        // Create a coin with the experience value of the enemy
         let expCoin = new Coin("yellow", 1, 1, x, y, "$");
         expCoin.xp_value = this.xp_reward; // Asigna el valor de experiencia del enemigo
+        expCoin.hasGravity = true; // Make the coin fall
     
-        // Agregar la moneda a la lista de actores (¡No al string de nivel!)
+        // Add the coin to the actors list of the game
         game.actors.push(expCoin);
 
         // Eliminate the enemy from the actor list
@@ -659,17 +678,38 @@ class FlyingEnemy extends Enemy {
 class Coin extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super("yellow", width, height, x, y, "coin");
+        this.velocity = new Vec(0.0, 0.0);
 
         this.setSprite('../../assets/objects/xp_orb.png', new Rect(0, 0, 32, 32));
 
-        this.xp_value = 5;
-        this.isCollectible = false;
+        this.xp_value = 5; // Default value of the coin
+        this.isCollectible = false; // Prevent the player from collecting the coin immediately
+        this.hasGravity = false; // Coins do not fall by default
 
+        // Timer to make the coin collectible after a short delay
         setTimeout(() => {
             this.isCollectible = true;
-        }, 1000);
-    }   
+        }, 500);
+    }  
 
+    update(level, deltaTime) {
+
+        if (this.hasGravity) {
+            // Apply gravity
+            this.velocity.y = this.velocity.y + gravity * deltaTime;
+
+            let velY = this.velocity.y;
+
+            // Find out where the coin should end if it moves vertically
+            let newYPosition = this.position.plus(new Vec(0, velY * deltaTime));
+            // Move only if the coin does not move inside a wall
+            if (!level.contact(newYPosition, this.size, 'wall')) {
+                this.position = newYPosition;
+            } else {
+                this.velocity.y = 0; // Stop vertical movement on collision
+            }
+        }
+    }
 }
 
 class Level {
@@ -836,14 +876,14 @@ class Game {
         this.labelLevel = new TextLabel(canvasWidth - 120, canvasHeight - 20, "20px Ubuntu Mono", "white");
 
         // Health bar for the player
-        this.playerHealthBar = (ctx, scale) => {
+        this.playerHealthBar = (ctx) => {
             const barWidth = 260; // Width of the health bar
             const barHeight = 10; // Height of the health bar
             const x = canvasWidth / 2; // X position of the health bar
             const y = canvasHeight - 60; // Y position (above the player)
 
             // Calculate the width of the health portion
-            const healthWidth = (this.player.health / 100) * barWidth;
+            const healthWidth = (this.player.health / this.player.maxHealth) * barWidth;
 
             // Draw the background (red bar)
             ctx.fillStyle = "black";
