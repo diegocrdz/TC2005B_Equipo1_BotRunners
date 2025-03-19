@@ -543,6 +543,7 @@ class Enemy extends AnimatedObject {
         if (this.isInvulnerable) return;
     
         this.health -= amount; // Reduce health by the damage amount
+        this.hit(); // Play the hit animation
     
         if (this.health <= 0) {
             this.die(); // Kill the enemy if health is 0 or less
@@ -591,7 +592,8 @@ class Enemy extends AnimatedObject {
         // Reset the isHit flag after the animation duration
         setTimeout(() => {
             this.isHit = false;
-        }, hitData.duration);
+            this.startMovement(this.isFacingRight ? "left" : "right"); // Continue moving in the same direction after being hit
+        }, hitData.duration * 2); // 3 times the duration of the hit animation
     }
 }
 
@@ -654,6 +656,13 @@ class FlyingEnemy extends Enemy {
                 duration: 100,
                 moveFrames: [0, 1],
                 idleFrames: [0, 1]
+            },
+            hit: {
+                status: false,
+                repeat: false,
+                duration: 200,
+                right: [2, 2],
+                left: [5, 5]
             }
         };
     }
@@ -1154,10 +1163,23 @@ function gameStart() {
 }
 
 function restartGame() {
-    // Reset the game state
+    // Regenerate the levels
+    let numRooms = 6; // Define the number of rooms for the new levels
+    let levelGenerator = new LevelGenerator(numRooms);
+    let rooms = levelGenerator.generate();
+
+    GAME_LEVELS = []; // Clear the existing levels
+
+    // Generate new levels based on the room types
+    for (let i = 0; i < numRooms; i++) {
+        let level = generateRandomLevel(levelWidth, 16, 10, 1, 1, 3, rooms.get(i).type);
+        GAME_LEVELS.push(level);
+    }
+
+    // Reset the game state with the new levels
     game = new Game('playing', new Level(GAME_LEVELS[0]));
     frameStart = undefined; // Reset the frame start time
-    console.log("Game restarted!");
+    console.log("Game restarted with new levels");
 }
 
 function setEventListeners() {
