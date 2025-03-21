@@ -3,8 +3,8 @@
 class Room {
     constructor(id, type = "normal") {
         this.id = id;
-        this.type = type;  // "start", "normal", "boss", "button"
-        this.connections = new Set(); // Conexiones a otras salas
+        this.type = type;  // "start", "normal", "boss", "button1", "button2", "branch", "ladder1", "ladder2"
+        this.connections = new Set(); // Rooms connected to this room
     }
 
     connect(room) {
@@ -22,24 +22,24 @@ class LevelGenerator {
     }
 
     generate() {
-        // Crear las salas
+        // Create rooms
         for (let i = 0; i < this.numRooms; i++) {
             this.rooms.set(i, new Room(i));
         }
 
-        // Definir tipos de salas iniciales y finales
+        // Assign the start and boss rooms
         this.rooms.get(0).type = "start";
         this.rooms.get(this.numRooms - 1).type = "boss";
 
-        // Conectar las salas de forma lineal
+        // Connect rooms in a linear way
         for (let i = 0; i < this.numRooms - 1; i++) {
             this.rooms.get(i).connect(this.rooms.get(i + 1));
         }
 
-        // Agregar bifurcaciones aleatorias
+        // Add branching paths
         this.addBranchingPaths();
 
-        // Verificar si las salas tienen escaleras
+        // Check if the room has a ladder to connect to 1 or 2 bifurcations
         this.checkLadder();
 
         return this.rooms;
@@ -49,21 +49,23 @@ class LevelGenerator {
         let buttonRoom = null;
 
         for (let i = 1; i < this.numRooms - 1; i++) {
-            if (Math.random() < 0.3) { // 30% de probabilidad de una bifurcación
-                let branchId1 = `branch${i}_1`;
+            if (Math.random() < 0.3) { // 30% of probability to create a branch
+                let branchId1 = this.rooms.size;
                 let branchRoom1 = new Room(branchId1);
+                branchRoom1.type = "branch1";
                 this.rooms.set(branchId1, branchRoom1);
                 this.rooms.get(i).connect(branchRoom1);
                 
-                // Segunda bifurcación con 50% de probabilidad si ya hay una
-                let branchId2 = `branch${i}_2`;
+                // 50% of probability to create a second branch
+                let branchId2 = this.rooms.size;
                 if (Math.random() < 0.5) {
                     let branchRoom2 = new Room(branchId2);
+                    branchRoom2.type = "branch2";
                     this.rooms.set(branchId2, branchRoom2);
                     this.rooms.get(i).connect(branchRoom2);
                 }
 
-                // Asignar una de las bifurcaciones como la sala del botón si aún no se ha asignado
+                // Assign the button room to the first branch
                 if (!buttonRoom) {
                     buttonRoom = branchRoom1;
                     buttonRoom.type = "button";
@@ -76,10 +78,10 @@ class LevelGenerator {
 
         // If the room has a connection to a bifurcation, change the type to "ladder1" or "ladder2"
         for (let room of this.rooms.values()) {
-            if (room.connections.size == 2) { // If the room has a connection to one bifurcation
+            if (room.connections.size === 3) { // If the room has a connection to one bifurcation
                 room.type = "ladder1";
             }
-            else if (room.connections.size == 3) { // If the room has a connection to two bifurcations
+            else if (room.connections.size === 4) { // If the room has a connection to two bifurcations
                 room.type = "ladder2";
             }
         }
@@ -92,6 +94,7 @@ class LevelGenerator {
     }
 }
 
+// Generate a list of enemies for each room
 function generateRandomEnemies(minEnemies, maxEnemies) {
     let numEnemies = Math.floor(Math.random() * (maxEnemies - minEnemies + 1)) + minEnemies;
     let enemies = [];
@@ -128,19 +131,32 @@ N - Normal enemy
 H - Heavy enemy
 F - Flying enemy
 D - Door
+U - Door up
+V - Door down
 B - Box
 L - Ladder
+0 - Button
 */
 
+// Generate the rooms layout
 function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies, maxEnemies, roomType) {
     let level = Array.from({ length: height }, () => Array(width).fill('.'));
     
     // Level borders
     // Top and bottom walls
     for (let x = 0; x < width; x++) {  // Fill the first and last rows with walls
-        level[0][x] = '#'; 
-        level[height - 1][x] = '#'; 
+        if (roomType == "button" || roomType == "branch1") { // Place doors at the bottom
+            level[0][x] = '#'; 
+            level[height - 1][x] = 'V'; 
+        } else if (roomType == "branch2") { // Place doors at the top
+            level[0][x] = 'U'; 
+            level[height - 1][x] = '#'; 
+        } else {
+            level[0][x] = '#'; 
+            level[height - 1][x] = '#'; 
+        }
     }
+
     // Side walls
     for (let y = 0; y < height; y++) {
         if (y < height - 4 || y === height - 1) { // Fill the first and last columns with walls
@@ -154,6 +170,12 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
         else if (roomType == "boss") { // Fill the last blocks of the last column with doors
             level[y][0] = 'D'; 
             level[y][width - 1] = '#'; 
+        }
+        else if (roomType == "button"
+                || roomType == "branch1"
+                || roomType == "branch2") { // Fill the last blocks of the first and last columns with walls
+            level[y][0] = '#';
+            level[y][width - 1] = '#';
         }
         else { // Fill the last blocks of the first and last columns with doors
             level[y][0] = 'D'; 
@@ -175,25 +197,54 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     }
 
     // Place ladders in the level if the room has bifurcations
-    // Place doors at the top and bottom of the level
+    // If roomType is "ladder1", place a door at the top of the level
     if (roomType == "ladder1") {
         for (let x = 1; x < width - 1; x++) {
-            level[0][x] = 'D'; 
+            level[0][x] = 'U'; 
+        }
+        for (let y = 0; y < height - 1; y++) {
+            level[y][Math.ceil(width / 2)] = 'L';
+        }
+    }
+    // If roomType is "ladder2", place a door at the top and bottom of the level
+    if (roomType == "ladder2") {
+        for (let x = 1; x < width - 1; x++) {
+            level[0][x] = 'U';
+            level[height - 1][x] = 'V'; 
         }
         for (let y = 0; y < height - 1; y++) {
             level[y][Math.ceil(width / 2)] = 'L';
         }
     }
 
-    
+    // Place ladders in the branches
+    if (roomType == "button" || roomType == "branch1") { // From the bottom to the top
+        for (let y = height - 3; y < height; y++) {
+            level[y][Math.ceil(width / 2)] = 'L';
+        }
+    } else if (roomType == "branch2") {  // From the top to the bottom
+        for (let y = 0; y < height - 2; y++) {
+            level[y][Math.ceil(width / 2)] = 'L';
+        }
+    }
+
     // Place rewards
     placeRandomly('$', numRewards, 1, height - 2);
 
-    // Generar enemigos aleatorios
+    // If roomType is "button", place a button only
+    if (roomType == "button") {
+        placeRandomly('0', 1, height - 2, height - 2, width - 5, width - 5);
+        return level.map(row => row.join('')).join('\n');
+    }
+    // If roomType is "branch1" or "branch2", dont place enemies
+    else if (roomType == "branch1" || roomType == "branch2") {
+        return level.map(row => row.join('')).join('\n');
+    }
+
+    // Generate random enemies
     let enemies = generateRandomEnemies(minEnemies, maxEnemies);
 
-    // Colocar enemigos normales (N), pesados (H) y voladores (F)
-    // Solo se colocan enemigos entre 1/3 y 2/3 del nivel, en el suelo o en la parte superior
+    // Place enemies
     for (let i = 0; i < enemies.length; i++) {
         
         if (enemies[i] === 'N') {
@@ -207,36 +258,32 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
         }
     }
 
-    // Colocar una caja en el suelo entre 1/3 y 2/3 del nivel
+    // Place a box in the level
     placeRandomly('B', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
     
-    // Colocar jugador al inicio del nivel
+    // Place the player at the bottom of the level
     level[height - 2][2] = '@';
     
     return level.map(row => row.join('')).join('\n');
 }
 
-// Generar un nivel aleatorio
+// Generate a random level layout
 
 let numRooms = 6;
 let levelGenerator = new LevelGenerator(numRooms);
 let rooms = levelGenerator.generate();
 console.log(rooms);
 
-/*
-let GAME_LEVELS = [
-    // width, height, numObstacles, numRewards, minEnemies, maxEnemies
-    generateRandomLevel(levelWidth, 16, 10, 1, 1, 3)
-];
-*/
-
+// List of generated levels
 let GAME_LEVELS = [];
 
-for (let i = 0; i < numRooms; i++) {
+// Fill the list of levels with the generated rooms
+for (let i = 0; i < rooms.size; i++) {
     let level = generateRandomLevel(levelWidth, 16, 10, 1, 1, 3, rooms.get(i).type);
     GAME_LEVELS.push(level);
 }
 
+// Print the generated levels to the console
 for (let i = 0; i < GAME_LEVELS.length; i++) {
     console.log(GAME_LEVELS[i]);
 }

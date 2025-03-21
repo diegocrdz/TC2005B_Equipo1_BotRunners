@@ -38,6 +38,7 @@ class Game {
         this.enemy = level.enemy;
         this.actors = level.actors;
         this.paused = false; // Game starts unpaused
+        this.lastRoomNumber = 0; // Keep track of the last room number visited
 
         this.labelMoney = new TextLabel(20, canvasHeight - 30,
                                         "30px Ubuntu Mono", "white");
@@ -45,9 +46,36 @@ class Game {
         this.labelDebug = new TextLabel(20, canvasHeight - 60,
                                         "20px Ubuntu Mono", "white");
 
-        this.labelLife = new TextLabel(canvasWidth - 120, canvasHeight - 50, "20px Ubuntu Mono", "white");
+        this.labelLife = new TextLabel(canvasWidth - 120, canvasHeight - 50,
+                                        "20px Ubuntu Mono", "white");
 
-        this.labelLevel = new TextLabel(canvasWidth - 120, canvasHeight - 20, "20px Ubuntu Mono", "white");
+        this.labelLevel = new TextLabel(canvasWidth - 120, canvasHeight - 20,
+                                        "20px Ubuntu Mono", "white");
+        
+        // Load board images for indicating ladders direction
+        this.ladderUpImage = new Image();
+        this.ladderUpImage.src = '../../assets/backgrounds/sign_up.png'; // Load the ladder up sprite
+
+        this.ladderDownImage = new Image();
+        this.ladderDownImage.src = '../../assets/backgrounds/sign_down.png'; // Load the ladder down sprite
+
+        // Method to draw the ladder up sign
+        this.drawLadderUp = (ctx) => {
+            const ladderX = (canvasWidth / 2) - 70; // Posición X de la escalera (al lado de la barra de vida)
+            const ladderY = canvasHeight / 3; // Posición Y de la escalera (alineada con la barra de vida)
+            const ladderWidth = 60; // Ancho del sprite de la escalera
+            const ladderHeight = 60; // Alto del sprite de la escalera
+            ctx.drawImage(this.ladderUpImage, ladderX, ladderY, ladderWidth, ladderHeight);
+        };
+
+        // Method to draw the ladder down sign
+        this.drawLadderDown = (ctx) => {
+            const ladderX = (canvasWidth / 2) - 70; // Posición X de la escalera (al lado de la barra de vida)
+            const ladderY = canvasHeight / 3 + 80; // Posición Y de la escalera (alineada con la barra de vida)
+            const ladderWidth = 60; // Ancho del sprite de la escalera
+            const ladderHeight = 60; // Alto del sprite de la escalera
+            ctx.drawImage(this.ladderDownImage, ladderX, ladderY, ladderWidth, ladderHeight);
+        };
 
         // Health bar for the player
         this.playerHealthBar = (ctx) => {
@@ -119,6 +147,38 @@ class Game {
         console.log(`############ LEVEL ${level} START ###################`);
     }
 
+    // Function to load a specific level
+    moveToLevel(levelNumber, playerPositionX, playerPositionY) {
+        this.level = new Level(GAME_LEVELS[levelNumber]); // Create a new level
+        this.levelNumber = levelNumber;
+        this.level.player = this.player; // Assign the new player instance
+        this.actors = this.level.actors;
+    
+        // Set the player's position explicitly
+        if (playerPositionX !== undefined && playerPositionY !== undefined) {
+            this.player.position = new Vec(playerPositionX, playerPositionY);
+        }
+
+        console.log("Moved to level " + levelNumber);
+    }
+
+    getBranch(type) {
+        // Check if the current room has a connection to a branch
+        const currentRoom = rooms.get(this.levelNumber); // Get the current room
+        const connectedRooms = Array.from(currentRoom.connections); // Get the connected rooms as an array
+        console.log("Connected rooms: " + connectedRooms);
+
+        // Search for a room of type "branch" or "button" in the connected rooms
+        const targetRoomId = connectedRooms.find(roomId => {
+            const room = rooms.get(roomId);
+            return room.type === type;
+        });
+
+        return targetRoomId; // Return the found room ID
+    }
+
+    // Function to 
+
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
 
@@ -153,21 +213,84 @@ class Game {
                 } else if (actor.type == 'door') {
                     
                     if (this.player.position.x > actor.position.x) { // If the door is on the left
-
-                        this.level = new Level(GAME_LEVELS[--this.levelNumber]);
-                        this.level.player = this.player; // Keep the player in the new level
-                        this.player.position = new Vec(levelWidth - this.player.size.x - 2, 12); // Set the player at the left of the door
-
+                        this.moveToLevel(--this.levelNumber, levelWidth - this.player.size.x - 2, 12);
+                        this.lastRoomNumber = this.levelNumber;
                     } else if (this.player.position.x < actor.position.x) { // If the door is on the right
-
-                        this.level = new Level(GAME_LEVELS[++this.levelNumber]);
-                        this.level.player = this.player; // Keep the player in the new level
-                        this.player.position = new Vec(1, 12); // Set the player at the right of the door
+                        this.moveToLevel(++this.levelNumber, 2, 12);
+                        this.lastRoomNumber = this.levelNumber;
                     }
-                    // Update the actors list
-                    this.actors = this.level.actors;
-                }
 
+                } else if (actor.type == 'ladder') {
+
+                    // Initialize the target room ID
+                    let targetRoomId = undefined;
+
+                    // If the player jumps and he is in a room with 1 branch
+                    // he will go to the button room
+                    // if there is no button room, he will go to branch2, since it is the only option
+                    if (this.player.isJumping
+                        && rooms.get(this.levelNumber).type === "ladder1") {
+                        targetRoomId = this.getBranch("button");
+                        if (targetRoomId !== undefined) {
+                            this.moveToLevel(targetRoomId, 2, 12);
+                        } else {
+                            targetRoomId = this.getBranch("branch2");
+                            if (targetRoomId !== undefined) {
+                                this.moveToLevel(targetRoomId, 2, 12);
+                            }
+                        }
+                    }
+
+                    // If the player jumps and he is in a room with 2 branches
+                    // he will go to the button room
+                    // if there is no button room, he will go to branch1
+                    if (this.player.isJumping
+                        && rooms.get(this.levelNumber).type === "ladder2") {
+                        targetRoomId = this.getBranch("button");
+                        if (targetRoomId !== undefined) {
+                            this.moveToLevel(targetRoomId, 2, 12);
+                        } else {
+                            targetRoomId = this.getBranch("branch1");
+                            if (targetRoomId !== undefined) {
+                                this.moveToLevel(targetRoomId, 2, 12);
+                            }
+                        }
+                    }
+
+                    // If the player crouches and he is in a room with 2 branches
+                    // he will go to branch2
+                    if (this.player.isCrouching
+                                && rooms.get(this.levelNumber).type === "ladder2") {
+                        targetRoomId = this.getBranch("branch2");
+                        if (targetRoomId !== undefined) {
+                            console.log("Going to branch2");
+                            this.moveToLevel(targetRoomId, 2, 12);
+                        }
+                    }
+                    
+                    // If the player jumpps and he is in a brach below
+                    // he will go to the last room visited
+                    if (this.player.isJumping
+                        && rooms.get(this.levelNumber).type === "branch2") {
+                        this.moveToLevel(this.lastRoomNumber, 2, 12);
+                    }
+
+                    // If the player crouches and he is in a branch up
+                    // he will go to the last room visited
+                    if (this.player.isCrouching
+                        && rooms.get(this.levelNumber).type === "branch1") {
+                        this.moveToLevel(this.lastRoomNumber, 2, 12);
+                    }
+
+                    // If the player crouches and he is in a button room
+                    // he will go to the last room visited
+                    if (this.player.isCrouching
+                        && rooms.get(this.levelNumber).type === "button") {
+                        this.moveToLevel(this.lastRoomNumber, 2, 12);
+                    }
+                } else if (actor.type == 'button') {
+                    actor.press(); // Press the button
+                }
             }
         }
     }
@@ -209,6 +332,15 @@ class Game {
 
         // Draw the health potion
         this.drawHealthPotion(ctx);
+
+        // Draw the ladders signs
+        if (rooms.get(this.levelNumber).type === "ladder1") {
+            this.drawLadderUp(ctx);
+        }
+        if (rooms.get(this.levelNumber).type === "ladder2") {
+            this.drawLadderUp(ctx);
+            this.drawLadderDown(ctx);
+        }
     }
 
     // Pause or resume the game
@@ -288,7 +420,15 @@ const levelChars = {
           startFrame: [0, 7]},
     "D": {objClass: GameObject,
           label: "door",
-          sprite: '../../assets/interactable/ladder_1.png',
+          sprite: '../../assets/interactable/ladder_2.png',
+          rect: new Rect(0, 0, 18, 18)},
+    "U": {objClass: GameObject,
+          label: "door_up",
+          sprite: '../../assets/interactable/platform_1.png',
+          rect: new Rect(0, 0, 18, 18)},
+    "V": {objClass: GameObject,
+          label: "door_down",
+          sprite: '../../assets/interactable/platform_1.png',
           rect: new Rect(0, 0, 18, 18)},
     "B": {objClass: GameObject,
           label: "wall",
@@ -297,6 +437,10 @@ const levelChars = {
     "L": {objClass: GameObject,
           label: "ladder",
           sprite: '../../assets/interactable/ladder_1.png',
+          rect: new Rect(0, 0, 18, 18)},
+    "0": {objClass: Button,
+          label: "button",
+          sprite: '../../assets/interactable/button_off.png',
           rect: new Rect(0, 0, 18, 18)}
 };
 

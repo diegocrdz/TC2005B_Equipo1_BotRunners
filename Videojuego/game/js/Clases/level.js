@@ -68,9 +68,15 @@ class Level {
                     this.actors.push(actor);
                     cellType = "floor";
                 } else if (actor.type == "door") {
-                    //actor.setSprite(item.sprite, item.rect);
+                    this.addBackgroundFloor(x, y);
+                    actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "door";
+                } else if (actor.type == "door_down" || actor.type == "door_up") {
+                    this.addBackgroundFloor(x, y);
+                    actor.setSprite(item.sprite, item.rect);
+                    this.actors.push(actor);
+                    cellType = "wall";
                 } else if (actor.type == "box") {
                     this.addBackgroundFloor(x, y);
                     actor.position = actor.position.plus(new Vec(0, -2));
@@ -80,6 +86,11 @@ class Level {
                     this.actors.push(actor);
                     cellType = "box";
                 } else if (actor.type == "ladder") {
+                    actor.setSprite(item.sprite, item.rect);
+                    this.actors.push(actor);
+                    cellType = "empty";
+                } else if (actor.type == "button") {
+                    this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "empty";
