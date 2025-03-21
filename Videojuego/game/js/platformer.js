@@ -217,6 +217,12 @@ class Game {
             this.player.position = new Vec(playerPositionX, playerPositionY);
         }
 
+        // Reset the player pressing keys
+        // This is necessary to avoid the player
+        // moving automatically when changing levels
+        this.player.isPressingUp = false;
+        this.player.isPressingDown = false;
+
         console.log("Moved to level " + levelNumber);
     }
 
@@ -285,16 +291,22 @@ class Game {
 
                     // If the player jumps and he is in a room with 1 branch
                     // he will go to the button room
-                    // if there is no button room, he will go to branch2, since it is the only option
-                    if (this.player.isJumping
+                    // if there is no button room, he will go to branch2
+                    // if there is no branch2, he will go to branch1
+                    if (this.player.isPressingUp
                         && rooms.get(this.levelNumber).type === "ladder1") {
                         targetRoomId = this.getBranch("button");
                         if (targetRoomId !== undefined) {
-                            this.moveToLevel(targetRoomId, 2, 12);
+                            this.moveToLevel(targetRoomId);
                         } else {
                             targetRoomId = this.getBranch("branch2");
                             if (targetRoomId !== undefined) {
-                                this.moveToLevel(targetRoomId, 2, 12);
+                                this.moveToLevel(targetRoomId);
+                            } else {
+                                targetRoomId = this.getBranch("branch1");
+                                if (targetRoomId !== undefined) {
+                                    this.moveToLevel(targetRoomId);
+                                }
                             }
                         }
                     }
@@ -302,49 +314,49 @@ class Game {
                     // If the player jumps and he is in a room with 2 branches
                     // he will go to the button room
                     // if there is no button room, he will go to branch1
-                    if (this.player.isJumping
+                    if (this.player.isPressingUp
                         && rooms.get(this.levelNumber).type === "ladder2") {
                         targetRoomId = this.getBranch("button");
                         if (targetRoomId !== undefined) {
-                            this.moveToLevel(targetRoomId, 2, 12);
+                            this.moveToLevel(targetRoomId);
                         } else {
                             targetRoomId = this.getBranch("branch1");
                             if (targetRoomId !== undefined) {
-                                this.moveToLevel(targetRoomId, 2, 12);
+                                this.moveToLevel(targetRoomId);
                             }
                         }
                     }
 
                     // If the player crouches and he is in a room with 2 branches
                     // he will go to branch2
-                    if (this.player.isCrouching
+                    if (this.player.isPressingDown
                                 && rooms.get(this.levelNumber).type === "ladder2") {
                         targetRoomId = this.getBranch("branch2");
                         if (targetRoomId !== undefined) {
                             console.log("Going to branch2");
-                            this.moveToLevel(targetRoomId, 2, 12);
+                            this.moveToLevel(targetRoomId);
                         }
                     }
                     
                     // If the player jumpps and he is in a brach below
                     // he will go to the last room visited
-                    if (this.player.isJumping
+                    if (this.player.isPressingUp
                         && rooms.get(this.levelNumber).type === "branch2") {
-                        this.moveToLevel(this.lastRoomNumber, 2, 12);
+                        this.moveToLevel(this.lastRoomNumber);
                     }
 
                     // If the player crouches and he is in a branch up
                     // he will go to the last room visited
-                    if (this.player.isCrouching
+                    if (this.player.isPressingDown
                         && rooms.get(this.levelNumber).type === "branch1") {
-                        this.moveToLevel(this.lastRoomNumber, 2, 12);
+                        this.moveToLevel(this.lastRoomNumber, this.player.position.x, 5);
                     }
 
                     // If the player crouches and he is in a button room
                     // he will go to the last room visited
-                    if (this.player.isCrouching
+                    if (this.player.isPressingDown
                         && rooms.get(this.levelNumber).type === "button") {
-                        this.moveToLevel(this.lastRoomNumber, 2, 12);
+                            this.moveToLevel(this.lastRoomNumber, this.player.position.x, 5);
                     }
                 } else if (actor.type == 'button') {
                     actor.press(); // Press the button
@@ -593,7 +605,6 @@ function setEventListeners() {
             game.togglePause();
         }
 
-
         // Use first weapom
         if (event.key == '1') {
             game.player.selectFirstWeapon();
@@ -602,6 +613,14 @@ function setEventListeners() {
         } else if(event.key == '3') {
             game.player.selectPotion();
             game.player.useHealthPotion();
+        }
+
+        // Use ladders
+        if (event.key == 'ArrowUp') {
+            game.player.isPressingUp = true;
+        }
+        if (event.key == 'ArrowDown') {
+            game.player.isPressingDown = true;
         }
     });
 
@@ -614,6 +633,14 @@ function setEventListeners() {
         }
         if (event.key == 's') {
             game.player.standUp();
+        }
+
+        // Use ladders
+        if (event.key == 'ArrowUp') {
+            game.player.isPressingUp = false;
+        }
+        if (event.key == 'ArrowDown') {
+            game.player.isPressingDown = false;
         }
     });
 }

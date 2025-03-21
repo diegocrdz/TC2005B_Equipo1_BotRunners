@@ -30,6 +30,9 @@ class Player extends AnimatedObject {
         this.selectedWeapon = null;
         this.hasUsedPotion = false; // Track if the health potion has been used
 
+        this.isPressingUp = false;
+        this.isPressingDown = false;
+
         // Player properties
         this.health = 100;
         this.maxHealth = 100;

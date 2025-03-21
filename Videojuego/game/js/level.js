@@ -3,7 +3,11 @@
 class Room {
     constructor(id, type = "normal") {
         this.id = id;
-        this.type = type;  // "start", "normal", "boss", "button1", "button2", "branch", "ladder1", "ladder2"
+        // Room types:
+        // "start", "room2", "normal", "boss",
+        // "button1", "button2", "branch",
+        // "ladder1", "ladder2"
+        this.type = type;
         this.connections = new Set(); // Rooms connected to this room
     }
 
@@ -29,6 +33,7 @@ class LevelGenerator {
 
         // Assign the start and boss rooms
         this.rooms.get(0).type = "start";
+        this.rooms.get(1).type = "second";
         this.rooms.get(this.numRooms - 1).type = "boss";
 
         // Connect rooms in a linear way
@@ -48,7 +53,7 @@ class LevelGenerator {
     addBranchingPaths() {
         let buttonRoom = null;
 
-        for (let i = 1; i < this.numRooms - 1; i++) {
+        for (let i = 2; i < this.numRooms - 1; i++) {
             if (Math.random() < 0.3) { // 30% of probability to create a branch
                 let branchId1 = this.rooms.size;
                 let branchRoom1 = new Room(branchId1);
@@ -197,7 +202,9 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     }
 
     // Place ladders in the level if the room has bifurcations
-    // If roomType is "ladder1", place a door at the top of the level
+    // If roomType is "ladder1"
+    // place a door at the top of the level
+    // place a ladder from the bottom to the top
     if (roomType == "ladder1") {
         for (let x = 1; x < width - 1; x++) {
             level[0][x] = 'U'; 
@@ -206,7 +213,9 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
             level[y][Math.ceil(width / 2)] = 'L';
         }
     }
-    // If roomType is "ladder2", place a door at the top and bottom of the level
+    // If roomType is "ladder2"
+    // place a door at the top and bottom of the level
+    // place a ladder from the top to the bottom
     if (roomType == "ladder2") {
         for (let x = 1; x < width - 1; x++) {
             level[0][x] = 'U';
@@ -218,20 +227,24 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     }
 
     // Place ladders in the branches
-    if (roomType == "button" || roomType == "branch1") { // From the bottom to the top
+    // Place a ladder from the bottom to the top
+    if (roomType == "button" || roomType == "branch1") {
         for (let y = height - 3; y < height; y++) {
             level[y][Math.ceil(width / 2)] = 'L';
         }
-    } else if (roomType == "branch2") {  // From the top to the bottom
+    // Place a ladder from the top to the bottom
+    } else if (roomType == "branch2") { 
         for (let y = 0; y < height - 2; y++) {
             level[y][Math.ceil(width / 2)] = 'L';
         }
     }
 
-    // Place rewards
-    placeRandomly('$', numRewards, 1, height - 2);
+    // Place xp rewards for all rooms
+    placeRandomly('$', numRewards, 2, height - 2);
 
-    // If roomType is "button", place a button only
+    // If roomType is "button"
+    // place a button on the floor
+    // place enemies at the sides
     if (roomType == "button") {
         placeRandomly('0', 1, height - 2, height - 2, width - 5, width - 5);
         return level.map(row => row.join('')).join('\n');
@@ -241,6 +254,30 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
         return level.map(row => row.join('')).join('\n');
     }
 
+    // If roomType is "start"
+    // Only place a box and the player
+    if (roomType == "start") {
+        // Place a box in the level
+        placeRandomly('B', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
+        // Place the player at the bottom of the level
+        level[height - 2][2] = '@';
+        return level.map(row => row.join('')).join('\n');
+    }
+
+    // If the room is the second
+    // Only place a normal enemy
+    if (roomType == "second") {
+        placeRandomly('N', 1, height - 2, height - 2, width - 4, width - 4);
+        return level.map(row => row.join('')).join('\n');
+    }
+
+    // If roomType is "boss"
+    // Only place a heavy enemy
+    if (roomType == "boss") {
+        placeRandomly('H', 1, height - 2, height - 2, width - 4, width - 4);
+        return level.map(row => row.join('')).join('\n');
+    }
+    
     // Generate random enemies
     let enemies = generateRandomEnemies(minEnemies, maxEnemies);
 
@@ -248,18 +285,27 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     for (let i = 0; i < enemies.length; i++) {
         
         if (enemies[i] === 'N') {
-            placeRandomly('N', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
+            placeRandomly('N', 1,
+                            height - 2, height - 2,
+                            Math.floor(width / 3), Math.floor(width / 3) * 2);
         }
         else if (enemies[i] === 'H') {
-            placeRandomly('H', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
+            placeRandomly('H', 1,
+                            height - 2, height - 2,
+                            Math.floor(width / 3), Math.floor(width / 3) * 2);
         }
         else {
-            placeRandomly('F', 1, Math.floor(height / 3), Math.floor(height / 3) * 2, Math.floor(width / 2), Math.floor(width / 2));
+            placeRandomly('F', 1,
+                            Math.floor(height / 3), Math.floor(height / 3) * 2,
+                            Math.floor(width / 2), Math.floor(width / 2));
         }
     }
 
     // Place a box in the level
-    placeRandomly('B', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
+    // Get a random number of boxes between 0 and 1
+    let numBoxes = Math.floor(Math.random() * 2)
+    // Place the boxes in the level
+    placeRandomly('B', numBoxes, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
     
     // Place the player at the bottom of the level
     level[height - 2][2] = '@';
