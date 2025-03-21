@@ -104,19 +104,6 @@ class Game {
             ctx.strokeRect(x, y, barWidth, barHeight);
         };
 
-        // Load the health potion image
-        this.potionImage = new Image();
-        this.potionImage.src = '../assets/sprites/potion_full.png'; // Load the full potion sprite
-
-        // Method to draw the health potion
-        this.drawHealthPotion = (ctx) => {
-            const potionX = (canvasWidth / 2) - 70; // Posición X de la poción (al lado de la barra de vida)
-            const potionY = canvasHeight - 70; // Posición Y de la poción (alineada con la barra de vida)
-            const potionWidth = 60; // Ancho del sprite de la poción
-            const potionHeight = 60; // Alto del sprite de la poción
-            ctx.drawImage(this.potionImage, potionX, potionY, potionWidth, potionHeight);
-        };
-
         // Experience bar for the player
         this.playerXpBar = (ctx, scale) => {
             const barWidth = 260; // Width of the health bar
@@ -142,6 +129,77 @@ class Game {
             // Make the border bigger
             ctx.lineWidth = 3;
             ctx.strokeRect(x, y, barWidth, barHeight);
+        };
+
+        // Load the health potion image
+        this.potionImage = new Image();
+        this.potionImage.src = '../assets/sprites/potion_full.png'; // Load the full potion sprite
+
+        // Weapons
+        this.weaponBackgroundImage = new Image();
+        this.weaponBackgroundImage.src = '../../../Videojuego/assets/objects/gray_weapon_background.png';
+
+        this.weaponSelectionImage = new Image();
+        this.weaponSelectionImage.src = '../../../Videojuego/assets/objects/weapon_selection.png';
+
+        this.armImage = new Image();
+        this.armImage.src =   '../../../Videojuego/assets/objects/melee_1.png';
+
+        this.roboticArmImage = new Image();
+        this.roboticArmImage.src =   '../../../Videojuego/assets/objects/melee_2.png';
+
+        this.slowPistolImage = new Image();
+        this.slowPistolImage.src =   '../../../Videojuego/assets/objects/gun_1.png';
+
+        this.fastPistolImage = new Image();
+        this.fastPistolImage.src =   '../../../Videojuego/assets/objects/gun_2.png';
+   
+
+        //Method to draw the selection backgrounds
+        this.drawBackgrounds = (ctx) => {
+            const armBackgroundX = (canvasWidth / 2) - 360;
+            const pistolBackgroundX = (canvasWidth / 2) - 260;
+            const potionBackgroundX = (canvasWidth / 2) - 160;
+            const weaponBackgroundY = canvasHeight - 78;
+            const weaponBackgroundWidth = 70; 
+            const weaponBackgroundHeight = 70;
+
+            ctx.drawImage(this.weaponBackgroundImage, armBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
+            ctx.drawImage(this.weaponBackgroundImage, pistolBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
+            ctx.drawImage(this.weaponBackgroundImage, potionBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
+
+            if(game.player.selectedWeapon == 1){
+                ctx.drawImage(this.weaponSelectionImage, armBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
+            } else if(game.player.selectedWeapon == 2){
+                ctx.drawImage(this.weaponSelectionImage, pistolBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
+            } else if(game.player.selectedWeapon == 3){
+                ctx.drawImage(this.weaponSelectionImage, potionBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
+            }
+        }
+        
+
+        // Method to draw the health potion
+        this.drawHealthPotion = (ctx) => {
+            const potionX = (canvasWidth / 2) - 155; // Posición X de la poción (al lado de la barra de vida)
+            const potionY = canvasHeight - 70; // Posición Y de la poción (alineada con la barra de vida)
+            const potionWidth = 60; // Ancho del sprite de la poción
+            const potionHeight = 50; // Alto del sprite de la poción
+            ctx.drawImage(this.potionImage, potionX, potionY, potionWidth, potionHeight);
+        };
+
+        this.drawWeapons = (ctx) => {
+            const armX = (canvasWidth / 2) - 355; // Posición X de la poción (al lado de la barra de vida)
+            const armY = canvasHeight - 70; // Posición Y de la poción (alineada con la barra de vida)
+            const armWidth = 60; // Ancho del sprite de la poción
+            const armHeight = 50; // Alto del sprite de la poción
+
+            const pistolX = (canvasWidth / 2) - 256;
+            const pistolY = canvasHeight - 80; // Posición Y de la poción (alineada con la barra de vida)
+            const pistolWidth = 65; // Ancho del sprite de la poción
+            const pistolHeight = 65; // Alto del sprite de la poción
+
+            ctx.drawImage(this.armImage, armX, armY, armWidth, armHeight);
+            ctx.drawImage(this.slowPistolImage, pistolX, pistolY, pistolWidth, pistolHeight);
         };
 
         console.log(`############ LEVEL ${level} START ###################`);
@@ -319,8 +377,8 @@ class Game {
         this.player.draw(ctx, scale);
 
         // Draw the labels
-        this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
-        this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
+        //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
+        //this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
         this.labelLife.draw(ctx, `Health: ${this.player.health}`);
         this.labelLevel.draw(ctx, `Lvl. ${this.player.level}`);
 
@@ -330,8 +388,14 @@ class Game {
         // Draw the player's experience bar
         this.playerXpBar(ctx, scale);
 
+        //Draw the weapon backgrounds
+        this.drawBackgrounds(ctx);
+
         // Draw the health potion
         this.drawHealthPotion(ctx);
+
+        //Draw the weapons
+        this.drawWeapons(ctx);
 
         // Draw the ladders signs
         if (rooms.get(this.levelNumber).type === "ladder1") {
@@ -529,8 +593,14 @@ function setEventListeners() {
             game.togglePause();
         }
 
-        // Use health potion
-        if (event.key == '3') {
+
+        // Use first weapom
+        if (event.key == '1') {
+            game.player.selectFirstWeapon();
+        } else if(event.key == '2') {
+            game.player.selectSecondWeapon();
+        } else if(event.key == '3') {
+            game.player.selectPotion();
             game.player.useHealthPotion();
         }
     });

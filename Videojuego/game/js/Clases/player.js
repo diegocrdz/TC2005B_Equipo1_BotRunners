@@ -27,6 +27,7 @@ class Player extends AnimatedObject {
         this.isDashing =  false; //dash
 
         this.isHit = false;
+        this.selectedWeapon = null;
         this.hasUsedPotion = false; // Track if the health potion has been used
 
         // Player properties
@@ -368,6 +369,18 @@ class Player extends AnimatedObject {
         setTimeout(() => {
             this.isHit = false;
         }, hitData.duration);
+    }
+
+    selectFirstWeapon(){
+        this.selectedWeapon = 1;
+    }
+
+    selectSecondWeapon(){
+        this.selectedWeapon = 2;
+    }
+
+    selectPotion(){
+        this.selectedWeapon = 3;
     }
 
     useHealthPotion() {
