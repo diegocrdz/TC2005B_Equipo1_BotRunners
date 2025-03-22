@@ -53,8 +53,34 @@ class LevelGenerator {
     addBranchingPaths() {
         let buttonRoom = null;
 
+        // Add the button branch before generating the other branches
+        // between room 2 and rooms length - 1
+        let random = Math.floor(Math.random() * (this.numRooms - 3)) + 2;
+        console.log(random);
+
         for (let i = 2; i < this.numRooms - 1; i++) {
+            // Create a branch with a button
+            if (i == random) {
+                let branchId = this.rooms.size;
+                let branchRoom = new Room(branchId);
+                branchRoom.type = "button";
+                this.rooms.set(branchId, branchRoom);
+                this.rooms.get(i).connect(branchRoom);
+                buttonRoom = branchRoom;
+            }
             if (Math.random() < 0.3) { // 30% of probability to create a branch
+
+                // If the room already has a button branch, create a normal branch
+                if (i == random) {
+                    let branchId1 = this.rooms.size;
+                    let branchRoom1 = new Room(branchId1);
+                    branchRoom1.type = "branch2";
+                    this.rooms.set(branchId1, branchRoom1);
+                    this.rooms.get(i).connect(branchRoom1);
+                    break;
+                }
+
+                // Create a normal branch
                 let branchId1 = this.rooms.size;
                 let branchRoom1 = new Room(branchId1);
                 branchRoom1.type = "branch1";
@@ -68,12 +94,6 @@ class LevelGenerator {
                     branchRoom2.type = "branch2";
                     this.rooms.set(branchId2, branchRoom2);
                     this.rooms.get(i).connect(branchRoom2);
-                }
-
-                // Assign the button room to the first branch
-                if (!buttonRoom) {
-                    buttonRoom = branchRoom1;
-                    buttonRoom.type = "button";
                 }
             }
         }
@@ -313,15 +333,13 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     return level.map(row => row.join('')).join('\n');
 }
 
-// Generate a random level layout
+// List of generated levels
+let GAME_LEVELS = [];
 
 let numRooms = 6;
 let levelGenerator = new LevelGenerator(numRooms);
 let rooms = levelGenerator.generate();
 console.log(rooms);
-
-// List of generated levels
-let GAME_LEVELS = [];
 
 // Fill the list of levels with the generated rooms
 for (let i = 0; i < rooms.size; i++) {

@@ -19,17 +19,19 @@ class Player extends AnimatedObject {
         this.isJumping = false;
         this.isCrouching = false;
         this.isAttacking = false;
-
-        this.canDoubleJump = true;
-        this.isDoubleJumping = false; // double jump
-
-        this.canDash = true;
-        this.isDashing =  false; //dash
-
         this.isHit = false;
-        this.selectedWeapon = null;
-        this.hasUsedPotion = false; // Track if the health potion has been used
 
+        // Double jump
+        this.canDoubleJump = true;
+        this.isDoubleJumping = false;
+
+        // Dash
+        this.canDash = true;
+        this.isDashing =  false;
+
+        // Player selection
+        this.selectedWeapon = null;
+        this.hasUsedPotion = false;
         this.isPressingUp = false;
         this.isPressingDown = false;
 
@@ -42,9 +44,6 @@ class Player extends AnimatedObject {
         this.xpToNextLevel = 100;
         this.level = 0;
         this.attackCooldown = 400;
-
-        // Track if the health potion has been used
-        this.hasUsedPotion = false;
 
         // Movement variables to define directions and animations
         this.movement = {
@@ -85,9 +84,16 @@ class Player extends AnimatedObject {
                         right: [10, 10],
                         left: [21, 21] }
         };
+
+        // Hitbox properties
+        this.offsetX = 0.5;
+        this.offsetY = 1;
+        this.hWidth = this.size.x + 1;
+        this.hHeight = this.size.y + 1;
     }
 
     update(level, deltaTime) {
+        this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
 
         // Make the character fall constantly because of gravity
         this.velocity.y = this.velocity.y + gravity * deltaTime;
@@ -111,8 +117,12 @@ class Player extends AnimatedObject {
         } else {
             this.land(); 
         }
-
         this.updateFrame(deltaTime);
+    }
+
+    draw(ctx, scale) {
+        super.draw(ctx, scale);
+        this.drawHitbox(ctx, scale);
     }
 
     // Start moving the player in a certain direction
@@ -262,10 +272,19 @@ class Player extends AnimatedObject {
         this.setSprite('../../assets/characters/skippy/skippy_attack_1.png', new Rect(0, 0, 32, 24));
         this.size.x = 4; // Adjust the size to match the new sprite
 
+        // Save the original hitbox size and position
+        let originalHWidth = this.hWidth;
+        let originalOffsetX = this.offsetX;
+
+        // Change hitbox size
+        this.hWidth += 2;
+
         if (this.isFacingRight) {
             this.setAnimation(...attackData.right, attackData.repeat, attackData.duration);
         } else {
             this.setAnimation(...attackData.left, attackData.repeat, attackData.duration);
+            // Move the hitbox to the left
+            this.offsetX -= 1;
         }
 
         setTimeout(() => {
@@ -273,6 +292,9 @@ class Player extends AnimatedObject {
             this.size.x = originalSize; // Adjust the size to match the new sprite
             // Restore the original sprite and rect
             this.setSprite('../../assets/characters/skippy/skippy_1.png', new Rect(0, 0, 24, 24));
+            // Restore hitbox size and position
+            this.hWidth = originalHWidth;
+            this.offsetX = originalOffsetX;
         }, this.attackCooldown);
     }
 

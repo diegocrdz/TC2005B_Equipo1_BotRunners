@@ -214,15 +214,16 @@ class Game {
     
         // Set the player's position explicitly
         if (playerPositionX !== undefined && playerPositionY !== undefined) {
-            this.player.position = new Vec(playerPositionX, playerPositionY);
+            this.player.position = new Vec(playerPositionX, playerPositionY); // Set the player's position
+            this.player.setHitbox(0, 0, this.player.size.x, this.player.size.y); // Update hitbox
         }
-
+    
         // Reset the player pressing keys
         // This is necessary to avoid the player
         // moving automatically when changing levels
         this.player.isPressingUp = false;
         this.player.isPressingDown = false;
-
+    
         console.log("Moved to level " + levelNumber);
     }
 
@@ -277,10 +278,10 @@ class Game {
                 } else if (actor.type == 'door') {
                     
                     if (this.player.position.x > actor.position.x) { // If the door is on the left
-                        this.moveToLevel(--this.levelNumber, levelWidth - this.player.size.x - 2, 12);
+                        this.moveToLevel(this.levelNumber - 1, levelWidth - this.player.size.x - 2, 12);
                         this.lastRoomNumber = this.levelNumber;
                     } else if (this.player.position.x < actor.position.x) { // If the door is on the right
-                        this.moveToLevel(++this.levelNumber, 2, 12);
+                        this.moveToLevel(this.levelNumber + 1, 2, 12);
                         this.lastRoomNumber = this.levelNumber;
                     }
 
@@ -334,7 +335,7 @@ class Game {
                         targetRoomId = this.getBranch("branch2");
                         if (targetRoomId !== undefined) {
                             console.log("Going to branch2");
-                            this.moveToLevel(targetRoomId);
+                            this.moveToLevel(targetRoomId, this.player.position.x, 5);
                         }
                     }
                     
@@ -372,6 +373,15 @@ class Game {
                 actor.draw(ctx, scale);
             }
         }
+
+        // Draw the ladders signs
+        if (rooms.get(this.levelNumber).type === "ladder1") {
+            this.drawLadderUp(ctx);
+        }
+        if (rooms.get(this.levelNumber).type === "ladder2") {
+            this.drawLadderUp(ctx);
+            this.drawLadderDown(ctx);
+        }
     
         // Then draw the rest of the actors
         for (let actor of this.actors) {
@@ -408,15 +418,6 @@ class Game {
 
         //Draw the weapons
         this.drawWeapons(ctx);
-
-        // Draw the ladders signs
-        if (rooms.get(this.levelNumber).type === "ladder1") {
-            this.drawLadderUp(ctx);
-        }
-        if (rooms.get(this.levelNumber).type === "ladder2") {
-            this.drawLadderUp(ctx);
-            this.drawLadderDown(ctx);
-        }
     }
 
     // Pause or resume the game
@@ -548,23 +549,25 @@ function gameStart() {
 }
 
 function restartGame() {
-    // Regenerate the levels
-    let numRooms = 6; // Define the number of rooms for the new levels
-    let levelGenerator = new LevelGenerator(numRooms);
-    let rooms = levelGenerator.generate();
+    
+    GAME_LEVELS = [];
+    numRooms = 6;
+    levelGenerator = new LevelGenerator(numRooms);
+    rooms = levelGenerator.generate();
+    console.log(rooms);
 
-    GAME_LEVELS = []; // Clear the existing levels
-
-    // Generate new levels based on the room types
-    for (let i = 0; i < numRooms; i++) {
+    // Fill the list of levels with the generated rooms
+    for (let i = 0; i < rooms.size; i++) {
         let level = generateRandomLevel(levelWidth, 16, 10, 1, 1, 3, rooms.get(i).type);
         GAME_LEVELS.push(level);
     }
 
-    // Reset the game state with the new levels
+    // Print the generated levels to the console
+    for (let i = 0; i < GAME_LEVELS.length; i++) {
+        console.log(GAME_LEVELS[i]);
+    }
+
     game = new Game('playing', new Level(GAME_LEVELS[0]));
-    frameStart = undefined; // Reset the frame start time
-    console.log("Game restarted with new levels");
 }
 
 function setEventListeners() {

@@ -16,6 +16,7 @@ class Coin extends GameObject {
     }  
 
     update(level, deltaTime) {
+        this.setHitbox(0, 0, this.size.x, this.size.y); // Update the hitbox
 
         if (this.hasGravity) {
             // Apply gravity

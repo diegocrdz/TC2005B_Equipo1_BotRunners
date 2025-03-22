@@ -41,6 +41,12 @@ class Enemy extends AnimatedObject {
                 left: [2, 2]
             },
         };
+
+        // Hitbox properties
+        this.offsetX = 0.5;
+        this.offsetY = 1;
+        this.hWidth = this.size.x + 1;
+        this.hHeight = this.size.y + 1;
     }
 
     // Draw the health bar above the enemy
@@ -69,6 +75,8 @@ class Enemy extends AnimatedObject {
     }
 
     update(level, deltaTime) {
+        this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
+
         // Make the character fall constantly because of gravity
         this.velocity.y = this.velocity.y + gravity * deltaTime;
     
@@ -107,6 +115,11 @@ class Enemy extends AnimatedObject {
         }
     
         this.updateFrame(deltaTime);
+    }
+
+    draw(ctx, scale) {
+        super.draw(ctx, scale);
+        this.drawHitbox(ctx, scale);
     }
 
     startMovement(direction) {
@@ -175,8 +188,9 @@ class Enemy extends AnimatedObject {
         // Reset the isHit flag after the animation duration
         setTimeout(() => {
             this.isHit = false;
-            this.startMovement(this.isFacingRight ? "left" : "right"); // Continue moving in the same direction after being hit
-        }, hitData.duration * 2); // 3 times the duration of the hit animation
+            // Continue moving in the same direction after being hit
+            this.startMovement(this.isFacingRight ? "left" : "right");
+        }, hitData.duration * 2); // 2 times the duration of the hit animation
     }
 }
 
@@ -248,9 +262,16 @@ class FlyingEnemy extends Enemy {
                 left: [5, 5]
             }
         };
+
+        // Hitbox properties
+        this.offsetX = 0.5;
+        this.offsetY = 1;
+        this.hWidth = this.size.x + 1;
+        this.hHeight = this.size.y + 1;
     }
 
     update(level, deltaTime) {
+        this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
 
         let velX = this.velocity.x;
 

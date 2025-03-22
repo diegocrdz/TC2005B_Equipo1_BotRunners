@@ -48,6 +48,16 @@ class GameObject {
         // Sprite properties
         this.spriteImage = undefined;
         this.spriteRect = undefined;
+
+        // Hitbox properties
+        this.hitbox = {
+            position: {
+                x: this.position.x,
+                y: this.position.y,
+            },
+            width: this.size.x,
+            height: this.size.y,
+        }
     }
 
     setSprite(imagePath, rect) {
@@ -56,6 +66,13 @@ class GameObject {
         if (rect) {
             this.spriteRect = rect;
         }
+    }
+
+    setHitbox(offsetX, offsetY, width, height) {
+        this.hitbox.position.x = this.position.x + offsetX;
+        this.hitbox.position.y = this.position.y + offsetY;
+        this.hitbox.width = width;
+        this.hitbox.height = height;
     }
 
     draw(ctx, scale) {
@@ -82,6 +99,18 @@ class GameObject {
             ctx.fillRect(this.position.x * scale, this.position.y * scale,
                          this.size.x * scale, this.size.y * scale);
         }
+    }
+
+    drawHitbox(ctx, scale) {
+        ctx.strokeStyle = "red"; // Use red color for the hitbox
+        ctx.lineWidth = 2; // Set the line width for better visibility
+
+        ctx.strokeRect(
+            this.hitbox.position.x * scale,
+            this.hitbox.position.y * scale,
+            this.hitbox.width * scale,
+            this.hitbox.height * scale
+        );
     }
 
     update() {
@@ -144,11 +173,19 @@ class TextLabel {
     }
 }
 
-
+/*
 // Simple collision detection between rectangles
 function overlapRectangles(actor1, actor2) {
     return actor1.position.x + actor1.size.x > actor2.position.x &&
            actor1.position.x < actor2.position.x + actor2.size.x &&
            actor1.position.y + actor1.size.y > actor2.position.y &&
            actor1.position.y < actor2.position.y + actor2.size.y;
+}
+*/
+
+function overlapRectangles(actor1, actor2) {
+    return actor1.hitbox.position.x + actor1.hitbox.width > actor2.hitbox.position.x &&
+           actor1.hitbox.position.x < actor2.hitbox.position.x + actor2.hitbox.width &&
+           actor1.hitbox.position.y + actor1.hitbox.height > actor2.hitbox.position.y &&
+           actor1.hitbox.position.y < actor2.hitbox.position.y + actor2.hitbox.height;
 }
