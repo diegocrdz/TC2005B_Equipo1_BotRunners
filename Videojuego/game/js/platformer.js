@@ -46,6 +46,9 @@ class Game {
         this.labelDebug = new TextLabel(20, canvasHeight - 60,
                                         "20px Ubuntu Mono", "white");
 
+        this.labelTime =  new TextLabel(canvasWidth - 150, 150,
+                                        "23px monospace", "#434a5f");
+
         this.labelLife = new TextLabel(canvasWidth - 120, canvasHeight - 50,
                                         "20px Ubuntu Mono", "white");
 
@@ -401,6 +404,7 @@ class Game {
         // Draw the labels
         //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
         //this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
+        this.labelTime.draw(ctx, `${this.chronometer.$elapsedTime.textContent}`);
         this.labelLife.draw(ctx, `Health: ${this.player.health}`);
         this.labelLevel.draw(ctx, `Lvl. ${this.player.level}`);
 
@@ -423,6 +427,13 @@ class Game {
     // Pause or resume the game
     togglePause() {
         this.paused = !this.paused;
+
+        if(this.paused){
+            this.chronometer.pause(); //pauses chronometer
+        } else{
+            this.chronometer.start(); //resumes chronometer
+        }
+
         console.log(this.paused ? "Game paused" : "Game resumed");
     }
 
@@ -542,10 +553,15 @@ function gameStart() {
     // Register the game object, which creates all other objects
     game = new Game('playing', new Level(GAME_LEVELS[0]));
 
+    game.chronometer = new Chronometer(); //initiates chronometer
+    game.chronometer.start(); //starts chronometer
+
     setEventListeners();
 
     // Call the first frame with the current time
     updateCanvas(document.timeline.currentTime);
+
+    
 }
 
 function restartGame() {
@@ -567,7 +583,18 @@ function restartGame() {
         console.log(GAME_LEVELS[i]);
     }
 
+    if (game.chronometer) {
+        game.chronometer.pause(); // stops the current chronometer
+    }
+
     game = new Game('playing', new Level(GAME_LEVELS[0]));
+
+    if (!game.chronometer) {
+        game.chronometer = new Chronometer(); // if the chronometer doesnt exists, it creates a new one
+    }
+
+    game.chronometer.reset(); // resets the chronometer
+    game.chronometer.start();
 }
 
 function setEventListeners() {

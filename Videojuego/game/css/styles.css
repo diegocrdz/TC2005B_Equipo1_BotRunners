@@ -86,3 +86,19 @@ canvas {
 #ui input, #ui select, #ui option, #ui canvas {
   pointer-events: auto;
 }
+
+/* #timerContainer{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10; 
+}
+
+#elapsedTime{
+  background-color: #434a5f;
+  color:white;
+  font-size: 20px;
+  font-family: monospace;
+  padding: 5px 20px;
+  border-radius: 5px;
+} */
