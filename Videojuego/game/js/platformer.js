@@ -35,10 +35,9 @@ class Game {
         this.level = level;
         this.levelNumber = 0;
         this.player = level.player;
-        this.enemy = level.enemy;
         this.actors = level.actors;
-        this.paused = false; // Game starts unpaused
-        this.lastRoomNumber = 0; // Keep track of the last room number visited
+        this.enemies = this.actors.filter(actor => actor.type === 'enemy'); // Inicializar game.enemies con los enemigos del nivel
+        this.projectiles = []; // Initialize the projectiles array
 
         this.labelMoney = new TextLabel(20, canvasHeight - 30,
                                         "30px Ubuntu Mono", "white");
@@ -205,7 +204,43 @@ class Game {
             ctx.drawImage(this.slowPistolImage, pistolX, pistolY, pistolWidth, pistolHeight);
         };
 
+        // Add event listeners for arrow keys
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') {
+                this.player.shoot('right'); // Call shoot method when right arrow is pressed
+            } else if (event.key === 'ArrowLeft') {
+                this.player.shoot('left'); // Call shoot method when left arrow is pressed
+            }
+        });
+
+        window.addEventListener('keyup', (event) => {
+            if (event.key === 'ArrowRight') {
+                this.player.stopMovement('right');
+            } else if (event.key === 'ArrowLeft') {
+                this.player.stopMovement('left');
+            }
+        });
+
         console.log(`############ LEVEL ${level} START ###################`);
+    }
+
+    addProjectile(projectile) {
+        this.projectiles.push(projectile);
+    }
+
+    removeProjectile(projectile) {
+        const index = this.projectiles.indexOf(projectile);
+        if (index > -1) {
+            this.projectiles.splice(index, 1);
+        }
+    }
+
+    removeEnemy(enemy) {
+        const index = this.enemies.indexOf(enemy);
+        if (index > -1) {
+            this.enemies.splice(index, 1);
+        }
+        this.actors = this.actors.filter(actor => actor !== enemy);
     }
 
     // Function to load a specific level
@@ -253,6 +288,9 @@ class Game {
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
         }
+
+        // Update projectiles
+        this.projectiles.forEach(projectile => projectile.update(deltaTime));
 
         // A copy of the full list to iterate over all of them
         // DOES THIS WORK?
@@ -366,6 +404,16 @@ class Game {
                     actor.press(); // Press the button
                 }
             }
+
+            // Check for collisions with enemies
+            if (actor.type == 'enemy' && overlapRectangles(this.player, actor)) {
+        
+            }
+
+            // Check for collisions with doors
+            if (actor.type == 'door' && overlapRectangles(this.player, actor)) {
+            
+            }
         }
     }
 
@@ -400,6 +448,9 @@ class Game {
         
         // Draw the player on top of everything else
         this.player.draw(ctx, scale);
+
+        // Draw the projectiles
+        this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
 
         // Draw the labels
         //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
@@ -643,6 +694,14 @@ function setEventListeners() {
         } else if(event.key == '3') {
             game.player.selectPotion();
             game.player.useHealthPotion();
+        }
+
+        //shoot
+        if (event.key == 'ArrowLeft') {
+            game.player.shoot('left'); // Call shoot method when left arrow is pressed
+        }
+        if (event.key == 'ArrowRight') {
+            game.player.shoot('right'); // Call shoot method when right arrow is pressed
         }
 
         // Use ladders
