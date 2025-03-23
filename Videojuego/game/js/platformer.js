@@ -60,10 +60,8 @@ class Game {
         
         // Load board images for indicating ladders direction
         this.ladderUpImage = new Image();
-        this.ladderUpImage.src = '../../assets/backgrounds/sign_up.png'; // Load the ladder up sprite
 
         this.ladderDownImage = new Image();
-        this.ladderDownImage.src = '../../assets/backgrounds/sign_down.png'; // Load the ladder down sprite
 
         // Method to draw the ladder up sign
         this.drawLadderUp = (ctx) => {
@@ -291,9 +289,15 @@ class Game {
         for (let actor of this.actors) {
             if (actor.type === 'door') {
                 if (hasEnemies) {
-                    actor.close(); // Update the state and sprite
+                    actor.close(); // Update the state and sprite of doors
+                    // Update the ladder signs
+                    this.ladderUpImage.src = '../../assets/backgrounds/sign_up_1.png';
+                    this.ladderDownImage.src = '../../assets/backgrounds/sign_down_1.png';
                 } else {
-                    actor.open(); // Update the state and sprite
+                    actor.open(); // Update the state and sprite of doors
+                    // Update the ladder signs
+                    this.ladderUpImage.src = '../../assets/backgrounds/sign_up.png';
+                    this.ladderDownImage.src = '../../assets/backgrounds/sign_down.png';
                 }
             }
         }
@@ -347,7 +351,7 @@ class Game {
                         this.lastRoomNumber = this.levelNumber;
                     }
 
-                } else if (actor.type == 'ladder') {
+                } else if (actor.type == 'ladder' && !hasEnemies) {
 
                     // Initialize the target room ID
                     let targetRoomId = undefined;
