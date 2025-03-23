@@ -36,8 +36,12 @@ class Game {
         this.levelNumber = 0;
         this.player = level.player;
         this.actors = level.actors;
-        this.enemies = this.actors.filter(actor => actor.type === 'enemy'); // Inicializar game.enemies con los enemigos del nivel
-        this.projectiles = []; // Initialize the projectiles array
+
+        // From the actors list, filter the enemies
+        this.enemies = this.actors.filter(actor => actor.type === 'enemy');
+
+        // List of projectiles
+        this.projectiles = [];
 
         this.labelMoney = new TextLabel(20, canvasHeight - 30,
                                         "30px Ubuntu Mono", "white");
@@ -288,23 +292,40 @@ class Game {
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
         }
-
+        
         // Update projectiles
-        this.projectiles.forEach(projectile => projectile.update(deltaTime));
+        this.projectiles.forEach(projectile => projectile.update(this.level, deltaTime));
 
         // A copy of the full list to iterate over all of them
         // DOES THIS WORK?
         let currentActors = this.actors;
-        // Detect collisions
+
+        // Detect collisions with projectiles
+        for (let projectile of this.projectiles) {
+            for (let actor of currentActors) {
+                if (actor.type === 'enemy' && overlapRectangles(projectile, actor)) {
+                    actor.takeDamage(game.player.damage); // Deal damage to the enemy
+                    this.removeProjectile(projectile); // Remove the projectile
+                    if (actor.health <= 0) {
+                        actor.die(); // Kill the enemy if health is 0 or less
+                    }
+                    break; // Stop checking other enemies for this projectile
+                }
+            }
+        }
+
+        // Detect collisions with player
         for (let actor of currentActors) {
             if (actor.type != 'floor' && overlapRectangles(this.player, actor)) {
                 //console.log(`Collision of ${this.player.type} with ${actor.type}`);
                 if (actor.type == 'wall') {
                     //console.log("Hit a wall");
+
                 } else if (actor.type == 'coin' && actor.isCollectible) {
                     this.player.gainXp(actor.xp_value); // Gain 5 experience points
                     GAME_LEVELS[this.levelNumber] = GAME_LEVELS[this.levelNumber].replace('$', '.'); // Remove the coin from the level
                     this.actors = this.actors.filter(item => item !== actor); // Remove the coin from the actors list
+
                 } else if (actor.type == 'enemy') {
                     // Check if the player is attacking
                     if (this.player.isAttacking) { // If the player is attacking, deal damage to the enemy
@@ -316,6 +337,7 @@ class Game {
                     else { // If the player is not attacking, the enemy deals damage to the player
                         this.player.takeDamage(actor.damage);
                     }
+
                 } else if (actor.type == 'door') {
                     
                     if (this.player.position.x > actor.position.x) { // If the door is on the left
@@ -400,19 +422,10 @@ class Game {
                         && rooms.get(this.levelNumber).type === "button") {
                             this.moveToLevel(this.lastRoomNumber, this.player.position.x, 5);
                     }
+
                 } else if (actor.type == 'button') {
                     actor.press(); // Press the button
                 }
-            }
-
-            // Check for collisions with enemies
-            if (actor.type == 'enemy' && overlapRectangles(this.player, actor)) {
-        
-            }
-
-            // Check for collisions with doors
-            if (actor.type == 'door' && overlapRectangles(this.player, actor)) {
-            
             }
         }
     }
@@ -671,14 +684,24 @@ function setEventListeners() {
             game.player.dash(game.level);
         }
 
-        // Attack
-        if (event.key == 'ArrowLeft') {
+        // Attack with the melee weapon
+        if (event.key == 'ArrowLeft' && game.player.selectedWeapon == 1) {
             game.player.isFacingRight = false;
             game.player.attack();
         }
-        if (event.key == 'ArrowRight') {
+        if (event.key == 'ArrowRight' && game.player.selectedWeapon == 1) {
             game.player.isFacingRight = true;
             game.player.attack();
+        }
+
+        // Attack with the ranged weapon
+        if (event.key == 'ArrowLeft' && game.player.selectedWeapon == 2) {
+            game.player.isFacingRight = false;
+            game.player.shoot();
+        }
+        if (event.key == 'ArrowRight' && game.player.selectedWeapon == 2) {
+            game.player.isFacingRight = true;
+            game.player.shoot();
         }
 
         // Pause the game
@@ -686,22 +709,21 @@ function setEventListeners() {
             game.togglePause();
         }
 
-        // Use first weapom
-        if (event.key == '1') {
-            game.player.selectFirstWeapon();
-        } else if(event.key == '2') {
-            game.player.selectSecondWeapon();
-        } else if(event.key == '3') {
-            game.player.selectPotion();
-            game.player.useHealthPotion();
+        // Restart the game
+        if (event.key == 'r') {
+            restartGame();
         }
 
-        //shoot
-        if (event.key == 'ArrowLeft') {
-            game.player.shoot('left'); // Call shoot method when left arrow is pressed
-        }
-        if (event.key == 'ArrowRight') {
-            game.player.shoot('right'); // Call shoot method when right arrow is pressed
+        // Use first weapom
+        if (event.key == '1') {
+            game.player.selectWeapon(1);
+
+        } else if(event.key == '2') {
+            game.player.selectWeapon(2);
+
+        } else if(event.key == '3') {
+            game.player.selectWeapon(3)
+            game.player.useHealthPotion();
         }
 
         // Use ladders

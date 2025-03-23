@@ -36,6 +36,7 @@ class Level {
 
                     this.player = actor;
                     cellType = "empty";
+
                 } else if (actor.type == "coin") {
                     // Also instantiate a floor tile below the player
                     this.addBackgroundFloor(x, y);
@@ -43,6 +44,7 @@ class Level {
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "empty";
+
                 } else if (actor.type == "enemy") {
                     // Make the enemy larger
                     this.addBackgroundFloor(x, y);
@@ -57,26 +59,31 @@ class Level {
 
                     this.actors.push(actor);
                     cellType = "empty";
+
                 } else if (actor.type == "wall") {
                     // Randomize sprites for each wall tile
                     // item.rect = this.randomEvironment(rnd);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "wall";
+
                 } else if (actor.type == "floor") {
                     //actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "floor";
+
                 } else if (actor.type == "door") {
                     this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "door";
+
                 } else if (actor.type == "door_down" || actor.type == "door_up") {
                     this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "wall";
+
                 } else if (actor.type == "box") {
                     this.addBackgroundFloor(x, y);
                     actor.position = actor.position.plus(new Vec(0, -2));
@@ -85,10 +92,12 @@ class Level {
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "box";
+
                 } else if (actor.type == "ladder") {
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "empty";
+
                 } else if (actor.type == "button") {
                     this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);

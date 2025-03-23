@@ -19,6 +19,7 @@ class Player extends AnimatedObject {
         this.isJumping = false;
         this.isCrouching = false;
         this.isAttacking = false;
+        this.isShooting = false;
         this.isHit = false;
 
         // Double jump
@@ -30,7 +31,8 @@ class Player extends AnimatedObject {
         this.isDashing =  false;
 
         // Player selection
-        this.selectedWeapon = null;
+        // By default, the player has the first weapon selected
+        this.selectedWeapon = 1; // 1: sword, 2: gun
         this.hasUsedPotion = false;
         this.isPressingUp = false;
         this.isPressingDown = false;
@@ -44,6 +46,7 @@ class Player extends AnimatedObject {
         this.xpToNextLevel = 100;
         this.level = 0;
         this.attackCooldown = 400;
+        this.shootCooldown = 1000;
 
         // Movement variables to define directions and animations
         this.movement = {
@@ -93,6 +96,7 @@ class Player extends AnimatedObject {
     }
 
     update(level, deltaTime) {
+        // Update the hitbox
         this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
 
         // Make the character fall constantly because of gravity
@@ -117,6 +121,7 @@ class Player extends AnimatedObject {
         } else {
             this.land(); 
         }
+
         this.updateFrame(deltaTime);
     }
 
@@ -129,6 +134,7 @@ class Player extends AnimatedObject {
     startMovement(direction) {
         const dirData = this.movement[direction];
         this.isFacingRight = direction == "right"; // Check if the direction is right
+
         if (!dirData.status) { // If the player is not already moving
             dirData.status = true;
             this.velocity[dirData.axis] = dirData.sign * walkSpeed; // Set the velocity
@@ -258,7 +264,6 @@ class Player extends AnimatedObject {
                 }, 5000); // 5 second cooldown
             }
         }
-        
     }
 
     attack() {
@@ -298,60 +303,31 @@ class Player extends AnimatedObject {
         }, this.attackCooldown);
     }
 
-
-    //logica disque pa disparar tengo un problema con la detección de colisiones 
-    // con el proyectil y no sirve aaaaaaaaa
     shoot() {
-        if (this.selectedWeapon !== 2 || this.isAttacking) return;
+        if (this.selectedWeapon !== 2 || this.isShooting) return;
 
-        this.isAttacking = true;
+        this.isShooting = true;
+        const attackData = this.movement.attack;
 
         // Crear el proyectil
-        let projectile = new Projectile(this.position, this.isFacingRight ? "right" : "left");
+        let projectile = new Projectile("blue", 1, 1,
+                                        this.position.x + 1.5,
+                                        this.position.y + 1.8,
+                                        "projectile",
+                                        this.isFacingRight ? "right" : "left");
+
         game.addProjectile(projectile);
-
-        setTimeout(() => {
-            this.isAttacking = false;
-        }, this.attackCooldown);
-    }
-
-    shootProjectile(direction) {
-        if (this.isAttacking) return;
-
-        this.isAttacking = true;
-        const attackData = this.movement.attack;
-        let originalSize = this.size.x;
-
-        // Change to the shoot sprite and rect
-        this.setSprite('../../assets/characters/skippy/skippy_3.png', new Rect(0, 0, 32, 24));
-        this.size.x = 4; // Adjust the size to match the new sprite
-
-        // Save the original hitbox size and position
-        let originalHWidth = this.hWidth;
-        let originalOffsetX = this.offsetX;
-
-        // Change hitbox size
-        this.hWidth += 2;
 
         if (this.isFacingRight) {
             this.setAnimation(...attackData.right, attackData.repeat, attackData.duration);
-        } else {
+        }
+        else {
             this.setAnimation(...attackData.left, attackData.repeat, attackData.duration);
-           
         }
 
-        // Create the projectile
-        let projectile = new Projectile(this.position, direction);
-        game.addProjectile(projectile);
-
         setTimeout(() => {
-            this.isAttacking = false;
-            this.size.x = originalSize; 
-            this.setSprite('../../assets/characters/skippy/skippy_3.png', new Rect(0, 0, 24, 24));
-            // Restore hitbox size and position
-            this.hWidth = originalHWidth;
-            this.offsetX = originalOffsetX;
-        }, this.attackCooldown);
+            this.isShooting = false;
+        }, this.shootCooldown);
     }
 
     takeDamage(amount) {
@@ -391,12 +367,9 @@ class Player extends AnimatedObject {
     }
 
     selectRandomAbility() {
-        for (let ability of abilities) {
-            let random = Math.floor(Math.random() * abilities.length);
-            let selectedAbility = abilities[random];
-            this.gainAbility(selectedAbility);
-            break;
-        }
+        let random = Math.floor(Math.random() * abilities.length);
+        let selectedAbility = abilities[random];
+        this.gainAbility(selectedAbility);
     }
 
     gainAbility(ability) {
@@ -452,21 +425,16 @@ class Player extends AnimatedObject {
         }, hitData.duration);
     }
 
-    selectFirstWeapon(){
-        this.selectedWeapon = 1;
-        this.setSprite('../../assets/characters/skippy/skippy_1.png', new Rect(0, 0, 24, 24));
-
-      
-
-    }
-
-    selectSecondWeapon(){
-        this.selectedWeapon = 2;
-        this.setSprite('../../assets/characters/skippy/skippy_3.png', new Rect(0, 0, 24, 24));
-    }
-
-    selectPotion(){
-        this.selectedWeapon = 3;
+    selectWeapon(number) {
+        if (number === 1) {
+            this.selectedWeapon = 1;
+            this.setSprite('../../assets/characters/skippy/skippy_1.png', new Rect(0, 0, 24, 24));
+        } else if (number === 2) {
+            this.selectedWeapon = 2;
+            this.setSprite('../../assets/characters/skippy/skippy_3.png', new Rect(0, 0, 24, 24));
+        } else if (number === 3) {
+            this.selectedWeapon = 3;
+        }
     }
 
     useHealthPotion() {
@@ -480,49 +448,6 @@ class Player extends AnimatedObject {
             }
             this.hasUsedPotion = true; // Mark the potion as used
             game.potionImage.src = '../assets/sprites/potion_empty.png'; // Change the sprite to the empty potion
-        }
-    }
-}
-
-class Projectile {
-    constructor(position, direction) {
-        this.position = new Vec(position.x + 2.5, position.y + 1.9); // Ajustar la posición del proyectil
-        this.direction = direction;
-        this.sprite = new Image();
-        this.sprite.src = '../../assets/objects/xp_orb.png';
-        this.speed = 0.05; // Speed of the projectile
-        this.duration = 1000; // Duration of the projectile in milliseconds
-        this.startTime = Date.now();
-
-        // Hitbox properties
-        this.offsetX = 0.5;
-        this.offsetY = 0.5;
-        this.hWidth = 1;
-        this.hHeight = 1;
-    }
-
-    update(deltaTime) {
-        this.position.x += this.direction === "right" ? this.speed * deltaTime : -this.speed * deltaTime;
-        this.checkCollisionWithEnemies();
-        if (Date.now() - this.startTime > this.duration) {
-            game.removeProjectile(this);
-        }
-    }
-
-    draw(ctx, scale) {
-        ctx.drawImage(this.sprite, this.position.x * scale, this.position.y * scale);
-    }
-
-    checkCollisionWithEnemies() {
-        for (let enemy of game.enemies) {
-            if (this.position.x + this.offsetX < enemy.position.x + enemy.size.x &&
-                this.position.x + this.offsetX + this.hWidth > enemy.position.x &&
-                this.position.y + this.offsetY < enemy.position.y + enemy.size.y &&
-                this.position.y + this.offsetY + this.hHeight > enemy.position.y) {
-                enemy.takeDamage(20); // Reduce enemy health by 20 points
-                game.removeProjectile(this); // Remove the projectile after collision
-                break;
-            }
         }
     }
 }
