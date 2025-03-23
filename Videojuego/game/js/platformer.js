@@ -208,23 +208,6 @@ class Game {
             ctx.drawImage(this.slowPistolImage, pistolX, pistolY, pistolWidth, pistolHeight);
         };
 
-        // Add event listeners for arrow keys
-        window.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowRight') {
-                this.player.shoot('right'); // Call shoot method when right arrow is pressed
-            } else if (event.key === 'ArrowLeft') {
-                this.player.shoot('left'); // Call shoot method when left arrow is pressed
-            }
-        });
-
-        window.addEventListener('keyup', (event) => {
-            if (event.key === 'ArrowRight') {
-                this.player.stopMovement('right');
-            } else if (event.key === 'ArrowLeft') {
-                this.player.stopMovement('left');
-            }
-        });
-
         console.log(`############ LEVEL ${level} START ###################`);
     }
 

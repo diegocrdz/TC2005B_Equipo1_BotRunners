@@ -307,7 +307,11 @@ class Player extends AnimatedObject {
         if (this.selectedWeapon !== 2 || this.isShooting) return;
 
         this.isShooting = true;
-        const attackData = this.movement.attack;
+        let attackData = this.movement.attack;
+
+        // Adjust the attack animation data for the projectile
+        attackData.right = [8, 9];
+        attackData.left = [19, 20];
 
         // Crear el proyectil
         let projectile = new Projectile("blue", 1, 1,
@@ -325,6 +329,22 @@ class Player extends AnimatedObject {
             this.setAnimation(...attackData.left, attackData.repeat, attackData.duration);
         }
 
+        // Cooldown for the animation
+        setTimeout(() => {
+            // Restore the original attack data
+            attackData.right = [0, 1];
+            attackData.left = [2, 3];
+            // Restore the animation to idle
+            const leftData = this.movement["left"];
+            const rightData = this.movement["right"];
+            if (this.isFacingRight) {
+                this.setAnimation(...rightData.idleFrames, rightData.repeat, rightData.duration);
+            } else {
+                this.setAnimation(...leftData.idleFrames, leftData.repeat, leftData.duration);
+            }
+        }, attackData.duration);
+
+        // Cooldown for shooting
         setTimeout(() => {
             this.isShooting = false;
         }, this.shootCooldown);
