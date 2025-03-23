@@ -283,15 +283,27 @@ class Game {
         // DOES THIS WORK?
         let currentActors = this.actors;
 
+        // Update door state
+        // .some() returns true if at least one element satisfies the condition
+        // ref: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+        // actor => actor.type === 'enemy' is a function that returns true if the actor is an enemy
+        const hasEnemies = this.actors.some(actor => actor.type === 'enemy');
+        for (let actor of this.actors) {
+            if (actor.type === 'door') {
+                if (hasEnemies) {
+                    actor.close(); // Update the state and sprite
+                } else {
+                    actor.open(); // Update the state and sprite
+                }
+            }
+        }
+
         // Detect collisions with projectiles
         for (let projectile of this.projectiles) {
             for (let actor of currentActors) {
                 if (actor.type === 'enemy' && overlapRectangles(projectile, actor)) {
                     actor.takeDamage(game.player.damage); // Deal damage to the enemy
                     this.removeProjectile(projectile); // Remove the projectile
-                    if (actor.health <= 0) {
-                        actor.die(); // Kill the enemy if health is 0 or less
-                    }
                     break; // Stop checking other enemies for this projectile
                 }
             }
@@ -305,28 +317,32 @@ class Game {
                     //console.log("Hit a wall");
 
                 } else if (actor.type == 'coin' && actor.isCollectible) {
-                    this.player.gainXp(actor.xp_value); // Gain 5 experience points
-                    GAME_LEVELS[this.levelNumber] = GAME_LEVELS[this.levelNumber].replace('$', '.'); // Remove the coin from the level
+                    // Collect the coin
+                    this.player.gainXp(actor.xp_value);
+                    // Remove the coin from the level string
+                    GAME_LEVELS[this.levelNumber] = GAME_LEVELS[this.levelNumber].replace('$', '.');
+                    // Remove the coin from the actors list
                     this.actors = this.actors.filter(item => item !== actor); // Remove the coin from the actors list
 
                 } else if (actor.type == 'enemy') {
-                    // Check if the player is attacking
-                    if (this.player.isAttacking) { // If the player is attacking, deal damage to the enemy
+                    // If the player is attacking, deal damage to the enemy
+                    if (this.player.isAttacking) {
                         actor.takeDamage(this.player.damage, this.player.attackCooldown);
-                        if (actor.health <= 0) {
-                            actor.die();
-                        }
                     }
-                    else { // If the player is not attacking, the enemy deals damage to the player
+                    // If the player is not attacking, the enemy deals damage to the player
+                    else {
                         this.player.takeDamage(actor.damage);
                     }
 
-                } else if (actor.type == 'door') {
+                } else if (actor.type == 'door' && actor.isOpen) {
                     
-                    if (this.player.position.x > actor.position.x) { // If the door is on the left
+                    // If the door is on the left, move to the previous level
+                    if (this.player.position.x > actor.position.x) {
                         this.moveToLevel(this.levelNumber - 1, levelWidth - this.player.size.x - 2, 12);
                         this.lastRoomNumber = this.levelNumber;
-                    } else if (this.player.position.x < actor.position.x) { // If the door is on the right
+                        
+                    // If the door is on the right, move to the next level
+                    } else if (this.player.position.x < actor.position.x) {
                         this.moveToLevel(this.levelNumber + 1, 2, 12);
                         this.lastRoomNumber = this.levelNumber;
                     }
@@ -553,10 +569,11 @@ const levelChars = {
           rect: new Rect(0, 0, 32, 32),
           sheetCols: 8,
           startFrame: [0, 7]},
-    "D": {objClass: GameObject,
+    "D": {objClass: Door,
           label: "door",
-          sprite: '../../assets/interactable/ladder_2.png',
-          rect: new Rect(0, 0, 18, 18)},
+          sprite: '../../assets/interactable/door_open.png',
+          rect: new Rect(0, 0, 18, 18),
+          isOpen: true},
     "U": {objClass: GameObject,
           label: "door_up",
           sprite: '../../assets/interactable/platform_1.png',

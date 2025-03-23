@@ -86,9 +86,6 @@ class Level {
 
                 } else if (actor.type == "box") {
                     this.addBackgroundFloor(x, y);
-                    actor.position = actor.position.plus(new Vec(0, -2));
-                    actor.size = new Vec(3, 3);
-
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "box";
