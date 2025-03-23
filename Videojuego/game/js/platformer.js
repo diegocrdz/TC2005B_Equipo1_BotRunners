@@ -404,12 +404,12 @@ class Game {
 
             // Check for collisions with enemies
             if (actor.type == 'enemy' && overlapRectangles(this.player, actor)) {
-                // ...existing code...
+        
             }
 
             // Check for collisions with doors
             if (actor.type == 'door' && overlapRectangles(this.player, actor)) {
-                // ...existing code...
+            
             }
         }
     }
