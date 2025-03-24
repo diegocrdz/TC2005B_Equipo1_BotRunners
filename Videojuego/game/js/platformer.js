@@ -35,10 +35,15 @@ class Game {
         this.level = level;
         this.levelNumber = 0;
         this.player = level.player;
-        this.enemy = level.enemy;
         this.actors = level.actors;
-        this.paused = false; // Game starts unpaused
-        this.lastRoomNumber = 0; // Keep track of the last room number visited
+        // Button state for the boss room
+        this.isButtonPressed = false;
+
+        // From the actors list, filter the enemies
+        this.enemies = this.actors.filter(actor => actor.type === 'enemy');
+
+        // List of projectiles
+        this.projectiles = [];
 
         this.labelMoney = new TextLabel(20, canvasHeight - 30,
                                         "30px Ubuntu Mono", "white");
@@ -57,10 +62,8 @@ class Game {
         
         // Load board images for indicating ladders direction
         this.ladderUpImage = new Image();
-        this.ladderUpImage.src = '../../assets/backgrounds/sign_up.png'; // Load the ladder up sprite
 
         this.ladderDownImage = new Image();
-        this.ladderDownImage.src = '../../assets/backgrounds/sign_down.png'; // Load the ladder down sprite
 
         // Method to draw the ladder up sign
         this.drawLadderUp = (ctx) => {
@@ -205,15 +208,60 @@ class Game {
             ctx.drawImage(this.slowPistolImage, pistolX, pistolY, pistolWidth, pistolHeight);
         };
 
-        console.log(`############ LEVEL ${level} START ###################`);
+        console.log(`############ LEVEL ${this.levelNumber} START ###################`);
+    }
+
+    addProjectile(projectile) {
+        this.projectiles.push(projectile);
+    }
+
+    removeProjectile(projectile) {
+        const index = this.projectiles.indexOf(projectile);
+        if (index > -1) {
+            this.projectiles.splice(index, 1);
+        }
+    }
+
+    removeEnemy(enemy) {
+        const index = this.enemies.indexOf(enemy);
+        if (index > -1) {
+            this.enemies.splice(index, 1);
+        }
+        this.actors = this.actors.filter(actor => actor !== enemy);
     }
 
     // Function to load a specific level
     moveToLevel(levelNumber, playerPositionX, playerPositionY) {
+
+        // Save the state of the doors of the current level
+        this.level.doors.forEach(door => {
+            door.savedState = door.isOpen;
+        });
+
+        // If the player is in the boss room and wants
+        // to move to the next room, the game is finished
+        if (rooms.get(this.levelNumber).type === "boss"
+            && levelNumber === this.levelNumber + 1) {
+            restartGame();
+            return;
+        }
+
         this.level = new Level(GAME_LEVELS[levelNumber]); // Create a new level
         this.levelNumber = levelNumber;
         this.level.player = this.player; // Assign the new player instance
         this.actors = this.level.actors;
+
+        // Restore the state of the doors of the new level
+        this.level.doors.forEach(door => {
+            if (door.savedState !== undefined) {
+                door.isOpen = door.savedState; // Restore the state of the door
+                if (door.isOpen) {
+                    door.open(); // Open the door if it was open
+                } else {
+                    door.close(); // Close the door if it was closed
+                }
+            }
+        });
     
         // Set the player's position explicitly
         if (playerPositionX !== undefined && playerPositionY !== undefined) {
@@ -253,29 +301,68 @@ class Game {
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
         }
+        
+        // Update projectiles
+        this.projectiles.forEach(projectile => projectile.update(this.level, deltaTime));
 
         // A copy of the full list to iterate over all of them
         // DOES THIS WORK?
         let currentActors = this.actors;
-        // Detect collisions
+
+        // Update door state
+        // .some() returns true if at least one element satisfies the condition
+        // ref: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+        // actor => actor.type === 'enemy' is a function that returns true if the actor is an enemy
+        const hasEnemies = this.actors.some(actor => actor.type === 'enemy');
+        for (let actor of this.actors) {
+            if (actor.type === 'door') {
+                if (hasEnemies) {
+                    actor.close(); // Update the state and sprite of doors
+                    // Update the ladder signs
+                    this.ladderUpImage.src = '../../assets/backgrounds/sign_up_1.png';
+                    this.ladderDownImage.src = '../../assets/backgrounds/sign_down_1.png';
+                } else {
+                    actor.open(); // Update the state and sprite of doors
+                    // Update the ladder signs
+                    this.ladderUpImage.src = '../../assets/backgrounds/sign_up.png';
+                    this.ladderDownImage.src = '../../assets/backgrounds/sign_down.png';
+                }
+            }
+        }
+
+        // Detect collisions with projectiles
+        for (let projectile of this.projectiles) {
+            for (let actor of currentActors) {
+                if (actor.type === 'enemy' && overlapRectangles(projectile, actor)) {
+                    actor.takeDamage(game.player.damage); // Deal damage to the enemy
+                    this.removeProjectile(projectile); // Remove the projectile
+                    break; // Stop checking other enemies for this projectile
+                }
+            }
+        }
+
+        // Detect collisions with player
         for (let actor of currentActors) {
             if (actor.type != 'floor' && overlapRectangles(this.player, actor)) {
                 //console.log(`Collision of ${this.player.type} with ${actor.type}`);
                 if (actor.type == 'wall') {
                     //console.log("Hit a wall");
+
                 } else if (actor.type == 'coin' && actor.isCollectible) {
-                    this.player.gainXp(actor.xp_value); // Gain 5 experience points
-                    GAME_LEVELS[this.levelNumber] = GAME_LEVELS[this.levelNumber].replace('$', '.'); // Remove the coin from the level
+                    // Collect the coin
+                    this.player.gainXp(actor.xp_value);
+                    // Remove the coin from the level string
+                    GAME_LEVELS[this.levelNumber] = GAME_LEVELS[this.levelNumber].replace('$', '.');
+                    // Remove the coin from the actors list
                     this.actors = this.actors.filter(item => item !== actor); // Remove the coin from the actors list
+
                 } else if (actor.type == 'enemy') {
-                    // Check if the player is attacking
-                    if (this.player.isAttacking) { // If the player is attacking, deal damage to the enemy
+                    // If the player is attacking, deal damage to the enemy
+                    if (this.player.isAttacking) {
                         actor.takeDamage(this.player.damage, this.player.attackCooldown);
-                        if (actor.health <= 0) {
-                            actor.die();
-                        }
                     }
-                    else { // If the player is not attacking, the enemy deals damage to the player
+                    // If the player is not attacking, the enemy deals damage to the player
+                    else {
                         this.player.takeDamage(actor.damage);
                     }
                 } else if (actor.type == 'spikes') { 
@@ -283,19 +370,22 @@ class Game {
                         continue;
                     } else {
                         this.player.takeDamage(10); // Player takes 10 damage
-                }
+                    }
                 
                 }  else if (actor.type == 'door') {
                     
-                    if (this.player.position.x > actor.position.x) { // If the door is on the left
+                    // If the door is on the left, move to the previous level
+                    if (this.player.position.x > actor.position.x) {
                         this.moveToLevel(this.levelNumber - 1, levelWidth - this.player.size.x - 2, 12);
                         this.lastRoomNumber = this.levelNumber;
-                    } else if (this.player.position.x < actor.position.x) { // If the door is on the right
+                        
+                    // If the door is on the right, move to the next level
+                    } else if (this.player.position.x < actor.position.x) {
                         this.moveToLevel(this.levelNumber + 1, 2, 12);
                         this.lastRoomNumber = this.levelNumber;
                     }
 
-                } else if (actor.type == 'ladder') {
+                } else if (actor.type == 'ladder' && !hasEnemies) {
 
                     // Initialize the target room ID
                     let targetRoomId = undefined;
@@ -369,8 +459,10 @@ class Game {
                         && rooms.get(this.levelNumber).type === "button") {
                             this.moveToLevel(this.lastRoomNumber, this.player.position.x, 5);
                     }
-                } else if (actor.type == 'button') {
+
+                } else if (actor.type == 'button' && !actor.isPressed) {
                     actor.press(); // Press the button
+                    console.log("Boss room opened");
                 }
             }
         }
@@ -407,6 +499,9 @@ class Game {
         
         // Draw the player on top of everything else
         this.player.draw(ctx, scale);
+
+        // Draw the projectiles
+        this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
 
         // Draw the labels
         //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
@@ -513,10 +608,11 @@ const levelChars = {
           rect: new Rect(0, 0, 32, 32),
           sheetCols: 8,
           startFrame: [0, 7]},
-    "D": {objClass: GameObject,
+    "D": {objClass: Door,
           label: "door",
-          sprite: '../../assets/interactable/ladder_2.png',
-          rect: new Rect(0, 0, 18, 18)},
+          sprite: '../../assets/interactable/door_open.png',
+          rect: new Rect(0, 0, 18, 18),
+          isOpen: true},
     "U": {objClass: GameObject,
           label: "door_up",
           sprite: '../../assets/interactable/platform_1.png',
@@ -639,14 +735,24 @@ function setEventListeners() {
             game.player.dash(game.level);
         }
 
-        // Attack
-        if (event.key == 'ArrowLeft') {
+        // Attack with the melee weapon
+        if (event.key == 'ArrowLeft' && game.player.selectedWeapon == 1) {
             game.player.isFacingRight = false;
             game.player.attack();
         }
-        if (event.key == 'ArrowRight') {
+        if (event.key == 'ArrowRight' && game.player.selectedWeapon == 1) {
             game.player.isFacingRight = true;
             game.player.attack();
+        }
+
+        // Attack with the ranged weapon
+        if (event.key == 'ArrowLeft' && game.player.selectedWeapon == 2) {
+            game.player.isFacingRight = false;
+            game.player.shoot();
+        }
+        if (event.key == 'ArrowRight' && game.player.selectedWeapon == 2) {
+            game.player.isFacingRight = true;
+            game.player.shoot();
         }
 
         // Pause the game
@@ -654,13 +760,20 @@ function setEventListeners() {
             game.togglePause();
         }
 
+        // Restart the game
+        if (event.key == 'r') {
+            restartGame();
+        }
+
         // Use first weapom
         if (event.key == '1') {
-            game.player.selectFirstWeapon();
+            game.player.selectWeapon(1);
+
         } else if(event.key == '2') {
-            game.player.selectSecondWeapon();
+            game.player.selectWeapon(2);
+
         } else if(event.key == '3') {
-            game.player.selectPotion();
+            game.player.selectWeapon(3)
             game.player.useHealthPotion();
         }
 

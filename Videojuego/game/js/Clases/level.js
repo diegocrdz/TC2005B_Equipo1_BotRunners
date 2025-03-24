@@ -5,6 +5,7 @@ class Level {
         this.height = rows.length;
         this.width = rows[0].length;
         this.actors = [];
+        this.doors = [];
 
         // Variable to randomize environments
         let rnd = Math.random();
@@ -36,6 +37,7 @@ class Level {
 
                     this.player = actor;
                     cellType = "empty";
+
                 } else if (actor.type == "coin") {
                     // Also instantiate a floor tile below the player
                     this.addBackgroundFloor(x, y);
@@ -43,6 +45,7 @@ class Level {
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "empty";
+
                 } else if (actor.type == "enemy") {
                     // Make the enemy larger
                     this.addBackgroundFloor(x, y);
@@ -57,31 +60,34 @@ class Level {
 
                     this.actors.push(actor);
                     cellType = "empty";
+
                 } else if (actor.type == "wall") {
                     // Randomize sprites for each wall tile
                     // item.rect = this.randomEvironment(rnd);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "wall";
+
                 } else if (actor.type == "floor") {
                     //actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "floor";
+
                 } else if (actor.type == "door") {
                     this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
+                    this.doors.push(actor);
                     cellType = "door";
+
                 } else if (actor.type == "door_down" || actor.type == "door_up") {
                     this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "wall";
+
                 } else if (actor.type == "box") {
                     this.addBackgroundFloor(x, y);
-                    actor.position = actor.position.plus(new Vec(0, -2));
-                    actor.size = new Vec(3, 3);
-
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "box";
@@ -104,6 +110,7 @@ class Level {
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "empty";
+
                 } else if (actor.type == "button") {
                     this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);
@@ -113,6 +120,15 @@ class Level {
                 return cellType;
             });
         });
+
+        // Define directions for the doors relative to the players position
+        if (this.player) { // If the player exists
+            this.doors.forEach(door => { // For each door, set the direction
+                // If the door is to the left of the player, set the direction to left
+                // otherwise, set it to right
+                door.direction = door.position.x < this.player.position.x ? "left" : "right";
+            });
+        }
     }
 
     addBackgroundFloor(x, y) {
