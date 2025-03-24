@@ -454,6 +454,7 @@ class Player extends AnimatedObject {
     }
 
     selectWeapon(number) {
+        let lastWeapon = this.selectedWeapon;
         if (number === 1) {
             this.selectedWeapon = 1;
             this.setSprite('../../assets/characters/skippy/skippy_1.png', new Rect(0, 0, 24, 24));
@@ -462,6 +463,9 @@ class Player extends AnimatedObject {
             this.setSprite('../../assets/characters/skippy/skippy_3.png', new Rect(0, 0, 24, 24));
         } else if (number === 3) {
             this.selectedWeapon = 3;
+            setTimeout(() => {
+                this.selectWeapon(lastWeapon);
+            }, 250);
         }
     }
 
