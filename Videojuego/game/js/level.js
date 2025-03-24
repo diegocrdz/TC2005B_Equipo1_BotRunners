@@ -165,6 +165,7 @@ E - Pipe end
 S - Pipe start
 L - Ladder
 0 - Button
+T - Tutorial sign (no interactuable)
 */
 
 // Generate the rooms layout
@@ -380,6 +381,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     // If roomType is "start"
     // Only place a box and the player
     if (roomType == "start") {
+
         // Place a box in the level
         placeRandomly('B', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
         placePipes();
