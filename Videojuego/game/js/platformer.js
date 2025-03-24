@@ -403,7 +403,7 @@ class Game {
                         this.player.takeDamage(10); // Player takes 10 damage
                     }
                 
-                }  else if (actor.type == 'door') {
+                }  else if (actor.type == 'door' && actor.isOpen) {
                     
                     // If the door is on the left, move to the previous level
                     if (this.player.position.x > actor.position.x) {
