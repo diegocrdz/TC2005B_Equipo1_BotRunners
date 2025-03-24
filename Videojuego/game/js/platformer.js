@@ -81,6 +81,15 @@ class Game {
             ctx.drawImage(this.ladderDownImage, ladderX, ladderY, ladderWidth, ladderHeight);
         };
 
+        
+        //load the tutorial image
+        this.tutorial1 = new Image();
+        this.tutorial1.src =  '../../../Videojuego/assets/backgrounds/tutorial1.png';
+
+        this.tutorial2 = new Image();
+        this.tutorial2.src =  '../../../Videojuego/assets/backgrounds/tutorial2.png';
+
+
         // Health bar for the player
         this.playerHealthBar = (ctx) => {
             const barWidth = 260; // Width of the health bar
@@ -157,6 +166,8 @@ class Game {
 
         this.fastPistolImage = new Image();
         this.fastPistolImage.src =   '../../../Videojuego/assets/objects/gun_2.png';
+
+    
    
 
         //Method to draw the selection backgrounds
@@ -206,7 +217,27 @@ class Game {
             ctx.drawImage(this.slowPistolImage, pistolX, pistolY, pistolWidth, pistolHeight);
         };
 
-        console.log(`############ LEVEL ${level} START ###################`);
+        //method to draw the tutorial signs
+        this.drawTutorial1 = (ctx) => {
+            const tutorialX = (canvasWidth / 2) -175; 
+            const tutorialY = (canvasHeight / 3) - 100; 
+            const tutorialWidth = 360; // Ancho del sprite
+            const tutorialHeight = 180; // Alto del sprite 
+            ctx.drawImage(this.tutorial1, tutorialX, tutorialY, tutorialWidth, tutorialHeight);
+        };
+
+        //method to draw the tutorial signs
+        this.drawTutorial2 = (ctx) => {
+            const tutorialX = (canvasWidth / 2) -175; 
+            const tutorialY = (canvasHeight / 3) - 100;  
+            const tutorialWidth = 360; // Ancho del sprite
+            const tutorialHeight = 180; // Alto del sprite 
+            ctx.drawImage(this.tutorial2, tutorialX, tutorialY, tutorialWidth, tutorialHeight);
+            
+            
+            console.log(`############ LEVEL ${level} START ###################`);
+        };
+
     }
 
     addProjectile(projectile) {
@@ -462,6 +493,14 @@ class Game {
             }
         }
         
+        if (rooms.get(this.levelNumber).type === "start") {
+            this.drawTutorial1(ctx);
+        }
+
+        if (rooms.get(this.levelNumber).type === "second") {
+            this.drawTutorial2(ctx);
+           
+        }
         // Draw the player on top of everything else
         this.player.draw(ctx, scale);
 
@@ -475,20 +514,23 @@ class Game {
         this.labelLife.draw(ctx, `Health: ${this.player.health}`);
         this.labelLevel.draw(ctx, `Lvl. ${this.player.level}`);
 
+        
         // Draw the player's health bar
         this.playerHealthBar(ctx, scale);
-
+        
         // Draw the player's experience bar
         this.playerXpBar(ctx, scale);
-
+        
         //Draw the weapon backgrounds
         this.drawBackgrounds(ctx);
-
+        
         // Draw the health potion
         this.drawHealthPotion(ctx);
-
+        
         //Draw the weapons
         this.drawWeapons(ctx);
+       
+        //draw the tutorial image
     }
 
     // Pause or resume the game
@@ -597,6 +639,10 @@ const levelChars = {
     "0": {objClass: Button,
           label: "button",
           sprite: '../../assets/interactable/button_off.png',
+          rect: new Rect(0, 0, 18, 18)},
+    "T": {objClass: GameObject,
+          label: "Tutorial",
+          sprite: '../../assets/background/tutorial.png',
           rect: new Rect(0, 0, 18, 18)}
 };
 
