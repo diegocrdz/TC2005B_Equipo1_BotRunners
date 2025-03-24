@@ -36,6 +36,8 @@ class Game {
         this.levelNumber = 0;
         this.player = level.player;
         this.actors = level.actors;
+        // Button state for the boss room
+        this.isButtonPressed = false;
 
         // From the actors list, filter the enemies
         this.enemies = this.actors.filter(actor => actor.type === 'enemy');
@@ -261,10 +263,36 @@ class Game {
 
     // Function to load a specific level
     moveToLevel(levelNumber, playerPositionX, playerPositionY) {
+
+        // Save the state of the doors of the current level
+        this.level.doors.forEach(door => {
+            door.savedState = door.isOpen;
+        });
+
+        // If the player is in the boss room and wants
+        // to move to the next room, the game is finished
+        if (rooms.get(this.levelNumber).type === "boss"
+            && levelNumber === this.levelNumber + 1) {
+            restartGame();
+            return;
+        }
+
         this.level = new Level(GAME_LEVELS[levelNumber]); // Create a new level
         this.levelNumber = levelNumber;
         this.level.player = this.player; // Assign the new player instance
         this.actors = this.level.actors;
+
+        // Restore the state of the doors of the new level
+        this.level.doors.forEach(door => {
+            if (door.savedState !== undefined) {
+                door.isOpen = door.savedState; // Restore the state of the door
+                if (door.isOpen) {
+                    door.open(); // Open the door if it was open
+                } else {
+                    door.close(); // Close the door if it was closed
+                }
+            }
+        });
     
         // Set the player's position explicitly
         if (playerPositionX !== undefined && playerPositionY !== undefined) {
@@ -368,8 +396,14 @@ class Game {
                     else {
                         this.player.takeDamage(actor.damage);
                     }
-
-                } else if (actor.type == 'door' && actor.isOpen) {
+                } else if (actor.type == 'spikes') { 
+                    if(this.player.isCrouching){
+                        continue;
+                    } else {
+                        this.player.takeDamage(10); // Player takes 10 damage
+                    }
+                
+                }  else if (actor.type == 'door' && actor.isOpen) {
                     
                     // If the door is on the left, move to the previous level
                     if (this.player.position.x > actor.position.x) {
@@ -457,8 +491,9 @@ class Game {
                             this.moveToLevel(this.lastRoomNumber, this.player.position.x, 5);
                     }
 
-                } else if (actor.type == 'button') {
+                } else if (actor.type == 'button' && !actor.isPressed) {
                     actor.press(); // Press the button
+                    console.log("Boss room opened");
                 }
             }
         }
@@ -631,6 +666,18 @@ const levelChars = {
     "B": {objClass: GameObject,
           label: "wall",
           sprite: '../../assets/obstacles/box_1.png',
+          rect: new Rect(0, 0, 18, 18)},
+    "E": {objClass: GameObject,
+            label: "end_pipe",
+            sprite: '../../assets/obstacles/pipe_end_2.png',
+            rect: new Rect(0, 0, 18, 18)},
+    "S":{objClass: GameObject,
+            label: "start_pipe",
+            sprite: '../../assets/obstacles/pipe_mid_2.png',
+            rect: new Rect(0, 0, 18, 18)},
+    "P": {objClass: GameObject,
+          label: "spikes",
+          sprite: '../../assets/obstacles/spikes.png',
           rect: new Rect(0, 0, 18, 18)},
     "L": {objClass: GameObject,
           label: "ladder",

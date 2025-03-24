@@ -121,10 +121,13 @@ class LevelGenerator {
 
 // Generate a list of enemies for each room
 function generateRandomEnemies(minEnemies, maxEnemies) {
+    // Generate a random number of enemies between minEnemies and maxEnemies
     let numEnemies = Math.floor(Math.random() * (maxEnemies - minEnemies + 1)) + minEnemies;
+    // Generate a list of enemies with probabilities of spawning
     let enemies = [];
     let probabilities = {N: 0.5, H: 0.3, F: 0.2};
 
+    // Generate the enemies
     for (let i = 0; i < numEnemies; i++) {
 
         let random = Math.random();
@@ -142,7 +145,6 @@ function generateRandomEnemies(minEnemies, maxEnemies) {
         enemies.push(type);
     }
 
-    console.log(enemies);
     return enemies;
 }
 
@@ -159,6 +161,8 @@ D - Door
 U - Door up
 V - Door down
 B - Box
+E - Pipe end
+S - Pipe start
 L - Ladder
 0 - Button
 T - Tutorial sign (no interactuable)
@@ -187,7 +191,11 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     for (let y = 0; y < height; y++) {
         if (y < height - 4 || y === height - 1) { // Fill the first and last columns with walls
             level[y][0] = '#'; 
-            level[y][width - 1] = '#'; 
+            level[y][width - 1] = '#';
+            // Place a big door at the right side of the level
+            if (y > 0 && y < height - 1 && roomType == "boss") {
+                level[y][width - 1] = 'D'; 
+            }
         }
         else if (roomType == "start") { // Fill the last blocks of the first column with doors
             level[y][0] = '#'; 
@@ -195,7 +203,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
         }
         else if (roomType == "boss") { // Fill the last blocks of the last column with doors
             level[y][0] = 'D'; 
-            level[y][width - 1] = '#'; 
+            level[y][width - 1] = 'D'; 
         }
         else if (roomType == "button"
                 || roomType == "branch1"
@@ -212,13 +220,69 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     // Function to place elements in the level
     function placeRandomly(char, count, minY=1, maxY=height-2, minX=1, maxX=width-2) {
         let placed = 0;
-        while (placed < count) {
+        let attempts = 0;
+        const maxAttempts = 1000; // Limit the number of attempts to prevent infinite loops
+        while (placed < count && attempts < maxAttempts) {
             let x = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
             let y = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
             if (level[y][x] === '.') {
                 level[y][x] = char;
                 placed++;
             }
+            attempts++;
+        }
+        // If the number of attempts is greater than the maximum, print a warning
+        if (attempts >= maxAttempts) {
+            console.warn(`Could not place all '${char}' items after ${maxAttempts} attempts.`);
+        }
+    }
+
+    function placePipes() {
+        let numPipes = Math.floor(Math.random() * 2) + 1; // 1 o 2 tuberías
+        let minX = Math.floor(width / 3);
+        let maxX = Math.floor(2 * width / 3);
+        let usedPositions = new Set(); // Guardará las posiciones de tuberías ya usadas
+    
+        if (roomType === "ladder1" || roomType === "ladder2") {
+            return; // No colocar tuberías en habitaciones con escaleras.
+        }
+    
+        for (let i = 0; i < numPipes; i++) {
+            let attempts = 10; // Intentos para encontrar una posición válida
+            let pipeX;
+    
+            do {
+                pipeX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
+                attempts--;
+            } while (
+                (usedPositions.has(pipeX) || usedPositions.has(pipeX - 1) || usedPositions.has(pipeX + 1) || usedPositions.has(pipeX - 2) 
+                || usedPositions.has(pipeX + 2) || usedPositions.has(pipeX - 3) || usedPositions.has(pipeX + 3)) 
+                && attempts > 0
+            );
+    
+            if (attempts === 0) {
+                continue; // Si después de varios intentos no se encuentra una posición válida, saltar esta tubería.
+            }
+    
+            let pipeLength = Math.floor(Math.random() * 6) + 3; // Longitud entre 3 y 8
+    
+            // **Asegurar que la posición inicial esté vacía**
+            if (level[1][pipeX] !== '.') {
+                continue;
+            }
+    
+            level[1][pipeX] = 'S'; // **Colocar la cabeza de la tubería en el techo**
+            usedPositions.add(pipeX); // **Guardar la posición de la tubería**
+    
+            // **Dibujar el cuerpo de la tubería**
+            for (let j = 2; j < Math.min(1 + pipeLength, height - 1); j++) {
+                if (level[j][pipeX] !== '.') {
+                    break; // **Si choca con algo, detener la tubería**
+                }
+                level[j][pipeX] = 'S'; 
+            }
+    
+            level[Math.min(1 + pipeLength, height - 2)][pipeX] = 'E'; 
         }
     }
 
@@ -261,17 +325,56 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     }
 
     // Place xp rewards for all rooms
-    placeRandomly('$', numRewards, 2, height - 2);
+    placeRandomly('$', 2, 7, height - 2);
+
 
     // If roomType is "button"
     // place a button on the floor
     // place enemies at the sides
     if (roomType == "button") {
+        // Place a button in the level
         placeRandomly('0', 1, height - 2, height - 2, width - 5, width - 5);
+        // Place enemies at the sides
+        let enemies = generateRandomEnemies(minEnemies, maxEnemies);
+        for (let i = 0; i < enemies.length; i++) {
+            if (enemies[i] === 'N') {
+                placeRandomly('N', 1,
+                    height - 2, height - 2,
+                    2, Math.floor(width / 3));
+            }
+            else if (enemies[i] === 'H') {
+                placeRandomly('H', 1,
+                    height - 2, height - 2,
+                    width - 4, width - 4);
+            }
+            else {
+                placeRandomly('F', 1,
+                    Math.floor(height / 3) * 2, Math.floor(height / 3) * 2,
+                    Math.floor(width / 3), Math.floor(width / 3) * 2);
+            }
+        }
         return level.map(row => row.join('')).join('\n');
     }
     // If roomType is "branch1" or "branch2", dont place enemies
     else if (roomType == "branch1" || roomType == "branch2") {
+        let enemies = generateRandomEnemies(minEnemies, maxEnemies);
+        for (let i = 0; i < enemies.length; i++) {
+            if (enemies[i] === 'N') {
+                placeRandomly('N', 1,
+                    height - 2, height - 2,
+                    width - 4, width - 4);
+            }
+            else if (enemies[i] === 'H') {
+                placeRandomly('H', 1,
+                    height - 2, height - 2,
+                    width - 4, width - 4);
+            }
+            else {
+                placeRandomly('F', 1,
+                    Math.floor(height / 3) * 2, Math.floor(height / 3) * 2,
+                    Math.floor(width / 3), Math.floor(width / 3) * 2);
+            }
+        }
         return level.map(row => row.join('')).join('\n');
     }
 
@@ -281,6 +384,8 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
 
         // Place a box in the level
         placeRandomly('B', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
+        placePipes();
+        placeRandomly('P', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
         // Place the player at the bottom of the level
         level[height - 2][2] = '@';
         return level.map(row => row.join('')).join('\n');
@@ -318,16 +423,25 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
         }
         else {
             placeRandomly('F', 1,
-                            Math.floor(height / 3), Math.floor(height / 3) * 2,
-                            Math.floor(width / 2), Math.floor(width / 2));
+                            Math.floor(height / 3) * 2, Math.floor(height / 3) * 2,
+                            Math.floor(width / 3), Math.floor(width / 3) * 2);
         }
+    }
+
+    // If the room has a ladder, dont place boxes
+    // it can obstruct the path to the ladder
+    if (roomType == "ladder1" || roomType == "ladder2") {
+        return level.map(row => row.join('')).join('\n');
     }
 
     // Place a box in the level
     // Get a random number of boxes between 0 and 1
-    let numBoxes = Math.floor(Math.random() * 2)
-    // Place the boxes in the level
+    let numBoxes = Math.floor(Math.random() * 2);
+    let numSpikes = Math.floor(Math.random() * 2);
+  
     placeRandomly('B', numBoxes, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
+    placePipes();
+    placeRandomly('P', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
     
     // Place the player at the bottom of the level
     level[height - 2][2] = '@';

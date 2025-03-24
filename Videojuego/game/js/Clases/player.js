@@ -300,6 +300,14 @@ class Player extends AnimatedObject {
             // Restore hitbox size and position
             this.hWidth = originalHWidth;
             this.offsetX = originalOffsetX;
+            // Restore the animation to idle
+            const leftData = this.movement["left"];
+            const rightData = this.movement["right"];
+            if (this.isFacingRight) {
+                this.setAnimation(...rightData.idleFrames, rightData.repeat, rightData.duration);
+            } else {
+                this.setAnimation(...leftData.idleFrames, leftData.repeat, leftData.duration);
+            }
         }, this.attackCooldown);
     }
 
@@ -446,6 +454,7 @@ class Player extends AnimatedObject {
     }
 
     selectWeapon(number) {
+        let lastWeapon = this.selectedWeapon;
         if (number === 1) {
             this.selectedWeapon = 1;
             this.setSprite('../../assets/characters/skippy/skippy_1.png', new Rect(0, 0, 24, 24));
@@ -454,6 +463,9 @@ class Player extends AnimatedObject {
             this.setSprite('../../assets/characters/skippy/skippy_3.png', new Rect(0, 0, 24, 24));
         } else if (number === 3) {
             this.selectedWeapon = 3;
+            setTimeout(() => {
+                this.selectWeapon(lastWeapon);
+            }, 250);
         }
     }
 
