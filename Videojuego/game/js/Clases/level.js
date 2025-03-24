@@ -60,6 +60,21 @@ class Level {
 
                     this.actors.push(actor);
                     cellType = "empty";
+                
+                } else if (actor.type == "bossEnemy") {
+                    // Make the enemy larger
+                    this.addBackgroundFloor(x, y);
+                    actor.position = actor.position.plus(new Vec(0, -5));
+                    actor.size = new Vec(10, 10);
+
+                    actor.setSprite(item.sprite, item.rect);
+                    actor.sheetCols = item.sheetCols;
+
+                    const dirData = actor.movement["right"];
+                    actor.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
+
+                    this.actors.push(actor);
+                    cellType = "empty";
 
                 } else if (actor.type == "wall") {
                     // Randomize sprites for each wall tile

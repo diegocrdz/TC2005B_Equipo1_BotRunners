@@ -166,6 +166,7 @@ S - Pipe start
 L - Ladder
 0 - Button
 T - Tutorial sign (no interactuable)
+X - Boss
 */
 
 // Generate the rooms layout
@@ -256,8 +257,10 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
                 pipeX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
                 attempts--;
             } while (
-                (usedPositions.has(pipeX) || usedPositions.has(pipeX - 1) || usedPositions.has(pipeX + 1) || usedPositions.has(pipeX - 2) 
-                || usedPositions.has(pipeX + 2) || usedPositions.has(pipeX - 3) || usedPositions.has(pipeX + 3)) 
+                (usedPositions.has(pipeX)
+                || usedPositions.has(pipeX - 1) || usedPositions.has(pipeX + 1) 
+                || usedPositions.has(pipeX - 2) || usedPositions.has(pipeX + 2) 
+                || usedPositions.has(pipeX - 3) || usedPositions.has(pipeX + 3)) 
                 && attempts > 0
             );
     
@@ -401,7 +404,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     // If roomType is "boss"
     // Only place a heavy enemy
     if (roomType == "boss") {
-        placeRandomly('H', 1, height - 2, height - 2, width - 4, width - 4);
+        placeRandomly('X', 1, height - 2, height - 2, width - 4, width - 4);
         return level.map(row => row.join('')).join('\n');
     }
     

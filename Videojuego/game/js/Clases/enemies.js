@@ -287,3 +287,17 @@ class FlyingEnemy extends Enemy {
         this.updateFrame(deltaTime);
     }
 }
+
+class BossEnemy extends Enemy {
+    constructor(_color, width, height, x, y, _type) {
+        super("red", width, height, x, y, "X");
+
+        this.health = 75;
+        this.maxHealth = 75;
+        this.damage = 40;
+        this.xp_reward = 20;
+
+        this.speed = 0.0005;
+        this.velocity = new Vec(this.speed, 0);
+    }
+}
