@@ -243,7 +243,8 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
         let maxX = Math.floor(2 * width / 3);
         let usedPositions = new Set(); // Guardará las posiciones de tuberías ya usadas
     
-        if (roomType === "ladder1" || roomType === "ladder2") {
+        if (roomType === "ladder1"
+            || roomType === "ladder2") {
             return; // No colocar tuberías en habitaciones con escaleras.
         }
     
@@ -384,7 +385,6 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
 
         // Place a box in the level
         placeRandomly('B', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
-        placePipes();
         placeRandomly('P', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
         // Place the player at the bottom of the level
         level[height - 2][2] = '@';
