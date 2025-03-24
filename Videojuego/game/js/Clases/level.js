@@ -5,6 +5,7 @@ class Level {
         this.height = rows.length;
         this.width = rows[0].length;
         this.actors = [];
+        this.doors = [];
 
         // Variable to randomize environments
         let rnd = Math.random();
@@ -76,6 +77,7 @@ class Level {
                     this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
+                    this.doors.push(actor);
                     cellType = "door";
 
                 } else if (actor.type == "door_down" || actor.type == "door_up") {
@@ -104,6 +106,15 @@ class Level {
                 return cellType;
             });
         });
+
+        // Define directions for the doors relative to the players position
+        if (this.player) { // If the player exists
+            this.doors.forEach(door => { // For each door, set the direction
+                // If the door is to the left of the player, set the direction to left
+                // otherwise, set it to right
+                door.direction = door.position.x < this.player.position.x ? "left" : "right";
+            });
+        }
     }
 
     addBackgroundFloor(x, y) {

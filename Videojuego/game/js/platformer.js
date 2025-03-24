@@ -36,6 +36,8 @@ class Game {
         this.levelNumber = 0;
         this.player = level.player;
         this.actors = level.actors;
+        // Button state for the boss room
+        this.isButtonPressed = false;
 
         // From the actors list, filter the enemies
         this.enemies = this.actors.filter(actor => actor.type === 'enemy');
@@ -231,6 +233,11 @@ class Game {
     // Function to load a specific level
     moveToLevel(levelNumber, playerPositionX, playerPositionY) {
 
+        // Save the state of the doors of the current level
+        this.level.doors.forEach(door => {
+            door.savedState = door.isOpen;
+        });
+
         // If the player is in the boss room and wants
         // to move to the next room, the game is finished
         if (rooms.get(this.levelNumber).type === "boss"
@@ -239,11 +246,22 @@ class Game {
             return;
         }
 
-
         this.level = new Level(GAME_LEVELS[levelNumber]); // Create a new level
         this.levelNumber = levelNumber;
         this.level.player = this.player; // Assign the new player instance
         this.actors = this.level.actors;
+
+        // Restore the state of the doors of the new level
+        this.level.doors.forEach(door => {
+            if (door.savedState !== undefined) {
+                door.isOpen = door.savedState; // Restore the state of the door
+                if (door.isOpen) {
+                    door.open(); // Open the door if it was open
+                } else {
+                    door.close(); // Close the door if it was closed
+                }
+            }
+        });
     
         // Set the player's position explicitly
         if (playerPositionX !== undefined && playerPositionY !== undefined) {
@@ -436,8 +454,9 @@ class Game {
                             this.moveToLevel(this.lastRoomNumber, this.player.position.x, 5);
                     }
 
-                } else if (actor.type == 'button') {
+                } else if (actor.type == 'button' && !actor.isPressed) {
                     actor.press(); // Press the button
+                    console.log("Boss room opened");
                 }
             }
         }
