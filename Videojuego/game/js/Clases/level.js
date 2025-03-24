@@ -85,7 +85,22 @@ class Level {
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "box";
-                } else if (actor.type == "ladder") {
+                } else if(actor.type == "end_pipe") {
+                    this.addBackgroundFloor(x, y);
+                    actor.setSprite(item.sprite, item.rect);
+                    this.actors.push(actor);
+                    cellType = "wall";
+                }   else if(actor.type == "start_pipe"){
+                    this.addBackgroundFloor(x, y);
+                    actor.setSprite(item.sprite, item.rect);    
+                    this.actors.push(actor);
+                    cellType = "wall";
+                }else if(actor.type == "spikes"){
+                    this.addBackgroundFloor(x, y);
+                    actor.setSprite(item.sprite, item.rect);
+                    this.actors.push(actor);
+                    cellType = "spikes";
+                }else if (actor.type == "ladder") {
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "empty";

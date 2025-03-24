@@ -278,7 +278,14 @@ class Game {
                     else { // If the player is not attacking, the enemy deals damage to the player
                         this.player.takeDamage(actor.damage);
                     }
-                } else if (actor.type == 'door') {
+                } else if (actor.type == 'spikes') { 
+                    if(this.player.isCrouching){
+                        continue;
+                    } else {
+                        this.player.takeDamage(10); // Player takes 10 damage
+                }
+                
+                }  else if (actor.type == 'door') {
                     
                     if (this.player.position.x > actor.position.x) { // If the door is on the left
                         this.moveToLevel(this.levelNumber - 1, levelWidth - this.player.size.x - 2, 12);
@@ -521,6 +528,18 @@ const levelChars = {
     "B": {objClass: GameObject,
           label: "wall",
           sprite: '../../assets/obstacles/box_1.png',
+          rect: new Rect(0, 0, 18, 18)},
+    "E": {objClass: GameObject,
+            label: "end_pipe",
+            sprite: '../../assets/obstacles/pipe_end_2.png',
+            rect: new Rect(0, 0, 18, 18)},
+    "S":{objClass: GameObject,
+            label: "start_pipe",
+            sprite: '../../assets/obstacles/pipe_mid_2.png',
+            rect: new Rect(0, 0, 18, 18)},
+    "P": {objClass: GameObject,
+          label: "spikes",
+          sprite: '../../assets/obstacles/spikes.png',
           rect: new Rect(0, 0, 18, 18)},
     "L": {objClass: GameObject,
           label: "ladder",
