@@ -206,7 +206,7 @@ class Game {
             ctx.drawImage(this.slowPistolImage, pistolX, pistolY, pistolWidth, pistolHeight);
         };
 
-        console.log(`############ LEVEL ${level} START ###################`);
+        console.log(`############ LEVEL ${this.levelNumber} START ###################`);
     }
 
     addProjectile(projectile) {
@@ -230,6 +230,16 @@ class Game {
 
     // Function to load a specific level
     moveToLevel(levelNumber, playerPositionX, playerPositionY) {
+
+        // If the player is in the boss room and wants
+        // to move to the next room, the game is finished
+        if (rooms.get(this.levelNumber).type === "boss"
+            && levelNumber === this.levelNumber + 1) {
+            restartGame();
+            return;
+        }
+
+
         this.level = new Level(GAME_LEVELS[levelNumber]); // Create a new level
         this.levelNumber = levelNumber;
         this.level.player = this.player; // Assign the new player instance

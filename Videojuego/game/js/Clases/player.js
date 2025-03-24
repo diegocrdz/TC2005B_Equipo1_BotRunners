@@ -300,6 +300,14 @@ class Player extends AnimatedObject {
             // Restore hitbox size and position
             this.hWidth = originalHWidth;
             this.offsetX = originalOffsetX;
+            // Restore the animation to idle
+            const leftData = this.movement["left"];
+            const rightData = this.movement["right"];
+            if (this.isFacingRight) {
+                this.setAnimation(...rightData.idleFrames, rightData.repeat, rightData.duration);
+            } else {
+                this.setAnimation(...leftData.idleFrames, leftData.repeat, leftData.duration);
+            }
         }, this.attackCooldown);
     }
 
