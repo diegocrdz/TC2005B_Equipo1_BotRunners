@@ -157,7 +157,6 @@ class AnimatedObject extends GameObject {
     }
 }
 
-
 class TextLabel {
     constructor(x, y, font, color) {
         this.x = x;
@@ -173,6 +172,40 @@ class TextLabel {
     }
 }
 
+class Bar {
+    constructor(x, y, width, height, maxValue, currentValue, barColor = "white", backgroundColor = "black", borderColor = "black") {
+        this.position = new Vec(x, y); // Position of the bar
+        this.size = new Vec(width, height); // Size of the bar
+        this.maxValue = maxValue; // Max value of the bar
+        this.currentValue = currentValue; // Current value of the bar
+        this.barColor = barColor; // Color of the filled portion
+        this.backgroundColor = backgroundColor; // Color of the background
+        this.borderColor = borderColor; // Color of the border
+    }
+
+    update(newValue) {
+        // Clamp the value between 0 and maxValue
+        this.currentValue = Math.max(0, Math.min(newValue, this.maxValue));
+    }
+
+    draw(ctx) {
+        const filledWidth = (this.currentValue / this.maxValue) * this.size.x;
+
+        // Draw the background
+        ctx.fillStyle = this.backgroundColor;
+        ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
+
+        // Draw the filled portion
+        ctx.fillStyle = this.barColor;
+        ctx.fillRect(this.position.x, this.position.y, filledWidth, this.size.y);
+
+        // Draw the border
+        ctx.strokeStyle = this.borderColor;
+        ctx.lineWidth = 3;
+        ctx.strokeRect(this.position.x, this.position.y, this.size.x, this.size.y);
+    }
+}
+
 /*
 // Simple collision detection between rectangles
 function overlapRectangles(actor1, actor2) {
@@ -183,6 +216,7 @@ function overlapRectangles(actor1, actor2) {
 }
 */
 
+// Collision detection between hitboxes
 function overlapRectangles(actor1, actor2) {
     return actor1.hitbox.position.x + actor1.hitbox.width > actor2.hitbox.position.x &&
            actor1.hitbox.position.x < actor2.hitbox.position.x + actor2.hitbox.width &&

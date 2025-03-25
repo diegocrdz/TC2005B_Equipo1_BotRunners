@@ -3,14 +3,10 @@ const walkSpeed = 0.01;
 const initialJumpSpeed = -0.03;
 const gravity = 0.0000981;
 
-// let debugJump = false;
-
-// Class that represents a player of the game
 class Player extends AnimatedObject {
     constructor(_color, width, height, x, y, _type) {
         super("green", width, height, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
-        this.money = 0;
 
         this.njumps = 0; //counter for double jumping
 
@@ -46,7 +42,7 @@ class Player extends AnimatedObject {
         this.xpToNextLevel = 100;
         this.level = 0;
         this.attackCooldown = 400;
-        this.shootCooldown = 1000;
+        this.shootCooldown = 400;
 
         // Movement variables to define directions and animations
         this.movement = {
@@ -479,7 +475,7 @@ class Player extends AnimatedObject {
                 this.health = this.maxHealth; // Cap health at the max value
             }
             this.hasUsedPotion = true; // Mark the potion as used
-            game.potionImage.src = '../assets/sprites/potion_empty.png'; // Change the sprite to the empty potion
+            game.potionImage.setSprite('../../assets/objects/potion_empty.png');
         }
     }
 }
