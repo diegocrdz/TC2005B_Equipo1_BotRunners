@@ -267,12 +267,14 @@ class BossEnemy extends Enemy {
 
         this.health = 200;
         this.maxHealth = 200;
-        this.damage = 50;
-        // Reward the remaining XP to the player
+        this.damage = 30;
         this.xp_reward = 500;
 
         this.speed = 0.002;
         this.velocity = new Vec(this.speed, 0);
+
+        // Jumping flag for special attack
+        this.isJumping = false;
 
         // Hitbox properties
         this.offsetX = 1;
@@ -288,8 +290,16 @@ class BossEnemy extends Enemy {
         this.followPlayer(level, deltaTime);
         this.moveVertically(level, deltaTime);
 
-        if (this.health < this.maxHealth / 2 && this.velocity.y === 0) {
-            this.velocity.y = -0.035; // Make the boss jump if on the ground
+        // Make the boss jump if health is below 50%
+        if (this.health < this.maxHealth / 2
+            && this.velocity.y === 0
+            && !this.isJumping) {
+            this.velocity.y = -0.039; // Make the boss jump if on the ground
+            this.isJumping = true; // Set the jumping flag
+            setTimeout(() => {
+                this.velocity.y = 0; // Stop the boss from jumping
+                this.isJumping = false; // Reset the jumping flag
+            }, 1000); // 1 second
         }
 
         this.updateFrame(deltaTime);
