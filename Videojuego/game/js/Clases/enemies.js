@@ -1,6 +1,6 @@
 class Enemy extends AnimatedObject {
     constructor(_color, width, height, x, y, _type) {
-        super("red", width, height, x, y, "enemy");
+        super("red", width, height, x, y, _type);
         this.isFacingRight = false; // Default direction is left
         this.isHit = false;
 
@@ -21,8 +21,8 @@ class Enemy extends AnimatedObject {
                 sign: 1,
                 repeat: true,
                 duration: 100,
-                moveFrames: [0, 1],
-                idleFrames: [0, 1]
+                moveFrames: [3, 4],
+                idleFrames: [3, 4]
             },
             left: {
                 status: false,
@@ -30,8 +30,8 @@ class Enemy extends AnimatedObject {
                 sign: -1,
                 repeat: true,
                 duration: 100,
-                moveFrames: [3, 4],
-                idleFrames: [3, 4]
+                moveFrames: [0, 1],
+                idleFrames: [0, 1]
             },
             hit: { 
                 status: false,
@@ -47,6 +47,70 @@ class Enemy extends AnimatedObject {
         this.offsetY = 1;
         this.hWidth = this.size.x + 1;
         this.hHeight = this.size.y + 1;
+    }
+
+    update(level, deltaTime) {
+        this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
+
+        // Make the character fall constantly because of gravity
+        this.velocity.y = this.velocity.y + gravity * deltaTime;
+    
+        // Move the enemy horizontally
+        this.moveHorizontally(level, deltaTime);
+        // Follow the player
+        this.followPlayer(level, deltaTime);
+        // Move the enemy vertically
+        this.moveVertically(level, deltaTime);
+    
+        this.updateFrame(deltaTime);
+    }
+
+    moveHorizontally(level, deltaTime) {
+        const newXPosition = this.position.plus(new Vec(this.velocity.x * deltaTime, 0));
+        if (!level.contact(newXPosition, this.size, 'wall')) {
+            this.position = newXPosition;
+        }
+    }
+
+    bounceOffWalls(level, deltaTime) {
+        const newXPosition = this.position.plus(new Vec(this.velocity.x * deltaTime, 0));
+        if (level.contact(newXPosition, this.size, 'wall')) {
+            this.velocity.x = -this.velocity.x; // Reverse direction
+            this.isFacingRight = !this.isFacingRight; // Update facing direction
+            this.startMovement(this.isFacingRight ? "right" : "left"); // Update animation
+        }
+    }
+
+    followPlayer(level, deltaTime) {
+        const playerToRight = level.player.position.x > this.position.x;
+
+        if (playerToRight) {
+            if (!this.isFacingRight) {
+                this.isFacingRight = true;
+                this.startMovement("right");
+            }
+            this.velocity.x = Math.abs(this.speed); // Move right
+        } else {
+            if (this.isFacingRight) {
+                this.isFacingRight = false;
+                this.startMovement("left");
+            }
+            this.velocity.x = -Math.abs(this.speed); // Move left
+        }
+    }
+
+    moveVertically(level, deltaTime) {
+        const newYPosition = this.position.plus(new Vec(0, this.velocity.y * deltaTime));
+        if (!level.contact(newYPosition, this.size, 'wall')) {
+            this.position = newYPosition;
+        } else {
+            this.velocity.y = 0; // Stop vertical movement on collision
+        }
+    }
+
+    draw(ctx, scale) {
+        super.draw(ctx, scale);
+        this.drawHitbox(ctx, scale);
     }
 
     // Draw the health bar above the enemy
@@ -74,60 +138,13 @@ class Enemy extends AnimatedObject {
         ctx.strokeRect(x, y, barWidth, barHeight);
     }
 
-    update(level, deltaTime) {
-        this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
-
-        // Make the character fall constantly because of gravity
-        this.velocity.y = this.velocity.y + gravity * deltaTime;
-    
-        let velX = this.velocity.x;
-        let velY = this.velocity.y;
-    
-        // Adjust horizontal velocity to follow the player
-        if (level.player.position.x > this.position.x) {
-            if (!this.isFacingRight) {
-                this.isFacingRight = true;
-                this.startMovement("left");
-            }
-            this.velocity.x = Math.abs(this.speed); // Move right
-        } else {
-            if (this.isFacingRight) {
-                this.isFacingRight = false;
-                this.startMovement("right");
-            }
-            this.velocity.x = -Math.abs(this.speed); // Move left
-        }
-    
-        // Find out where the enemy should end if it moves horizontally
-        let newXPosition = this.position.plus(new Vec(velX * deltaTime, 0));
-        // Move only if the enemy does not move inside a wall
-        if (!level.contact(newXPosition, this.size, 'wall')) {
-            this.position = newXPosition;
-        }
-    
-        // Find out where the enemy should end if it moves vertically
-        let newYPosition = this.position.plus(new Vec(0, velY * deltaTime));
-        // Move only if the enemy does not move inside a wall
-        if (!level.contact(newYPosition, this.size, 'wall')) {
-            this.position = newYPosition;
-        } else {
-            this.velocity.y = 0; // Stop vertical movement on collision
-        }
-    
-        this.updateFrame(deltaTime);
-    }
-
-    draw(ctx, scale) {
-        super.draw(ctx, scale);
-        this.drawHitbox(ctx, scale);
-    }
-
     startMovement(direction) {
         const dirData = this.movement[direction];
         dirData.status = true;
         this.velocity[dirData.axis] = dirData.sign * this.speed;
         this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
     }
+
     stopMovement(direction) {
         const dirData = this.movement[direction];
         dirData.status = false;
@@ -189,14 +206,14 @@ class Enemy extends AnimatedObject {
         setTimeout(() => {
             this.isHit = false;
             // Continue moving in the same direction after being hit
-            this.startMovement(this.isFacingRight ? "left" : "right");
+            this.startMovement(this.isFacingRight ? "right" : "left");
         }, hitData.duration * 2); // 2 times the duration of the hit animation
     }
 }
 
 class NormalEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
-        super("red", width, height, x, y, "N");
+        super("red", width, height, x, y, "enemy");
 
         this.health = 50;
         this.maxHealth = 50;
@@ -210,7 +227,7 @@ class NormalEnemy extends Enemy {
 
 class HeavyEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
-        super("red", width, height, x, y, "H");
+        super("red", width, height, x, y, "enemy");
 
         this.health = 75;
         this.maxHealth = 75;
@@ -224,7 +241,8 @@ class HeavyEnemy extends Enemy {
 
 class FlyingEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
-        super("red", width, height, x, y, "F");
+        super("red", width, height, x, y, "enemy");
+        this.isFacingRight = true; // Default direction is right
 
         this.health = 25;
         this.maxHealth = 25;
@@ -233,71 +251,47 @@ class FlyingEnemy extends Enemy {
 
         this.speed = 0.002;
         this.velocity = new Vec(this.speed, 0);
-
-        // Define movement directions for flying enemies
-        this.movement = {
-            right: { 
-                status: false,
-                axis: "x",
-                sign: 1,
-                repeat: true,
-                duration: 100,
-                moveFrames: [3, 4],
-                idleFrames: [3, 4]
-            },
-            left: {
-                status: false,
-                axis: "x",
-                sign: -1,
-                repeat: true,
-                duration: 100,
-                moveFrames: [0, 1],
-                idleFrames: [0, 1]
-            },
-            hit: {
-                status: false,
-                repeat: false,
-                duration: 200,
-                right: [2, 2],
-                left: [5, 5]
-            }
-        };
-
-        // Hitbox properties
-        this.offsetX = 0.5;
-        this.offsetY = 1;
-        this.hWidth = this.size.x + 1;
-        this.hHeight = this.size.y + 1;
     }
 
     update(level, deltaTime) {
         this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
-
-        let velX = this.velocity.x;
-
-        // Reverse direction if the enemy hits a wall
-        let newXPosition = this.position.plus(new Vec(velX * deltaTime, 0));
-        if (level.contact(newXPosition, this.size, 'wall')) {
-            this.velocity.x = -this.velocity.x; // Reverse direction
-            this.startMovement(this.velocity.x > 0 ? "right" : "left"); // Update animation direction
-        } else {
-            this.position = newXPosition;
-        }
-
+        this.moveHorizontally(level, deltaTime);
+        this.bounceOffWalls(level, deltaTime);
         this.updateFrame(deltaTime);
     }
 }
 
 class BossEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
-        super("red", width, height, x, y, "X");
+        super("red", width, height, x, y, "boss");
 
-        this.health = 75;
-        this.maxHealth = 75;
-        this.damage = 40;
-        this.xp_reward = 20;
+        this.health = 200;
+        this.maxHealth = 200;
+        this.damage = 50;
+        // Reward the remaining XP to the player
+        this.xp_reward = 500;
 
-        this.speed = 0.0005;
+        this.speed = 0.002;
         this.velocity = new Vec(this.speed, 0);
+
+        // Hitbox properties
+        this.offsetX = 1;
+        this.offsetY = 1;
+        this.hWidth = this.size.x + 2;
+        this.hHeight = this.size.y + 3;
+    }
+
+    update(level, deltaTime) {
+        this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
+        this.velocity.y += gravity * deltaTime;
+        this.moveHorizontally(level, deltaTime);
+        this.followPlayer(level, deltaTime);
+        this.moveVertically(level, deltaTime);
+
+        if (this.health < this.maxHealth / 2 && this.velocity.y === 0) {
+            this.velocity.y = -0.035; // Make the boss jump if on the ground
+        }
+
+        this.updateFrame(deltaTime);
     }
 }

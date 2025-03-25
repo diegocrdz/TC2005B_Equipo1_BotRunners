@@ -17,7 +17,6 @@ let frameStart;
 // Variables for the game
 let game;
 let player;
-let enemy;
 let level;
 
 let abilities = ["damage", "health", "resistance", "double jump", "dash"]; // List of abilities that the player can gain
@@ -40,7 +39,7 @@ class Game {
         this.isButtonPressed = false;
 
         // From the actors list, filter the enemies
-        this.enemies = this.actors.filter(actor => actor.type === 'enemy');
+        this.enemies = this.actors.filter(actor => actor.type === 'enemy' || actor.type === 'boss');
 
         // List of projectiles
         this.projectiles = [];
@@ -344,7 +343,7 @@ class Game {
         // .some() returns true if at least one element satisfies the condition
         // ref: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/some
         // actor => actor.type === 'enemy' is a function that returns true if the actor is an enemy
-        const hasEnemies = this.actors.some(actor => actor.type === 'enemy');
+        const hasEnemies = this.actors.some(actor => actor.type === 'enemy' || actor.type === 'boss');
         for (let actor of this.actors) {
             if (actor.type === 'door') {
                 if (hasEnemies) {
@@ -364,7 +363,7 @@ class Game {
         // Detect collisions with projectiles
         for (let projectile of this.projectiles) {
             for (let actor of currentActors) {
-                if (actor.type === 'enemy' && overlapRectangles(projectile, actor)) {
+                if ((actor.type === 'enemy' || actor.type === 'boss') && overlapRectangles(projectile, actor)) {
                     actor.takeDamage(game.player.damage); // Deal damage to the enemy
                     this.removeProjectile(projectile); // Remove the projectile
                     break; // Stop checking other enemies for this projectile
@@ -387,7 +386,7 @@ class Game {
                     // Remove the coin from the actors list
                     this.actors = this.actors.filter(item => item !== actor); // Remove the coin from the actors list
 
-                } else if (actor.type == 'enemy') {
+                } else if (actor.type == 'enemy' || actor.type == 'boss') {
                     // If the player is attacking, deal damage to the enemy
                     if (this.player.isAttacking) {
                         actor.takeDamage(this.player.damage, this.player.attackCooldown);
@@ -397,7 +396,7 @@ class Game {
                         this.player.takeDamage(actor.damage);
                     }
                 } else if (actor.type == 'spikes') { 
-                    if(this.player.isCrouching){
+                    if(this.player.isCrouching || this.player.isAttacking) {
                         continue;
                     } else {
                         this.player.takeDamage(10); // Player takes 10 damage
@@ -522,7 +521,7 @@ class Game {
                 actor.draw(ctx, scale);
 
                 // Draw health bar for enemies
-                if (actor.type === 'enemy') {
+                if (actor.type === 'enemy' || actor.type === 'boss') {
                     actor.drawHealthBar(ctx, scale);
                 }
             }
@@ -645,7 +644,7 @@ const levelChars = {
           sheetCols: 6,
           startFrame: [0, 0]},
     "X": {objClass: BossEnemy,
-          label: "bossEnemy",
+          label: "boss",
           sprite: '../../assets/characters/enemies/robot_boss.png',
           rect: new Rect(0, 0, 28, 28),
           sheetCols: 8,

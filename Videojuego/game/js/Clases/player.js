@@ -46,7 +46,7 @@ class Player extends AnimatedObject {
         this.xpToNextLevel = 100;
         this.level = 0;
         this.attackCooldown = 400;
-        this.shootCooldown = 1000;
+        this.shootCooldown = 400;
 
         // Movement variables to define directions and animations
         this.movement = {

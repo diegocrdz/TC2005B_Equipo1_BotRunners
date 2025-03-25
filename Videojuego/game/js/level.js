@@ -404,7 +404,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     // If roomType is "boss"
     // Only place a heavy enemy
     if (roomType == "boss") {
-        placeRandomly('X', 1, height - 2, height - 2, width - 4, width - 4);
+        placeRandomly('X', 1, height - 2, height - 2, width - 6, width - 6);
         return level.map(row => row.join('')).join('\n');
     }
     
