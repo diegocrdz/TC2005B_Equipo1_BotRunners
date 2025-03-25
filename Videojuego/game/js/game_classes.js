@@ -183,9 +183,11 @@ class Bar {
         this.borderColor = borderColor; // Color of the border
     }
 
-    update(newValue) {
-        // Clamp the value between 0 and maxValue
-        this.currentValue = Math.max(0, Math.min(newValue, this.maxValue));
+    update(newValue, newMaxValue) {
+        // Update the current value of the bar
+        this.currentValue = newValue
+        // Update the max value of the bar
+        this.maxValue = newMaxValue
     }
 
     draw(ctx) {

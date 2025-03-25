@@ -270,7 +270,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
                 continue; // Si después de varios intentos no se encuentra una posición válida, saltar esta tubería.
             }
     
-            let pipeLength = Math.floor(Math.random() * 6) + 3; // Longitud entre 3 y 8
+            let pipeLength = Math.floor(Math.random() * 5) + 3; // Longitud entre 3 y 7
     
             // **Asegurar que la posición inicial esté vacía**
             if (level[1][pipeX] !== '.') {

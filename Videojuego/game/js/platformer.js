@@ -55,6 +55,11 @@ class Game {
 
         this.labelTime =  new TextLabel(canvasWidth - 150, 150,
                                         "23px monospace", "#434a5f");
+        
+        this.labelHP = new TextLabel(canvasWidth / 2, canvasHeight - 65,
+                                    "10px monospace", "white");
+        this.labelXP = new TextLabel(canvasWidth / 2, canvasHeight - 35,
+                                    "10px monospace", "white");
 
         this.labelLife = new TextLabel(canvasWidth - 120, canvasHeight - 50,
                                         "20px Ubuntu Mono", "white");
@@ -100,8 +105,8 @@ class Game {
             canvasHeight - 30, // Y position
             260, // Width
             10, // Height
-            this.player.xpToNextLevel, // Max health
-            this.player.xp, // Current health
+            this.player.xpToNextLevel, // Max XP
+            this.player.xp, // Current XP
             "yellow", // Bar color
             "black", // Background color
             "black" // Border color
@@ -279,8 +284,8 @@ class Game {
         this.projectiles.forEach(projectile => projectile.update(this.level, deltaTime));
 
         // Update player bars
-        this.playerHealthBar.update(this.player.health);
-        this.playerXpBar.update(this.player.xp);
+        this.playerHealthBar.update(this.player.health, this.player.maxHealth);
+        this.playerXpBar.update(this.player.xp, this.player.xpToNextLevel);
 
         // A copy of the full list to iterate over all of them
         // DOES THIS WORK?
@@ -493,16 +498,18 @@ class Game {
         // Draw the projectiles
         this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
 
+        // Draw the player bars
+        this.playerHealthBar.draw(ctx);
+        this.playerXpBar.draw(ctx);
+
         // Draw the labels
         //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
         //this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
         this.labelTime.draw(ctx, `${this.chronometer.$elapsedTime.textContent}`);
-        this.labelLife.draw(ctx, `Health: ${this.player.health}`);
-        this.labelLevel.draw(ctx, `Lvl. ${this.player.level}`);
-
-        // Draw the player bars
-        this.playerHealthBar.draw(ctx);
-        this.playerXpBar.draw(ctx);
+        this.labelLife.draw(ctx, 'HP');
+        this.labelHP.draw(ctx, `${this.player.health} / ${this.player.maxHealth}`);
+        this.labelLevel.draw(ctx, `LVL ${this.player.level}`);
+        this.labelXP.draw(ctx, `${this.player.xp} / ${this.player.xpToNextLevel}`);
         
         //Draw the weapon backgrounds
         this.drawBackgrounds(ctx);
