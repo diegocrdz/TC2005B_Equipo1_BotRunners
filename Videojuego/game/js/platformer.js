@@ -37,6 +37,11 @@ class Game {
         this.actors = level.actors;
         // Button state for the boss room
         this.isButtonPressed = false;
+        // Cinematic properties
+        this.cinematicImage = new GameObject(null, canvasWidth, canvasHeight - 100, 0, 0, 'cinematic');
+        this.cinematicImage.setSprite('../../assets/cinematics/intro.png');
+        this.cinematicTimer = undefined;
+        this.cinematicSkipped = false;
 
         // List of projectiles
         this.projectiles = [];
@@ -161,6 +166,29 @@ class Game {
         };
 
         console.log(`############ LEVEL ${level} START ###################`);
+    }
+
+    startCinematic() {
+        this.state = 'cinematic';
+        // Start the cinematic timer
+        this.cinematicTimer = setTimeout(() => {
+            this.startGame();
+        }, 30000); // 30 seconds
+    }
+
+    skipCinematic() {
+        if (this.state === 'cinematic') {
+            // Skip the cinematic and start the game
+            this.cinematicSkipped = true;
+            clearTimeout(this.cinematicTimer);
+            this.startGame();
+        }
+    }
+
+    startGame() {
+        this.state = 'playing';
+        console.log("Game started");
+        this.chronometer.start();
     }
 
     addProjectile(projectile) {
@@ -416,6 +444,11 @@ class Game {
     }
 
     draw(ctx, scale) {
+        if (this.state === 'cinematic') {
+            this.cinematicImage.draw(ctx, 1);
+            return;
+        }
+
         // First draw the background tiles
         for (let actor of this.actors) {
             if (actor.type === 'floor' || actor.type === 'wall') {
@@ -628,7 +661,8 @@ function init() {
 
 function gameStart() {
     // Register the game object, which creates all other objects
-    game = new Game('playing', new Level(GAME_LEVELS[0]));
+    game = new Game('cinematic', new Level(GAME_LEVELS[0]));
+    game.startCinematic();
 
     game.chronometer = new Chronometer(); //initiates chronometer
     game.chronometer.start(); //starts chronometer
@@ -743,6 +777,11 @@ function setEventListeners() {
         }
         if (event.key == 'ArrowDown') {
             game.player.isPressingDown = true;
+        }
+
+        // Skip the cinematic
+        if (event.key == ' ' && game.state === 'cinematic') {
+            game.skipCinematic();
         }
     });
 
