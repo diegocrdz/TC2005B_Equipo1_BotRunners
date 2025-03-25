@@ -708,6 +708,14 @@ function restartGame() {
 
 function setEventListeners() {
     window.addEventListener("keydown", event => {
+        // Skip the cinematic and prevent player actions
+        if (game.state === 'cinematic') {
+            if (event.key == ' ') {
+                game.skipCinematic();
+            }
+            return;
+        }
+
         if (event.key == 'w'){
             game.player.jump(); 
         }
@@ -778,14 +786,14 @@ function setEventListeners() {
         if (event.key == 'ArrowDown') {
             game.player.isPressingDown = true;
         }
-
-        // Skip the cinematic
-        if (event.key == ' ' && game.state === 'cinematic') {
-            game.skipCinematic();
-        }
     });
 
     window.addEventListener("keyup", event => {
+        // Prevent player actions during the cinematic
+        if (game.state === 'cinematic') {
+            return; // Block all actions
+        }
+        
         if (event.key == 'a') {
             game.player.stopMovement("left");
         }
