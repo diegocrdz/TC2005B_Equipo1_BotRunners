@@ -42,6 +42,7 @@ class Game {
         this.cinematicImage.setSprite('../../assets/cinematics/intro.png');
         this.cinematicTimer = undefined;
         this.cinematicSkipped = false;
+        this.labelSkip = new TextLabel(canvasWidth / 2 - 150, canvasHeight - 40, "20px monospace", "white");
 
         // List of projectiles
         this.projectiles = [];
@@ -445,6 +446,7 @@ class Game {
 
     draw(ctx, scale) {
         if (this.state === 'cinematic') {
+            this.labelSkip.draw(ctx, "Presiona ESPACIO para omitir");
             this.cinematicImage.draw(ctx, 1);
             return;
         }
