@@ -210,7 +210,7 @@ class Game {
             const armWidth = 60; // Ancho del sprite de la poción
             const armHeight = 50; // Alto del sprite de la poción
 
-            const pistolX = (canvasWidth / 2) - 256;
+            const pistolX = (canvasWidth / 2) - 256; //posición X de la pistola 
             const pistolY = canvasHeight - 80; // Posición Y de la poción (alineada con la barra de vida)
             const pistolWidth = 65; // Ancho del sprite de la poción
             const pistolHeight = 65; // Alto del sprite de la poción
