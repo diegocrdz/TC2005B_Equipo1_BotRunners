@@ -45,20 +45,26 @@ class Game {
         // List of projectiles
         this.projectiles = [];
 
-        this.labelMoney = new TextLabel(20, canvasHeight - 30,
+        this.labelMoney = new TextLabel(20, canvasHeight - 50,
                                         "30px Ubuntu Mono", "white");
 
         this.labelDebug = new TextLabel(20, canvasHeight - 60,
                                         "20px Ubuntu Mono", "white");
 
-        this.labelTime =  new TextLabel(canvasWidth - 150, 150,
+        this.labelTime =  new TextLabel(canvasWidth - 150, 105,
                                         "23px monospace", "#434a5f");
 
-        this.labelLife = new TextLabel(canvasWidth - 120, canvasHeight - 50,
-                                        "20px Ubuntu Mono", "white");
+        this.labelLife = new TextLabel(canvasWidth - 92, canvasHeight - 50,
+                                        "20px monospace", "white");
 
-        this.labelLevel = new TextLabel(canvasWidth - 120, canvasHeight - 20,
-                                        "20px Ubuntu Mono", "white");
+        this.labelLevel = new TextLabel(canvasWidth - 92, canvasHeight - 20,
+                                        "20px monospace", "white");
+
+        this.labelDamage = new TextLabel(canvasWidth - 501, canvasHeight - 52,
+                                        "18px monospace", "white");
+
+        this.labelResistance = new TextLabel(canvasWidth - 437, canvasHeight - 52,
+                                            "18px monospace", "white");
         
         // Load board images for indicating ladders direction
         this.ladderUpImage = new Image();
@@ -96,7 +102,7 @@ class Game {
         this.playerHealthBar = (ctx) => {
             const barWidth = 260; // Width of the health bar
             const barHeight = 10; // Height of the health bar
-            const x = canvasWidth / 2; // X position of the health bar
+            const x = canvasWidth / 2 + 33; // X position of the health bar
             const y = canvasHeight - 60; // Y position (above the player)
 
             // Calculate the width of the health portion
@@ -123,7 +129,7 @@ class Game {
         this.playerXpBar = (ctx, scale) => {
             const barWidth = 260; // Width of the health bar
             const barHeight = 10; // Height of the health bar
-            const x = canvasWidth / 2; // X position of the health bar
+            const x = canvasWidth / 2 + 33; // X position of the health bar
             const y = canvasHeight - 30; // Y position (above the player)
 
             // Calculate the width of the health portion
@@ -169,21 +175,38 @@ class Game {
         this.fastPistolImage = new Image();
         this.fastPistolImage.src =   '../../../Videojuego/assets/objects/gun_2.png';
 
-    
-   
+        //Habilities
+        this.damageImage = new Image();
+        this.damageImage.src = '../../../Videojuego/assets/objects/ui_damage.png';
+
+        this.resistanceImage = new Image();
+        this.resistanceImage.src = '../../../Videojuego/assets/objects/ui_resistance.png';
+
+        this.dashImage = new Image();
+        this.dashImage.src = '../../../Videojuego/assets/objects/ui_dash.png';
+
+        this.doubleJumpImage = new Image();
+        this.doubleJumpImage.src = '../../../Videojuego/assets/objects/ui_doublejump.png';
 
         //Method to draw the selection backgrounds
         this.drawBackgrounds = (ctx) => {
-            const armBackgroundX = (canvasWidth / 2) - 360;
-            const pistolBackgroundX = (canvasWidth / 2) - 260;
-            const potionBackgroundX = (canvasWidth / 2) - 160;
+            const armBackgroundX = (canvasWidth / 2) - 387;
+            const pistolBackgroundX = (canvasWidth / 2) - 307;
+            const potionBackgroundX = (canvasWidth / 2) - 227;
+
             const weaponBackgroundY = canvasHeight - 78;
             const weaponBackgroundWidth = 70; 
             const weaponBackgroundHeight = 70;
 
+            const statisticsBackgroundX = (canvasWidth / 2) - 137;
+            const statisticsBackgroundY = canvasHeight - 78;
+            const statisticsBackgroundWidth = 147;
+            const statisticsBackgroundHeight = 70;
+
             ctx.drawImage(this.weaponBackgroundImage, armBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
             ctx.drawImage(this.weaponBackgroundImage, pistolBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
             ctx.drawImage(this.weaponBackgroundImage, potionBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
+            ctx.drawImage(this.weaponBackgroundImage, statisticsBackgroundX, statisticsBackgroundY, statisticsBackgroundWidth, statisticsBackgroundHeight);
 
             if(game.player.selectedWeapon == 1){
                 ctx.drawImage(this.weaponSelectionImage, armBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
@@ -193,21 +216,11 @@ class Game {
                 ctx.drawImage(this.weaponSelectionImage, potionBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
             }
         }
-        
-
-        // Method to draw the health potion
-        this.drawHealthPotion = (ctx) => {
-            const potionX = (canvasWidth / 2) - 155; // Posición X de la poción (al lado de la barra de vida)
-            const potionY = canvasHeight - 70; // Posición Y de la poción (alineada con la barra de vida)
-            const potionWidth = 60; // Ancho del sprite de la poción
-            const potionHeight = 50; // Alto del sprite de la poción
-            ctx.drawImage(this.potionImage, potionX, potionY, potionWidth, potionHeight);
-        };
 
         this.drawWeapons = (ctx) => {
-            const armX = (canvasWidth / 2) - 355; // Posición X de la poción (al lado de la barra de vida)
+            const armX = (canvasWidth / 2) - 380; // Posición X de la poción (al lado de la barra de vida)
             const armY = canvasHeight - 70; // Posición Y de la poción (alineada con la barra de vida)
-            const armWidth = 60; // Ancho del sprite de la poción
+            const armWidth = 55; // Ancho del sprite de la poción
             const armHeight = 50; // Alto del sprite de la poción
 
             const pistolX = (canvasWidth / 2) - 256; //posición X de la pistola 
@@ -217,6 +230,41 @@ class Game {
 
             ctx.drawImage(this.armImage, armX, armY, armWidth, armHeight);
             ctx.drawImage(this.slowPistolImage, pistolX, pistolY, pistolWidth, pistolHeight);
+        };
+
+        // Method to draw the health potion
+        this.drawHealthPotion = (ctx) => {
+            const potionX = (canvasWidth / 2) - 222; // Posición X de la poción (al lado de la barra de vida)
+            const potionY = canvasHeight - 70; // Posición Y de la poción (alineada con la barra de vida)
+            const potionWidth = 60; // Ancho del sprite de la poción
+            const potionHeight = 50; // Alto del sprite de la poción
+            ctx.drawImage(this.potionImage, potionX, potionY, potionWidth, potionHeight);
+        };
+        
+        //Method to draw the habilites signs
+        this.drawAbilities = (ctx) => {
+            const damageX = (canvasWidth / 2) - 125;
+            const habilitiesWidth = 25;
+            const habilitiesHeight = 30;
+
+            const resistanceX = (canvasWidth / 2) - 65;
+            const doubleJumpX = (canvasWidth / 2) - 123;
+            const dashX =  (canvasWidth / 2) - 95;
+            
+            const temporaryAbilitiesY = canvasHeight - 72;
+            const permanentAbilitiesY = canvasHeight - 45;
+
+            ctx.drawImage(this.damageImage, damageX, temporaryAbilitiesY, habilitiesWidth, habilitiesHeight);
+            ctx.drawImage(this.resistanceImage, resistanceX, temporaryAbilitiesY, habilitiesWidth, habilitiesHeight);
+            
+            if(game.player.canDoubleJump){
+                ctx.drawImage(this.doubleJumpImage, doubleJumpX, permanentAbilitiesY, habilitiesWidth, habilitiesHeight);
+            }
+            
+            if(game.player.canDash){
+                ctx.drawImage(this.dashImage, dashX, permanentAbilitiesY, habilitiesWidth, habilitiesHeight);
+            }
+
         };
 
         //method to draw the tutorial signs
@@ -541,14 +589,9 @@ class Game {
 
         // Draw the projectiles
         this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
-
-        // Draw the labels
+       
         //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
         //this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
-        this.labelTime.draw(ctx, `${this.chronometer.$elapsedTime.textContent}`);
-        this.labelLife.draw(ctx, `Health: ${this.player.health}`);
-        this.labelLevel.draw(ctx, `Lvl. ${this.player.level}`);
-
         
         // Draw the player's health bar
         this.playerHealthBar(ctx, scale);
@@ -564,6 +607,15 @@ class Game {
         
         //Draw the weapons
         this.drawWeapons(ctx);
+
+        this.drawAbilities(ctx);
+
+         // Draw the labels
+        this.labelTime.draw(ctx, `${this.chronometer.$elapsedTime.textContent}`);
+        this.labelLife.draw(ctx, `HP: ${this.player.health}`);
+        this.labelLevel.draw(ctx, `LVL: ${this.player.level}`);
+        this.labelDamage.draw(ctx, `${this.player.damage}`);
+        this.labelResistance.draw(ctx, `${this.player.resistance}`);
        
         //draw the tutorial image
     }
