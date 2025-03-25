@@ -47,13 +47,13 @@ class Game {
         // List of projectiles
         this.projectiles = [];
 
-        this.labelMoney = new TextLabel(20, canvasHeight - 30,
+        this.labelMoney = new TextLabel(20, canvasHeight - 50,
                                         "30px Ubuntu Mono", "white");
 
         this.labelDebug = new TextLabel(20, canvasHeight - 60,
                                         "20px Ubuntu Mono", "white");
 
-        this.labelTime =  new TextLabel(canvasWidth - 150, 150,
+        this.labelTime =  new TextLabel(canvasWidth - 150, 105,
                                         "23px monospace", "#434a5f");
         
         this.labelHP = new TextLabel(canvasWidth / 2, canvasHeight - 65,
@@ -61,11 +61,17 @@ class Game {
         this.labelXP = new TextLabel(canvasWidth / 2, canvasHeight - 35,
                                     "10px monospace", "white");
 
-        this.labelLife = new TextLabel(canvasWidth - 120, canvasHeight - 50,
-                                        "20px Ubuntu Mono", "white");
+        this.labelLife = new TextLabel(canvasWidth - 92, canvasHeight - 50,
+                                        "20px monospace", "white");
 
-        this.labelLevel = new TextLabel(canvasWidth - 120, canvasHeight - 20,
-                                        "20px Ubuntu Mono", "white");
+        this.labelLevel = new TextLabel(canvasWidth - 92, canvasHeight - 20,
+                                        "20px monospace", "white");
+
+        this.labelDamage = new TextLabel(canvasWidth - 501, canvasHeight - 52,
+                                        "18px monospace", "white");
+
+        this.labelResistance = new TextLabel(canvasWidth - 437, canvasHeight - 52,
+                                            "18px monospace", "white");
         
         // Load board images for indicating ladders direction
         this.ladderUpImage = new GameObject(null, 60, 60,
@@ -89,7 +95,7 @@ class Game {
 
         // Health bar for the player
         this.playerHealthBar = new Bar(
-            canvasWidth / 2, // X position
+            canvasWidth / 2 + 33, // X position
             canvasHeight - 60, // Y position
             260, // Width
             10, // Height
@@ -101,7 +107,7 @@ class Game {
         );
 
         this.playerXpBar = new Bar(
-            canvasWidth / 2, // X position
+            canvasWidth / 2 + 33, // X position
             canvasHeight - 30, // Y position
             260, // Width
             10, // Height
@@ -111,10 +117,10 @@ class Game {
             "black", // Background color
             "black" // Border color
         );
-
+        //with, height, x,y 
         // Load the health potion image
         this.potionImage = new GameObject(null, 60, 50,
-                                        (canvasWidth / 2) - 155, canvasHeight - 70,
+                                        (canvasWidth / 2) - 222, canvasHeight - 70,
                                         'potion');
         this.potionImage.setSprite('../../assets/objects/potion_full.png');
 
@@ -122,36 +128,61 @@ class Game {
         this.weaponBackgroundImage = new GameObject(null, 70, 70, 0, 0, 'ui');
         this.weaponBackgroundImage.setSprite('../../../Videojuego/assets/objects/gray_weapon_background.png');
 
+        this.abilitiesBackgroundImage = new GameObject(null, 147, 70, (canvasWidth / 2) - 137, canvasHeight - 78, 'ui');
+        this.abilitiesBackgroundImage.setSprite('../../../Videojuego/assets/objects/gray_weapon_background.png');
+
         this.weaponSelectionImage = new GameObject(null, 70, 70, 0, 0, 'ui');
         this.weaponSelectionImage.setSprite('../../../Videojuego/assets/objects/weapon_selection.png');
 
         // Weapon images for the UI
-        this.armImage = new GameObject(null, 60, 50, (canvasWidth / 2) - 355, canvasHeight - 70, 'weapon');
+        this.armImage = new GameObject(null, 55, 50, (canvasWidth / 2) - 380, canvasHeight - 70, 'weapon');
         this.armImage.setSprite('../../../Videojuego/assets/objects/melee_1.png');
 
-        this.roboticArmImage = new GameObject(null, 60, 50, (canvasWidth / 2) - 355, canvasHeight - 70, 'weapon');
+        this.roboticArmImage = new GameObject(null, 55, 50, (canvasWidth / 2) - 380, canvasHeight - 70, 'weapon');
         this.roboticArmImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
 
-        this.slowPistolImage = new GameObject(null, 65, 65, (canvasWidth / 2) - 256, canvasHeight - 80, 'weapon');
+        this.slowPistolImage = new GameObject(null, 65, 65, (canvasWidth / 2) - 303, canvasHeight - 80, 'weapon');
         this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
 
-        this.fastPistolImage = new GameObject(null, 65, 65, (canvasWidth / 2) - 256, canvasHeight - 80, 'weapon');
+        this.fastPistolImage = new GameObject(null, 65, 65, (canvasWidth / 2) - 303, canvasHeight - 80, 'weapon');
         this.fastPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
+
+        //Habilities
+        this.damageImage = new Image();
+        this.damageImage.src = '../../../Videojuego/assets/objects/ui_damage.png';
+
+        this.resistanceImage = new Image();
+        this.resistanceImage.src = '../../../Videojuego/assets/objects/ui_resistance.png';
+
+        this.dashImage = new Image();
+        this.dashImage.src = '../../../Videojuego/assets/objects/ui_dash.png';
+
+        this.doubleJumpImage = new Image();
+        this.doubleJumpImage.src = '../../../Videojuego/assets/objects/ui_doublejump.png';
+
+    
+   
 
         //Method to draw the selection backgrounds
         this.drawBackgrounds = (ctx) => {
             const weaponPositions = [
-                { x: (canvasWidth / 2) - 360, y: canvasHeight - 78 }, // Arm background
-                { x: (canvasWidth / 2) - 260, y: canvasHeight - 78 }, // Pistol background
-                { x: (canvasWidth / 2) - 160, y: canvasHeight - 78 }  // Potion background
+                { x: (canvasWidth / 2) - 387, y: canvasHeight - 78 }, // Arm background
+                { x: (canvasWidth / 2) - 307, y: canvasHeight - 78 }, // Pistol background
+                { x: (canvasWidth / 2) - 227, y: canvasHeight - 78 }  // Potion background
             ];
-        
+
+           
+
             // Draw weapon backgrounds
             weaponPositions.forEach((pos) => {
                 this.weaponBackgroundImage.position = new Vec(pos.x, pos.y);
+                this.abilitiesBackgroundImage.draw(ctx,1);
                 this.weaponBackgroundImage.draw(ctx, 1);
             });
-        
+
+            this.weaponBackgroundImage.draw(ctx,1);
+            //ctx.drawImage(this.weaponBackgroundImage, statisticsBackgroundX, statisticsBackgroundY, statisticsBackgroundWidth, statisticsBackgroundHeight);
+
             // Draw weapon selection highlight
             if (game.player.selectedWeapon === 1) {
                 this.weaponSelectionImage.position = new Vec(weaponPositions[0].x, weaponPositions[0].y);
@@ -164,13 +195,41 @@ class Game {
                 this.weaponSelectionImage.position = new Vec(weaponPositions[2].x, weaponPositions[2].y);
                 this.weaponSelectionImage.draw(ctx, 1);
             }
-        };
+
+        
+        }
+        
 
         this.drawWeapons = (ctx) => {
             this.armImage.draw(ctx, 1);
             this.slowPistolImage.draw(ctx, 1);
         };
+        
+        //Method to draw the habilites signs
+        this.drawAbilities = (ctx) => {
+            const damageX = (canvasWidth / 2) - 125;
+            const habilitiesWidth = 25;
+            const habilitiesHeight = 30;
 
+            const resistanceX = (canvasWidth / 2) - 65;
+            const doubleJumpX = (canvasWidth / 2) - 123;
+            const dashX =  (canvasWidth / 2) - 95;
+            
+            const temporaryAbilitiesY = canvasHeight - 72;
+            const permanentAbilitiesY = canvasHeight - 45;
+
+            ctx.drawImage(this.damageImage, damageX, temporaryAbilitiesY, habilitiesWidth, habilitiesHeight);
+            ctx.drawImage(this.resistanceImage, resistanceX, temporaryAbilitiesY, habilitiesWidth, habilitiesHeight);
+            
+            if(game.player.canDoubleJump){
+                ctx.drawImage(this.doubleJumpImage, doubleJumpX, permanentAbilitiesY, habilitiesWidth, habilitiesHeight);
+            }
+            
+            if(game.player.canDash){
+                ctx.drawImage(this.dashImage, dashX, permanentAbilitiesY, habilitiesWidth, habilitiesHeight);
+            }
+
+        }
         console.log(`############ LEVEL ${level} START ###################`);
     }
 
@@ -519,8 +578,19 @@ class Game {
         
         //Draw the weapons
         this.drawWeapons(ctx);
-    }
 
+        this.drawAbilities(ctx);
+
+        //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
+        //this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
+        this.labelTime.draw(ctx, `${this.chronometer.$elapsedTime.textContent}`);
+        this.labelLife.draw(ctx, `HP: ${this.player.health}`);
+        this.labelLevel.draw(ctx, `LVL: ${this.player.level}`);
+        this.labelDamage.draw(ctx, `${this.player.damage}`);
+        this.labelResistance.draw(ctx, `${this.player.resistance}`);
+
+
+    }
     // Pause or resume the game
     togglePause() {
         this.paused = !this.paused;
@@ -725,20 +795,20 @@ function setEventListeners() {
             return;
         }
 
-        if (event.key == 'w'){
+        if (event.code == "KeyW"){
             game.player.jump(); 
         }
-        if (event.key == 'a') {
+        if (event.code == "KeyA") {
             game.player.startMovement("left");
         }
-        if (event.key == 'd') {
+        if (event.code == "KeyD") {
             game.player.startMovement("right");
         }
-        if (event.key == 's') {
+        if (event.code == "KeyS") {
             game.player.crouch();
         }
 
-        if(event.key == 'w' && game.player.isJumping){ //falta poner que no se pase del limite
+        if(event.code == 'KeyW' && game.player.isJumping){ //falta poner que no se pase del limite
             game.player.doubleJump();
         }
 
@@ -767,12 +837,12 @@ function setEventListeners() {
         }
 
         // Pause the game
-        if (event.key == 'p') {
+        if (event.code == 'KeyP') {
             game.togglePause();
         }
 
         // Restart the game
-        if (event.key == 'r') {
+        if (event.code == 'KeyR') {
             restartGame();
         }
 
@@ -803,13 +873,13 @@ function setEventListeners() {
             return; // Block all actions
         }
         
-        if (event.key == 'a') {
+        if (event.code == 'KeyA') {
             game.player.stopMovement("left");
         }
-        if (event.key == 'd') {
+        if (event.code == 'KeyD') {
             game.player.stopMovement("right");
         }
-        if (event.key == 's') {
+        if (event.code == 'KeyS') {
             game.player.standUp();
         }
 
