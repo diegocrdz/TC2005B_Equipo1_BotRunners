@@ -2,27 +2,29 @@
 <html>
     <head>
         <title>Platformer</title>
+        <!-- Stylesheet of the page -->
         <link rel="stylesheet" href="../css/styles.css">
-        <script src="../js/game_classes.js"></script>
 
+        <!-- Classes of the game -->
+        <script src="../js/game_classes.js"></script>
         <script src="../js/Clases/player.js"></script>
         <script src="../js/Clases/enemies.js"></script>
-
         <script src="../js/Clases/ability.js"></script>
         <script src="../js/Clases/coin.js"></script>
         <script src="../js/Clases/button.js"></script>
         <script src="../js/Clases/chronometer.js"></script>
         <script src="../js/Clases/projectile.js"></script>
         <script src="../js/Clases/door.js"></script>
-
         <script src="../js/Clases/level.js"></script>
+
+        <!-- Main scripts of the game -->
         <script src="../js/platformer.js"></script>
-        <script src="../js/level.js"></script>
+        <script src="../js/level_generation.js"></script>
     </head>
 
     <body>
         <div id="headerContainer">
-            <h1>Platformer</h1>
+            <h1>Overclocked</h1>
         </div>
         <canvas id="canvas"></canvas>
 
@@ -33,8 +35,6 @@
         <a href="/">
             <button id="backButton">Back</button>
         </a>
-
-        
 
         <script> main(); </script>
         

@@ -17,17 +17,16 @@ let frameStart;
 // Variables for the game
 let game;
 let player;
-let enemy;
 let level;
 
-let abilities = ["damage", "health", "resistance", "double jump", "dash"]; // List of abilities that the player can gain
+// List of abilities that the player can gain
+let abilities = ["damage", "health", "resistance", "double jump", "dash"];
 
 // Scale of the whole world, to be applied to all objects
 // Each unit in the level file will be drawn as these many square pixels
 const scale = 32;
 const levelWidth = Math.floor(canvasWidth / scale);
 const levelHeight = Math.floor(canvasHeight / scale);
-
 
 class Game {
     constructor(state, level) {
@@ -38,9 +37,12 @@ class Game {
         this.actors = level.actors;
         // Button state for the boss room
         this.isButtonPressed = false;
-
-        // From the actors list, filter the enemies
-        this.enemies = this.actors.filter(actor => actor.type === 'enemy');
+        // Cinematic properties
+        this.cinematicImage = new GameObject(null, canvasWidth, canvasHeight - 100, 0, 0, 'cinematic');
+        this.cinematicImage.setSprite('../../assets/cinematics/intro.png');
+        this.cinematicTimer = undefined;
+        this.cinematicSkipped = false;
+        this.labelSkip = new TextLabel(canvasWidth / 2 - 150, canvasHeight - 40, "20px monospace", "white");
 
         // List of projectiles
         this.projectiles = [];
@@ -67,113 +69,75 @@ class Game {
                                             "18px monospace", "white");
         
         // Load board images for indicating ladders direction
-        this.ladderUpImage = new Image();
-
-        this.ladderDownImage = new Image();
-
-        // Method to draw the ladder up sign
-        this.drawLadderUp = (ctx) => {
-            const ladderX = (canvasWidth / 2) - 70; // Posición X de la escalera (al lado de la barra de vida)
-            const ladderY = canvasHeight / 3; // Posición Y de la escalera (alineada con la barra de vida)
-            const ladderWidth = 60; // Ancho del sprite de la escalera
-            const ladderHeight = 60; // Alto del sprite de la escalera
-            ctx.drawImage(this.ladderUpImage, ladderX, ladderY, ladderWidth, ladderHeight);
-        };
-
-        // Method to draw the ladder down sign
-        this.drawLadderDown = (ctx) => {
-            const ladderX = (canvasWidth / 2) - 70; // Posición X de la escalera (al lado de la barra de vida)
-            const ladderY = canvasHeight / 3 + 80; // Posición Y de la escalera (alineada con la barra de vida)
-            const ladderWidth = 60; // Ancho del sprite de la escalera
-            const ladderHeight = 60; // Alto del sprite de la escalera
-            ctx.drawImage(this.ladderDownImage, ladderX, ladderY, ladderWidth, ladderHeight);
-        };
-
+        this.ladderUpImage = new GameObject(null, 60, 60,
+                                            (canvasWidth / 2) - 70, canvasHeight / 3,
+                                            'sign');
         
-        //load the tutorial image
-        this.tutorial1 = new Image();
-        this.tutorial1.src =  '../../../Videojuego/assets/backgrounds/tutorial1.png';
-
-        this.tutorial2 = new Image();
-        this.tutorial2.src =  '../../../Videojuego/assets/backgrounds/tutorial2.png';
-
+        this.ladderDownImage = new GameObject(null, 60, 60,
+                                            (canvasWidth / 2) - 70, canvasHeight / 3 + 80,
+                                            'sign');
+        
+        // Load the tutorial image
+        this.tutorial1Image = new GameObject(null, 360, 180,
+                                            (canvasWidth / 2) - 175, canvasHeight / 3 - 100,
+                                            'tutorial');
+        this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial1.png');
+        
+        this.tutorial2Image = new GameObject(null, 360, 180,
+                                            (canvasWidth / 2) - 175, canvasHeight / 3 - 100,
+                                            'tutorial');
+        this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial2.png');
 
         // Health bar for the player
-        this.playerHealthBar = (ctx) => {
-            const barWidth = 260; // Width of the health bar
-            const barHeight = 10; // Height of the health bar
-            const x = canvasWidth / 2 + 33; // X position of the health bar
-            const y = canvasHeight - 60; // Y position (above the player)
+        this.playerHealthBar = new Bar(
+            canvasWidth / 2, // X position
+            canvasHeight - 60, // Y position
+            260, // Width
+            10, // Height
+            this.player.maxHealth, // Max health
+            this.player.health, // Current health
+            "lightgreen", // Bar color
+            "black", // Background color
+            "black" // Border color
+        );
 
-            // Calculate the width of the health portion
-            const healthWidth = (this.player.health / this.player.maxHealth) * barWidth;
-
-            // Draw the background (red bar)
-            ctx.fillStyle = "black";
-
-            ctx.fillRect(x, y, barWidth, barHeight);
-
-            // Draw the foreground (green bar)
-            ctx.fillStyle = "lightgreen";
-
-            ctx.fillRect(x, y, healthWidth, barHeight);
-
-            // Draw a border around the health bar
-            ctx.strokeStyle = "black";
-            // Make the border bigger
-            ctx.lineWidth = 3;
-            ctx.strokeRect(x, y, barWidth, barHeight);
-        };
-
-        // Experience bar for the player
-        this.playerXpBar = (ctx, scale) => {
-            const barWidth = 260; // Width of the health bar
-            const barHeight = 10; // Height of the health bar
-            const x = canvasWidth / 2 + 33; // X position of the health bar
-            const y = canvasHeight - 30; // Y position (above the player)
-
-            // Calculate the width of the health portion
-            const xpWidth = (this.player.xp / this.player.xpToNextLevel) * barWidth;
-
-            // Draw the background (red bar)
-            ctx.fillStyle = "black";
-
-            ctx.fillRect(x, y, barWidth, barHeight);
-
-            // Draw the foreground (green bar)
-            ctx.fillStyle = "yellow";
-
-            ctx.fillRect(x, y, xpWidth, barHeight);
-
-            // Draw a border around the health bar
-            ctx.strokeStyle = "black";
-            // Make the border bigger
-            ctx.lineWidth = 3;
-            ctx.strokeRect(x, y, barWidth, barHeight);
-        };
+        this.playerXpBar = new Bar(
+            canvasWidth / 2, // X position
+            canvasHeight - 30, // Y position
+            260, // Width
+            10, // Height
+            this.player.xpToNextLevel, // Max health
+            this.player.xp, // Current health
+            "yellow", // Bar color
+            "black", // Background color
+            "black" // Border color
+        );
 
         // Load the health potion image
-        this.potionImage = new Image();
-        this.potionImage.src = '../assets/sprites/potion_full.png'; // Load the full potion sprite
+        this.potionImage = new GameObject(null, 60, 50,
+                                        (canvasWidth / 2) - 155, canvasHeight - 70,
+                                        'potion');
+        this.potionImage.setSprite('../../assets/objects/potion_full.png');
 
-        // Weapons
-        this.weaponBackgroundImage = new Image();
-        this.weaponBackgroundImage.src = '../../../Videojuego/assets/objects/gray_weapon_background.png';
+        // Weapon background and selection images
+        this.weaponBackgroundImage = new GameObject(null, 70, 70, 0, 0, 'ui');
+        this.weaponBackgroundImage.setSprite('../../../Videojuego/assets/objects/gray_weapon_background.png');
 
-        this.weaponSelectionImage = new Image();
-        this.weaponSelectionImage.src = '../../../Videojuego/assets/objects/weapon_selection.png';
+        this.weaponSelectionImage = new GameObject(null, 70, 70, 0, 0, 'ui');
+        this.weaponSelectionImage.setSprite('../../../Videojuego/assets/objects/weapon_selection.png');
 
-        this.armImage = new Image();
-        this.armImage.src =   '../../../Videojuego/assets/objects/melee_1.png';
+        // Weapon images for the UI
+        this.armImage = new GameObject(null, 60, 50, (canvasWidth / 2) - 355, canvasHeight - 70, 'weapon');
+        this.armImage.setSprite('../../../Videojuego/assets/objects/melee_1.png');
 
-        this.roboticArmImage = new Image();
-        this.roboticArmImage.src =   '../../../Videojuego/assets/objects/melee_2.png';
+        this.roboticArmImage = new GameObject(null, 60, 50, (canvasWidth / 2) - 355, canvasHeight - 70, 'weapon');
+        this.roboticArmImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
 
-        this.slowPistolImage = new Image();
-        this.slowPistolImage.src =   '../../../Videojuego/assets/objects/gun_1.png';
+        this.slowPistolImage = new GameObject(null, 65, 65, (canvasWidth / 2) - 256, canvasHeight - 80, 'weapon');
+        this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
 
-        this.fastPistolImage = new Image();
-        this.fastPistolImage.src =   '../../../Videojuego/assets/objects/gun_2.png';
+        this.fastPistolImage = new GameObject(null, 65, 65, (canvasWidth / 2) - 256, canvasHeight - 80, 'weapon');
+        this.fastPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
 
         //Habilities
         this.damageImage = new Image();
@@ -188,57 +152,50 @@ class Game {
         this.doubleJumpImage = new Image();
         this.doubleJumpImage.src = '../../../Videojuego/assets/objects/ui_doublejump.png';
 
+    
+   
+
         //Method to draw the selection backgrounds
         this.drawBackgrounds = (ctx) => {
-            const armBackgroundX = (canvasWidth / 2) - 387;
-            const pistolBackgroundX = (canvasWidth / 2) - 307;
-            const potionBackgroundX = (canvasWidth / 2) - 227;
-
-            const weaponBackgroundY = canvasHeight - 78;
-            const weaponBackgroundWidth = 70; 
-            const weaponBackgroundHeight = 70;
+            const weaponPositions = [
+                { x: (canvasWidth / 2) - 360, y: canvasHeight - 78 }, // Arm background
+                { x: (canvasWidth / 2) - 260, y: canvasHeight - 78 }, // Pistol background
+                { x: (canvasWidth / 2) - 160, y: canvasHeight - 78 }  // Potion background
+            ];
 
             const statisticsBackgroundX = (canvasWidth / 2) - 137;
             const statisticsBackgroundY = canvasHeight - 78;
             const statisticsBackgroundWidth = 147;
             const statisticsBackgroundHeight = 70;
 
-            ctx.drawImage(this.weaponBackgroundImage, armBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
-            ctx.drawImage(this.weaponBackgroundImage, pistolBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
-            ctx.drawImage(this.weaponBackgroundImage, potionBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
+            // Draw weapon backgrounds
+            weaponPositions.forEach((pos) => {
+                this.weaponBackgroundImage.position = new Vec(pos.x, pos.y);
+                this.weaponBackgroundImage.draw(ctx, 1);
+            });
+
             ctx.drawImage(this.weaponBackgroundImage, statisticsBackgroundX, statisticsBackgroundY, statisticsBackgroundWidth, statisticsBackgroundHeight);
 
-            if(game.player.selectedWeapon == 1){
-                ctx.drawImage(this.weaponSelectionImage, armBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
-            } else if(game.player.selectedWeapon == 2){
-                ctx.drawImage(this.weaponSelectionImage, pistolBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
-            } else if(game.player.selectedWeapon == 3){
-                ctx.drawImage(this.weaponSelectionImage, potionBackgroundX, weaponBackgroundY, weaponBackgroundWidth, weaponBackgroundHeight);
+            // Draw weapon selection highlight
+            if (game.player.selectedWeapon === 1) {
+                this.weaponSelectionImage.position = new Vec(weaponPositions[0].x, weaponPositions[0].y);
+                this.weaponSelectionImage.draw(ctx, 1);
+            } else if (game.player.selectedWeapon === 2) {
+                this.weaponSelectionImage.position = new Vec(weaponPositions[1].x, weaponPositions[1].y);
+                this.weaponSelectionImage.draw(ctx, 1);
             }
+            else if (game.player.selectedWeapon === 3) {
+                this.weaponSelectionImage.position = new Vec(weaponPositions[2].x, weaponPositions[2].y);
+                this.weaponSelectionImage.draw(ctx, 1);
+            }
+
+        
         }
+        
 
         this.drawWeapons = (ctx) => {
-            const armX = (canvasWidth / 2) - 380; // Posición X de la poción (al lado de la barra de vida)
-            const armY = canvasHeight - 70; // Posición Y de la poción (alineada con la barra de vida)
-            const armWidth = 55; // Ancho del sprite de la poción
-            const armHeight = 50; // Alto del sprite de la poción
-
-            const pistolX = (canvasWidth / 2) - 256; //posición X de la pistola 
-            const pistolY = canvasHeight - 80; // Posición Y de la poción (alineada con la barra de vida)
-            const pistolWidth = 65; // Ancho del sprite de la poción
-            const pistolHeight = 65; // Alto del sprite de la poción
-
-            ctx.drawImage(this.armImage, armX, armY, armWidth, armHeight);
-            ctx.drawImage(this.slowPistolImage, pistolX, pistolY, pistolWidth, pistolHeight);
-        };
-
-        // Method to draw the health potion
-        this.drawHealthPotion = (ctx) => {
-            const potionX = (canvasWidth / 2) - 222; // Posición X de la poción (al lado de la barra de vida)
-            const potionY = canvasHeight - 70; // Posición Y de la poción (alineada con la barra de vida)
-            const potionWidth = 60; // Ancho del sprite de la poción
-            const potionHeight = 50; // Alto del sprite de la poción
-            ctx.drawImage(this.potionImage, potionX, potionY, potionWidth, potionHeight);
+            this.armImage.draw(ctx, 1);
+            this.slowPistolImage.draw(ctx, 1);
         };
         
         //Method to draw the habilites signs
@@ -265,29 +222,31 @@ class Game {
                 ctx.drawImage(this.dashImage, dashX, permanentAbilitiesY, habilitiesWidth, habilitiesHeight);
             }
 
-        };
+        }
+        console.log(`############ LEVEL ${level} START ###################`);
+    }
 
-        //method to draw the tutorial signs
-        this.drawTutorial1 = (ctx) => {
-            const tutorialX = (canvasWidth / 2) -175; 
-            const tutorialY = (canvasHeight / 3) - 100; 
-            const tutorialWidth = 360; // Ancho del sprite
-            const tutorialHeight = 180; // Alto del sprite 
-            ctx.drawImage(this.tutorial1, tutorialX, tutorialY, tutorialWidth, tutorialHeight);
-        };
+    startCinematic() {
+        this.state = 'cinematic';
+        // Start the cinematic timer
+        this.cinematicTimer = setTimeout(() => {
+            this.startGame();
+        }, 30000); // 30 seconds
+    }
 
-        //method to draw the tutorial signs
-        this.drawTutorial2 = (ctx) => {
-            const tutorialX = (canvasWidth / 2) -175; 
-            const tutorialY = (canvasHeight / 3) - 100;  
-            const tutorialWidth = 360; // Ancho del sprite
-            const tutorialHeight = 180; // Alto del sprite 
-            ctx.drawImage(this.tutorial2, tutorialX, tutorialY, tutorialWidth, tutorialHeight);
-            
-            
-            console.log(`############ LEVEL ${level} START ###################`);
-        };
+    skipCinematic() {
+        if (this.state === 'cinematic') {
+            // Skip the cinematic and start the game
+            this.cinematicSkipped = true;
+            clearTimeout(this.cinematicTimer);
+            this.startGame();
+        }
+    }
 
+    startGame() {
+        this.state = 'playing';
+        console.log("Game started");
+        this.chronometer.start();
     }
 
     addProjectile(projectile) {
@@ -299,14 +258,6 @@ class Game {
         if (index > -1) {
             this.projectiles.splice(index, 1);
         }
-    }
-
-    removeEnemy(enemy) {
-        const index = this.enemies.indexOf(enemy);
-        if (index > -1) {
-            this.enemies.splice(index, 1);
-        }
-        this.actors = this.actors.filter(actor => actor !== enemy);
     }
 
     // Function to load a specific level
@@ -384,44 +335,47 @@ class Game {
         // Update projectiles
         this.projectiles.forEach(projectile => projectile.update(this.level, deltaTime));
 
+        // Update player bars
+        this.playerHealthBar.update(this.player.health);
+        this.playerXpBar.update(this.player.xp);
+
         // A copy of the full list to iterate over all of them
         // DOES THIS WORK?
         let currentActors = this.actors;
 
-        // Update door state
-        // .some() returns true if at least one element satisfies the condition
-        // ref: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/some
-        // actor => actor.type === 'enemy' is a function that returns true if the actor is an enemy
-        const hasEnemies = this.actors.some(actor => actor.type === 'enemy');
-        for (let actor of this.actors) {
+        // Detect collisions with player
+        for (let actor of currentActors) {
+
+            // Update door state
+            // .some() returns true if at least one element satisfies the condition
+            // ref: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+            // actor => actor.type === 'enemy' is a function that returns true if the actor is an enemy
+            const hasEnemies = this.actors.some(actor => actor.type === 'enemy' || actor.type === 'boss');
             if (actor.type === 'door') {
                 if (hasEnemies) {
                     actor.close(); // Update the state and sprite of doors
                     // Update the ladder signs
-                    this.ladderUpImage.src = '../../assets/backgrounds/sign_up_1.png';
-                    this.ladderDownImage.src = '../../assets/backgrounds/sign_down_1.png';
+                    this.ladderUpImage.setSprite('../../assets/backgrounds/sign_up_1.png');
+                    this.ladderDownImage.setSprite('../../assets/backgrounds/sign_down_1.png');
                 } else {
                     actor.open(); // Update the state and sprite of doors
                     // Update the ladder signs
-                    this.ladderUpImage.src = '../../assets/backgrounds/sign_up.png';
-                    this.ladderDownImage.src = '../../assets/backgrounds/sign_down.png';
+                    this.ladderUpImage.setSprite('../../assets/backgrounds/sign_up.png');
+                    this.ladderDownImage.setSprite('../../assets/backgrounds/sign_down.png');
                 }
             }
-        }
 
-        // Detect collisions with projectiles
-        for (let projectile of this.projectiles) {
-            for (let actor of currentActors) {
-                if (actor.type === 'enemy' && overlapRectangles(projectile, actor)) {
-                    actor.takeDamage(game.player.damage); // Deal damage to the enemy
-                    this.removeProjectile(projectile); // Remove the projectile
-                    break; // Stop checking other enemies for this projectile
+            // Detect collisions with projectiles
+            if (actor.type === 'enemy' || actor.type === 'boss') {
+                for (let projectile of this.projectiles) {
+                    if (overlapRectangles(projectile, actor)) {
+                        actor.takeDamage(game.player.damage); // Deal damage to the enemy
+                        this.removeProjectile(projectile); // Remove the projectile
+                        break; // Stop checking other projectiles for this actor
+                    }
                 }
             }
-        }
 
-        // Detect collisions with player
-        for (let actor of currentActors) {
             if (actor.type != 'floor' && overlapRectangles(this.player, actor)) {
                 //console.log(`Collision of ${this.player.type} with ${actor.type}`);
                 if (actor.type == 'wall') {
@@ -435,7 +389,7 @@ class Game {
                     // Remove the coin from the actors list
                     this.actors = this.actors.filter(item => item !== actor); // Remove the coin from the actors list
 
-                } else if (actor.type == 'enemy') {
+                } else if (actor.type == 'enemy' || actor.type == 'boss') {
                     // If the player is attacking, deal damage to the enemy
                     if (this.player.isAttacking) {
                         actor.takeDamage(this.player.damage, this.player.attackCooldown);
@@ -445,7 +399,7 @@ class Game {
                         this.player.takeDamage(actor.damage);
                     }
                 } else if (actor.type == 'spikes') { 
-                    if(this.player.isCrouching){
+                    if(this.player.isCrouching || this.player.isAttacking) {
                         continue;
                     } else {
                         this.player.takeDamage(10); // Player takes 10 damage
@@ -548,6 +502,12 @@ class Game {
     }
 
     draw(ctx, scale) {
+        if (this.state === 'cinematic') {
+            this.labelSkip.draw(ctx, "Presiona ESPACIO para omitir");
+            this.cinematicImage.draw(ctx, 1);
+            return;
+        }
+
         // First draw the background tiles
         for (let actor of this.actors) {
             if (actor.type === 'floor' || actor.type === 'wall') {
@@ -555,13 +515,21 @@ class Game {
             }
         }
 
+        // Draw the tutorial images
+        if (rooms.get(this.levelNumber).type === "start") {
+            this.tutorial1Image.draw(ctx, 1);
+        }
+        else if (rooms.get(this.levelNumber).type === "second") {
+            this.tutorial2Image.draw(ctx, 1);
+        }
+
         // Draw the ladders signs
         if (rooms.get(this.levelNumber).type === "ladder1") {
-            this.drawLadderUp(ctx);
+            this.ladderUpImage.draw(ctx, 1);
         }
         if (rooms.get(this.levelNumber).type === "ladder2") {
-            this.drawLadderUp(ctx);
-            this.drawLadderDown(ctx);
+            this.ladderUpImage.draw(ctx, 1);
+            this.ladderDownImage.draw(ctx, 1);
         }
     
         // Then draw the rest of the actors
@@ -570,20 +538,12 @@ class Game {
                 actor.draw(ctx, scale);
 
                 // Draw health bar for enemies
-                if (actor.type === 'enemy') {
+                if (actor.type === 'enemy' || actor.type === 'boss') {
                     actor.drawHealthBar(ctx, scale);
                 }
             }
         }
-        
-        if (rooms.get(this.levelNumber).type === "start") {
-            this.drawTutorial1(ctx);
-        }
 
-        if (rooms.get(this.levelNumber).type === "second") {
-            this.drawTutorial2(ctx);
-           
-        }
         // Draw the player on top of everything else
         this.player.draw(ctx, scale);
 
@@ -592,34 +552,27 @@ class Game {
        
         //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
         //this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
-        
-        // Draw the player's health bar
-        this.playerHealthBar(ctx, scale);
-        
-        // Draw the player's experience bar
-        this.playerXpBar(ctx, scale);
+        this.labelTime.draw(ctx, `${this.chronometer.$elapsedTime.textContent}`);
+        this.labelLife.draw(ctx, `Health: ${this.player.health}`);
+        this.labelLevel.draw(ctx, `Lvl. ${this.player.level}`);
+
+        // Draw the player bars
+        this.playerHealthBar.draw(ctx);
+        this.playerXpBar.draw(ctx);
         
         //Draw the weapon backgrounds
         this.drawBackgrounds(ctx);
-        
+
         // Draw the health potion
-        this.drawHealthPotion(ctx);
+        this.potionImage.draw(ctx, 1);
         
         //Draw the weapons
         this.drawWeapons(ctx);
 
         this.drawAbilities(ctx);
 
-         // Draw the labels
-        this.labelTime.draw(ctx, `${this.chronometer.$elapsedTime.textContent}`);
-        this.labelLife.draw(ctx, `HP: ${this.player.health}`);
-        this.labelLevel.draw(ctx, `LVL: ${this.player.level}`);
-        this.labelDamage.draw(ctx, `${this.player.damage}`);
-        this.labelResistance.draw(ctx, `${this.player.resistance}`);
-       
-        //draw the tutorial image
-    }
 
+    }
     // Pause or resume the game
     togglePause() {
         this.paused = !this.paused;
@@ -649,7 +602,7 @@ class Game {
 
         // Increase the stats of the enemies
         for (let actor of this.level.actors) {
-            if (actor.type === 'enemy') {
+            if (actor.type === 'enemy' || actor.type === 'boss') {
                 actor.maxHealth += increase;
                 actor.health += increase;
                 actor.damage += increase;
@@ -666,7 +619,7 @@ const levelChars = {
     // Rect defined as offset from the first tile, and size of the tiles
     ".": {objClass: GameObject,
           label: "floor",
-          sprite: '../assets/sprites/ProjectUtumno_full.png',
+          sprite: '',
           rect: new Rect(12, 17, 32, 32)},
     "#": {objClass: GameObject,
           label: "wall",
@@ -695,6 +648,12 @@ const levelChars = {
           sprite: '../../assets/characters/enemies/robot_fly.png',
           rect: new Rect(0, 0, 24, 24),
           sheetCols: 6,
+          startFrame: [0, 0]},
+    "X": {objClass: BossEnemy,
+          label: "boss",
+          sprite: '../../assets/characters/enemies/robot_boss.png',
+          rect: new Rect(0, 0, 28, 28),
+          sheetCols: 8,
           startFrame: [0, 0]},
     "$": {objClass: Coin,
           label: "collectible",
@@ -745,7 +704,6 @@ const levelChars = {
           rect: new Rect(0, 0, 18, 18)}
 };
 
-
 function main() {
     // Set a callback for when the page is loaded,
     // so that the canvas can be found
@@ -764,7 +722,8 @@ function init() {
 
 function gameStart() {
     // Register the game object, which creates all other objects
-    game = new Game('playing', new Level(GAME_LEVELS[0]));
+    game = new Game('cinematic', new Level(GAME_LEVELS[0]));
+    game.startCinematic();
 
     game.chronometer = new Chronometer(); //initiates chronometer
     game.chronometer.start(); //starts chronometer
@@ -773,8 +732,6 @@ function gameStart() {
 
     // Call the first frame with the current time
     updateCanvas(document.timeline.currentTime);
-
-    
 }
 
 function restartGame() {
@@ -812,6 +769,14 @@ function restartGame() {
 
 function setEventListeners() {
     window.addEventListener("keydown", event => {
+        // Skip the cinematic and prevent player actions
+        if (game.state === 'cinematic') {
+            if (event.key == ' ') {
+                game.skipCinematic();
+            }
+            return;
+        }
+
         if (event.key == 'w'){
             game.player.jump(); 
         }
@@ -885,6 +850,11 @@ function setEventListeners() {
     });
 
     window.addEventListener("keyup", event => {
+        // Prevent player actions during the cinematic
+        if (game.state === 'cinematic') {
+            return; // Block all actions
+        }
+        
         if (event.key == 'a') {
             game.player.stopMovement("left");
         }
