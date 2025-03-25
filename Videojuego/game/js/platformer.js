@@ -56,9 +56,9 @@ class Game {
         this.labelTime =  new TextLabel(canvasWidth - 150, 105,
                                         "23px monospace", "#434a5f");
         
-        this.labelHP = new TextLabel(canvasWidth / 2, canvasHeight - 65,
+        this.labelHP = new TextLabel(canvasWidth / 2 + 35, canvasHeight - 65,
                                     "10px monospace", "white");
-        this.labelXP = new TextLabel(canvasWidth / 2, canvasHeight - 35,
+        this.labelXP = new TextLabel(canvasWidth / 2 + 35, canvasHeight - 35,
                                     "10px monospace", "white");
 
         this.labelLife = new TextLabel(canvasWidth - 92, canvasHeight - 50,
