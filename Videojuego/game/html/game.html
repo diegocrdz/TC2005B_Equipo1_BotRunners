@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Overclocked - Play</title>
+        <title>Overclocked - Jugar</title>
         <!-- Stylesheet of the page -->
         <link rel="stylesheet" href="../css/styles.css">
 
@@ -23,18 +23,20 @@
     </head>
 
     <body>
-        <div id="headerContainer">
-            <h1>Overclocked</h1>
-        </div>
+        <header>
+            <img src="../../img/logo_overclocked.png" alt="overclocked-logo">
+            <nav>
+                <a href="../../../Web/html/inicio.html">Inicio</a>
+                <a href = "../../Videojuego/game/html/game.html" target="_blank">Jugar</a>
+                <a href="../../../Web/html/creditos.html">Créditos</a>
+            </nav>
+        </header>
+
         <canvas id="canvas"></canvas>
 
         <div id="timerContainer">
             <h2 id = "elapsedTime"></h2>
         </div>
-
-        <a href="/">
-            <button id="backButton">Back</button>
-        </a>
 
         <script> main(); </script>
         

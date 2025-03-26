@@ -1,9 +1,11 @@
-*{
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
+/* Fuentes de Google Fonts */
+/* Títulos: Press Start 2P */
+/* Texto: Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
 
 body {
-    background-color: White;
+    font-family: 'Roboto', sans-serif;
+    background-color: #272b36;
     width: 100vw;
     height: 100vh;
     box-sizing: border-box;
@@ -20,16 +22,51 @@ body {
     justify-items: center;
 }
 
-#headerContainer{
+header {
   grid-area: header;
-  background-color: darkred;
   width: 100%;
   height: 100%;
   margin: 0;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  background-color: #272b36; /* Gris oscuro */
+  color: #FFFFFF;
+
+  border-bottom: 4px solid #434A5F; /* Borde oscuro */
+}
+header img {
+  width: 30vw;
+  max-width: 300px;
+  height: auto;
+  transition: 0.2s; /* Efecto de rotación */
+}
+header img:hover {
+  cursor: pointer;
+  transform: rotate(2deg); /* Efecto de rotación */
+}
+header nav {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+/* Botones */
+header nav a {
+  font-family: 'Press Start 2P', sans-serif;
+  background-color: #272b36; /* Morado */
+  color: #6C6EA0;
+  border: 2px solid #434A5F; /* Borde oscuro */
+  padding: 10px 20px;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+  transition: 0.1s; /* Efecto de zoom */
+}
+header nav a:hover {
+  background-color: #ffcd81;
+  color: black;
+  transform: scale(1.05); /* Efecto de zoom */
 }
 
 h1{
@@ -39,24 +76,17 @@ h1{
 canvas {
     /* width: 75vw; */
     /* height: 75vh; */
-    border: 2px solid black;
+    height: 80vh;
+    width: auto;
+    border: 4px solid black;
     background-color: #87ceeb;
     /* width: 600px; */
     /* height: 600px; */
 }
 
 #canvas {
-  background-color: #47403d;
+  background-color: #1c1e25;
   grid-area: main;
-}
-
-.lil-gui.autoPlace{
-  top: 15vh;
-  right: 5vw;
-}
-
-#backButton {
-    margin: 10px;
 }
 
 #uiContainer {
@@ -87,18 +117,19 @@ canvas {
   pointer-events: auto;
 }
 
-/* #timerContainer{
+/* Timer */
+/* Location of the timer */
+#timerContainer{
   position: absolute;
   top: 10px;
-  right: 10px;
-  z-index: 10; 
+  right: auto;
 }
-
+/* Timer style */
 #elapsedTime{
-  background-color: #434a5f;
+  background-color: #1c1e25;
+  border: 2px solid #434A5F;
   color:white;
   font-size: 20px;
   font-family: monospace;
   padding: 5px 20px;
-  border-radius: 5px;
-} */
+}
