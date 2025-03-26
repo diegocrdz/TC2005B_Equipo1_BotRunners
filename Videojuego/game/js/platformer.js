@@ -276,9 +276,18 @@ class Game {
         // to move to the next room, the game is finished
         if (rooms.get(this.levelNumber).type === "boss"
             && levelNumber === this.levelNumber + 1) {
-            this.levelNumber = 0;
-            restartRooms(false, ++level, 6);
-            return;
+
+            if (level !== 2) {
+                this.levelNumber = 0;
+                restartRooms(false, ++level, 6);
+                return;
+            } else {
+                console.log("You win");
+                this.state = 'win';
+                this.levelNumber = 0;
+                restartRooms(false, 0, 6);
+                return;
+            }
         }
 
         this.level = new Level(GAME_LEVELS[levelNumber]); // Create a new level
@@ -309,6 +318,9 @@ class Game {
         // moving automatically when changing levels
         this.player.isPressingUp = false;
         this.player.isPressingDown = false;
+
+        // Adjust the difficulty of the enemies
+        game.adjustDificulty();
     
         console.log("Moved to level " + levelNumber);
     }
@@ -609,11 +621,11 @@ class Game {
         let increase = 0;
 
         // Increase the stats of the enemies depending on the level of the game
-        if (this.levelNumber == 1) {
-            increase = 10;
-        }
-        else if (this.levelNumber == 2) {
+        if (level == 1) {
             increase = 20;
+        }
+        else if (level == 2) {
+            increase = 30;
         }
 
         // Increase the stats of the enemies
@@ -738,7 +750,7 @@ function init() {
 
 function gameStart() {
     // Set the global variable of level to 0
-    level = 0;
+    level = 2;
 
     // Register the game object, which creates all other objects
     game = new Game('cinematic', new Level(GAME_LEVELS[0]));
