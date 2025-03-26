@@ -1,38 +1,168 @@
+/* Fuentes de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
+
+/* General */
 * {
     font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    background-color: #DCE1E7; /* Fondo de la página web */
+    color: #272b36; /* Texto gris oscuro */
+    font-size: 1.2em; /* Tamaño de fuente */;
+    background-image: url('../img/bkg.gif');
+    background-size: cover;
+    background-attachment: fixed;
 }
 
-div {
-    padding: 1vh 5vw; /* Relleno arriba-abajo, izquierda-derecha */
+/* Encabezados */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 1.5em; /* Tamaño de fuente */
+    color: #6C6EA0; /* Morado */
+    text-shadow: 1px 1px #000000; /* Sombra retro */
 }
 
 /* Header */
 header {
-    display: flex; /* Muestra los elementos en línea */
+    display: flex;
     flex-direction: row;
-    justify-content: space-between; /* Alinea los elementos a los extremos */
-    align-items: center; /* Alinea los elementos verticalmente */
-    background-color: #959AB1;
-    color: #fff;
-    padding: 1vh 5vw; /* Relleno arriba-abajo, izquierda-derecha */
+    justify-content: space-between;
+    align-items: center;
+    background-color: #272b36; /* Gris oscuro */
+    color: #FFFFFF;
+    padding: 1vh 5vw;
+    border-bottom: 4px solid #434A5F; /* Borde oscuro */
 }
-/* Menú de navegación */
+
+header img {
+    width: 30vw;
+    max-width: 300px;
+    height: auto;
+    transition: 0.2s; /* Efecto de rotación */
+}
+header img:hover {
+    cursor: pointer;
+    transform: rotate(2deg); /* Efecto de rotación */
+}
+
 header nav {
     display: flex;
     flex-direction: row;
-    justify-content: space-between; /* Alinea los elementos a los extremos */
-    gap: 20px; /* Espacio entre elementos */
+    gap: 20px;
 }
-header img {
-    width: 40vw; /* El ancho de la imagen se ajusta al tamaño de la ventana */
-    max-width: 400px; /* Ancho máximo de la imagen */
-    height: auto; /* La altura se ajusta automáticamente */
+
+/* Botones */
+a {
+    font-family: 'Press Start 2P', sans-serif;
+    background-color: #272b36; /* Morado */
+    color: #6C6EA0;
+    border: 2px solid #434A5F; /* Borde oscuro */
+    padding: 10px 20px;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    transition: 0.1s; /* Efecto de zoom */
+}
+a:hover, button:hover {
+    background-color: #ffcd81;
+    color: black;
+    transform: scale(1.05); /* Efecto de zoom */
+}
+
+/* Secciones */
+section {
+    padding: 10vh 10vw;
+}
+
+/* Titulo */
+#titulo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    font-size: 24px;
+    height: 100vh;
+    padding: 0 20vw;
+    background: #272b36;
+}
+#titulo h1 {
+    font-size: 36px;
+    text-align: center;
+}
+#titulo p {
+    color: whitesmoke;
+    font-size: 18px;
+    text-align: justify;
+}
+#titulo a {
+    font-size: 24px;
+    padding: 20px;
+    background-color: #6C6EA0;
+    color: #FFFFFF;
+    transition: 0,2s; /* Efecto de rotación */
+}
+#titulo a:hover {
+    background-color: #ffcd81;
+    color: black;
+    transform: rotate(2deg) scale(1.1); /* Efecto de rotación */
+}
+
+/* Contenido */
+#contenido {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 100px;
+}
+#contenido div {
+    flex: 1; /* Ocupa todo el espacio disponible */
+}
+#contenido img {
+    width: 40vw;
+    height: auto;
+    max-width: 400px;
+    transition: 0.2s; /* Efecto de rotación */
+}
+#contenido img:hover {
+    cursor: pointer;
+    transform: rotate(2deg); /* Efecto de rotación */
+}
+#contenido div h3 {
+    font-size: 24px;
+    margin-bottom: 40px;
+}
+
+/* Caracteristicas */
+#caracteristicas {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: left;
+    gap: 50px;
+}
+.grid-caracteristicas {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columnas */
+    grid-template-rows: 1fr 1fr 1fr; /* 3 filas */
+    width: 100%;
+    gap: 20px;
+}
+.grid-caracteristicas div {
+    background-color: #272b36;
+    color: whitesmoke;
+    padding: 40px;
+    border: 2px solid #6C6EA0; /* Borde morado */
+    transition: 0.2s; /* Efecto de zoom */
+}
+.grid-caracteristicas div:hover {
+    background-color: #6C6EA0;
+    border: 2px solid black;
+    transform: scale(1.02); /* Efecto de zoom */
+    cursor: pointer;
 }
 
 /* Footer */
@@ -41,6 +171,26 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #959AB1;
-    padding: 1vh 5vw; /* Relleno arriba-abajo, izquierda-derecha */
+    gap: 20px;
+    background-color: #272b36; /* Gris oscuro */
+    color: #FFFFFF;
+    padding: 4vh 5vw;
+    font-size: 14px;
+    border-top: 4px solid #6C6EA0; /* Borde morado */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    header nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    header img {
+        width: 50vw;
+    }
+
+    div {
+        padding: 2vh 3vw;
+    }
 }
