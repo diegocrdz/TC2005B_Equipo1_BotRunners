@@ -570,15 +570,6 @@ class Game {
         // Draw the player bars
         this.playerHealthBar.draw(ctx);
         this.playerXpBar.draw(ctx);
-
-        // Draw the labels
-        //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
-        //this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
-        this.labelTime.draw(ctx, `${this.chronometer.$elapsedTime.textContent}`);
-        this.labelLife.draw(ctx, 'HP');
-        this.labelHP.draw(ctx, `${this.player.health} / ${this.player.maxHealth}`);
-        this.labelLevel.draw(ctx, `LVL ${this.player.level}`);
-        this.labelXP.draw(ctx, `${this.player.xp} / ${this.player.xpToNextLevel}`);
         
         //Draw the weapon backgrounds
         this.drawBackgrounds(ctx);
@@ -591,15 +582,16 @@ class Game {
 
         this.drawAbilities(ctx);
 
+        // Draw the labels
         //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
         //this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
         this.labelTime.draw(ctx, `${this.chronometer.$elapsedTime.textContent}`);
+        this.labelHP.draw(ctx, `${this.player.health} / ${this.player.maxHealth}`);
+        this.labelXP.draw(ctx, `${this.player.xp} / ${this.player.xpToNextLevel}`);
         this.labelLife.draw(ctx, `HP: ${this.player.health}`);
         this.labelLevel.draw(ctx, `LVL: ${this.player.level}`);
         this.labelDamage.draw(ctx, `${this.player.damage}`);
         this.labelResistance.draw(ctx, `${this.player.resistance}`);
-
-
     }
     // Pause or resume the game
     togglePause() {
@@ -750,7 +742,7 @@ function init() {
 
 function gameStart() {
     // Set the global variable of level to 0
-    level = 2;
+    level = 0;
 
     // Register the game object, which creates all other objects
     game = new Game('cinematic', new Level(GAME_LEVELS[0]));
