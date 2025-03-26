@@ -58,7 +58,7 @@ class LevelGenerator {
         // Add the button branch before generating the other branches
         // between room 2 and rooms length - 1
         let random = Math.floor(Math.random() * (this.numRooms - 3)) + 2;
-        console.log(random);
+        console.log("Button room: " + random);
 
         for (let i = 2; i < this.numRooms - 1; i++) {
             // Create a branch with a button
@@ -338,8 +338,8 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     // place a button on the floor
     // place enemies at the sides
     if (roomType == "button") {
-        // Place a button in the level
-        placeRandomly('0', 1, height - 2, height - 2, width - 5, width - 5);
+        // Place a button in a determined position
+        level[height - 2][width - 5] = '0';
         // Place enemies at the sides
         let enemies = generateRandomEnemies(minEnemies, maxEnemies);
         for (let i = 0; i < enemies.length; i++) {

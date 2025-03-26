@@ -160,9 +160,6 @@ class Game {
         this.doubleJumpImage = new Image();
         this.doubleJumpImage.src = '../../../Videojuego/assets/objects/ui_doublejump.png';
 
-    
-   
-
         //Method to draw the selection backgrounds
         this.drawBackgrounds = (ctx) => {
             const weaponPositions = [
@@ -279,7 +276,8 @@ class Game {
         // to move to the next room, the game is finished
         if (rooms.get(this.levelNumber).type === "boss"
             && levelNumber === this.levelNumber + 1) {
-            restartGame();
+            this.levelNumber = 0;
+            restartRooms(false, ++level, 6);
             return;
         }
 
@@ -739,6 +737,9 @@ function init() {
 }
 
 function gameStart() {
+    // Set the global variable of level to 0
+    level = 0;
+
     // Register the game object, which creates all other objects
     game = new Game('cinematic', new Level(GAME_LEVELS[0]));
     game.startCinematic();
@@ -752,8 +753,22 @@ function gameStart() {
     updateCanvas(document.timeline.currentTime);
 }
 
-function restartGame() {
+function restartRooms(restartPlayer, levelNumer, numRooms) {
+
+    // Update the global variable of level
+    level = levelNumer;
+
+    console.log("New rooms for level " + level);
+
+    // Check if the player should be restarted
+    let savedPlayer = null;
+    if (!restartPlayer) {
+        // Save the current player
+        savedPlayer = game.player;
+    }
     
+    // Generate a new set of rooms
+    // Clear the list of levels
     GAME_LEVELS = [];
     numRooms = 6;
     levelGenerator = new LevelGenerator(numRooms);
@@ -771,17 +786,24 @@ function restartGame() {
         console.log(GAME_LEVELS[i]);
     }
 
+    // Check if the chronometer exists
     if (game.chronometer) {
         game.chronometer.pause(); // stops the current chronometer
     }
 
+    // Create a new game object with the new level
     game = new Game('playing', new Level(GAME_LEVELS[0]));
 
+    if (!restartPlayer && savedPlayer) {
+        game.player = savedPlayer;
+    }
+
+    // If the chronometer doesnt exist, create a new one
     if (!game.chronometer) {
         game.chronometer = new Chronometer(); // if the chronometer doesnt exists, it creates a new one
     }
-
-    game.chronometer.reset(); // resets the chronometer
+    // Reset and start the chronometer
+    game.chronometer.reset();
     game.chronometer.start();
 }
 
@@ -843,7 +865,7 @@ function setEventListeners() {
 
         // Restart the game
         if (event.code == 'KeyR') {
-            restartGame();
+            restartRooms(true, 0, 6);
         }
 
         // Use first weapom

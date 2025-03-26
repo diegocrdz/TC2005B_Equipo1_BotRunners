@@ -428,7 +428,7 @@ class Player extends AnimatedObject {
 
     die() {
         console.log("Player died");
-        restartGame();
+        restartRooms(true, 0, 6);
     }
 
     hit() {
