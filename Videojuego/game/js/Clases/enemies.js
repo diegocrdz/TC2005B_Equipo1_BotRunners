@@ -67,7 +67,8 @@ class Enemy extends AnimatedObject {
 
     moveHorizontally(level, deltaTime) {
         const newXPosition = this.position.plus(new Vec(this.velocity.x * deltaTime, 0));
-        if (!level.contact(newXPosition, this.size, 'wall')) {
+        if (!level.contact(newXPosition, this.size, 'wall')
+            && !level.contact(newXPosition, this.size, 'box')) {
             this.position = newXPosition;
         }
     }
@@ -101,7 +102,8 @@ class Enemy extends AnimatedObject {
 
     moveVertically(level, deltaTime) {
         const newYPosition = this.position.plus(new Vec(0, this.velocity.y * deltaTime));
-        if (!level.contact(newYPosition, this.size, 'wall')) {
+        if (!level.contact(newYPosition, this.size, 'wall')
+            && !level.contact(newYPosition, this.size, 'box')) {
             this.position = newYPosition;
         } else {
             this.velocity.y = 0; // Stop vertical movement on collision
@@ -185,9 +187,13 @@ class Enemy extends AnimatedObject {
         game.actors = game.actors.filter(actor => actor !== this);
         
         // Eliminate the enemies from the level. The player is supposed to kill every enemy to pass each level.
-        GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('N', '.');
-        GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('H', '.');
-        GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('F', '.');
+        if (this.type === "enemy") {
+            GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('N', '.');
+            GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('H', '.');
+            GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('F', '.');
+        } else if (this.type === "boss") {
+            GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('X', '.');
+        }
     }
 
     hit() {

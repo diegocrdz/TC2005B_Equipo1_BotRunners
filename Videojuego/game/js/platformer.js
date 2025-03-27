@@ -707,7 +707,7 @@ const levelChars = {
           sprite: '../../assets/interactable/platform_1.png',
           rect: new Rect(0, 0, 18, 18)},
     "B": {objClass: GameObject,
-          label: "wall",
+          label: "box",
           sprite: '../../assets/obstacles/box_1.png',
           rect: new Rect(0, 0, 18, 18)},
     "E": {objClass: GameObject,

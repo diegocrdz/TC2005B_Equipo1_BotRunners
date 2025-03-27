@@ -105,14 +105,16 @@ class Player extends AnimatedObject {
         // Find out where the player should end if it moves
         let newXPosition = this.position.plus(new Vec(velX * deltaTime, 0)); // d = v * t
         // Move only if the player does not move inside a wall
-        if (!level.contact(newXPosition, this.size, 'wall')) {
+        if (!level.contact(newXPosition, this.size, 'wall')
+            && (!level.contact(newXPosition, this.size, 'box'))) {
             this.position = newXPosition;
         }
 
         // Find out where the player should end if it moves
         let newYPosition = this.position.plus(new Vec(0, velY * deltaTime)); // d = v * t
         // Move only if the player does not move inside a wall
-        if (!level.contact(newYPosition, this.size, 'wall')) {
+        if (!level.contact(newYPosition, this.size, 'wall')
+            && (!level.contact(newYPosition, this.size, 'box'))) {
             this.position = newYPosition;
         } else {
             this.land(); 

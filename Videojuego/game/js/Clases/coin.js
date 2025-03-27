@@ -27,7 +27,8 @@ class Coin extends GameObject {
             // Find out where the coin should end if it moves vertically
             let newYPosition = this.position.plus(new Vec(0, velY * deltaTime));
             // Move only if the coin does not move inside a wall
-            if (!level.contact(newYPosition, this.size, 'wall')) {
+            if (!level.contact(newYPosition, this.size, 'wall')
+                && !level.contact(newYPosition, this.size, 'box')) {
                 this.position = newYPosition;
             } else {
                 this.velocity.y = 0; // Stop vertical movement on collision

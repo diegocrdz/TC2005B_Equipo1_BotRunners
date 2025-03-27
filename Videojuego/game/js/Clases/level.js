@@ -98,12 +98,14 @@ class Level {
 
                 } else if (actor.type == "door_down" || actor.type == "door_up") {
                     this.addBackgroundFloor(x, y);
+                    item.sprite = this.getPlatformForLevel();
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "wall";
 
                 } else if (actor.type == "box") {
                     this.addBackgroundFloor(x, y);
+                    item.sprite = this.getBoxForLevel();
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "box";
@@ -127,6 +129,8 @@ class Level {
                     cellType = "spikes";
 
                 }else if (actor.type == "ladder") {
+                    this.addBackgroundFloor(x, y);
+                    item.sprite = this.getLadderForLevel();
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "empty";
@@ -169,6 +173,36 @@ class Level {
         }
         // Default to the first wall
         return walls[level] || walls[0];
+    }
+
+    getBoxForLevel() {
+        const boxes = {
+            0: '../../assets/obstacles/box_1.png',
+            1: '../../assets/obstacles/box_2.png',
+            2: '../../assets/obstacles/box_3.png'
+        }
+        // Default to the first box
+        return boxes[level] || boxes[0];
+    }
+
+    getLadderForLevel() {
+        const ladders = {
+            0: '../../assets/interactable/ladder_1.png',
+            1: '../../assets/interactable/ladder_2.png',
+            2: '../../assets/interactable/ladder_3.png'
+        }
+        // Default to the first ladder
+        return ladders[level] || ladders[0];
+    }
+
+    getPlatformForLevel() {
+        const platforms = {
+            0: '../../assets/interactable/platform_1.png',
+            1: '../../assets/interactable/platform_2.png',
+            2: '../../assets/interactable/platform_3.png'
+        }
+        // Default to the first platform
+        return platforms[level] || platforms[0];
     }
 
     addBackgroundFloor(x, y) {
