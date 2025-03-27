@@ -367,15 +367,19 @@ class Game {
             // .some() returns true if at least one element satisfies the condition
             // ref: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/some
             // actor => actor.type === 'enemy' is a function that returns true if the actor is an enemy
+            // actor.close?.(); is called if the actor has the method
+            // ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
             const hasEnemies = this.actors.some(actor => actor.type === 'enemy' || actor.type === 'boss');
-            if (actor.type === 'door') {
+            if (actor.type === 'door'
+                || actor.type === 'door_up'
+                || actor.type === 'door_down') {
                 if (hasEnemies) {
-                    actor.close(); // Update the state and sprite of doors
+                    actor.close?.(); // Update the state and sprite of doors
                     // Update the ladder signs
                     this.ladderUpImage.setSprite('../../assets/backgrounds/sign_up_1.png');
                     this.ladderDownImage.setSprite('../../assets/backgrounds/sign_down_1.png');
                 } else {
-                    actor.open(); // Update the state and sprite of doors
+                    actor.open?.(); // Update the state and sprite of doors
                     // Update the ladder signs
                     this.ladderUpImage.setSprite('../../assets/backgrounds/sign_up.png');
                     this.ladderDownImage.setSprite('../../assets/backgrounds/sign_down.png');
@@ -541,11 +545,19 @@ class Game {
         }
 
         // Draw the ladders signs
-        if (rooms.get(this.levelNumber).type === "ladder1") {
+        // If the player can only go up
+        if (rooms.get(this.levelNumber).type === "ladder1"
+            || rooms.get(this.levelNumber).type === "branch2") {
             this.ladderUpImage.draw(ctx, 1);
         }
+        // If the player can go up and down
         if (rooms.get(this.levelNumber).type === "ladder2") {
             this.ladderUpImage.draw(ctx, 1);
+            this.ladderDownImage.draw(ctx, 1);
+        }
+        // If the player can only go down
+        if (rooms.get(this.levelNumber).type === "branch1"
+            || rooms.get(this.levelNumber).type === "button") {
             this.ladderDownImage.draw(ctx, 1);
         }
     

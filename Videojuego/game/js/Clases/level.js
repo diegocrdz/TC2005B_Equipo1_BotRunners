@@ -18,7 +18,7 @@ class Level {
                 let objClass = item.objClass;
                 let cellType = item.label;
                 // Create a new instance of the type specified
-                let actor = new objClass("#DCE1E7", 1, 1, x, y, item.label);
+                let actor = new objClass(this.getBackgroundForLevel(), 1, 1, x, y, item.label);
                 // Configurations for each type of cell
                 // TODO: Simplify this code, sinde most of it is repeated
                 if (actor.type == "player") {
@@ -79,6 +79,7 @@ class Level {
                 } else if (actor.type == "wall") {
                     // Randomize sprites for each wall tile
                     // item.rect = this.randomEvironment(rnd);
+                    item.sprite = this.getWallForLevel();
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "wall";
@@ -150,9 +151,29 @@ class Level {
         }
     }
 
+    getBackgroundForLevel() {
+        const backgrounds = {
+            0: "#DCE1E7",
+            1: "#b3bbc4",
+            2: "#d9b399",
+        }
+        // Default to the first background
+        return backgrounds[level] || backgrounds[0];
+    }
+
+    getWallForLevel() {
+        const walls = {
+            0: '../../assets/blocks/marble_packed.png',
+            1: '../../assets/blocks/rock_packed.png',
+            2: '../../assets/blocks/stone_packed.png'
+        }
+        // Default to the first wall
+        return walls[level] || walls[0];
+    }
+
     addBackgroundFloor(x, y) {
         let floor = levelChars['.'];
-        let floorActor = new GameObject("#DCE1E7", 1, 1, x, y, floor.label);
+        let floorActor = new GameObject(this.getBackgroundForLevel(level), 1, 1, x, y, floor.label);
         //floorActor.setSprite(floor.sprite, floor.rect);
         this.actors.push(floorActor);
     }
