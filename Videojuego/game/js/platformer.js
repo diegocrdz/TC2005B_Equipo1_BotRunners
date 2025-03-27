@@ -812,6 +812,7 @@ function restartRooms(restartPlayer, levelNumer, numRooms) {
 
     if (!restartPlayer && savedPlayer) {
         game.player = savedPlayer;
+        game.player.hasUsedPotion = false; // Reset the potion usage
     }
 
     // If the chronometer doesnt exist, create a new one

@@ -157,9 +157,9 @@ class Level {
 
     getBackgroundForLevel() {
         const backgrounds = {
-            0: "#DCE1E7",
-            1: "#b3bbc4",
-            2: "#d9b399",
+            0: "#d9b399", // yellow
+            1: "#DCE1E7", // light grey
+            2: "#b3bbc4", // dark grey
         }
         // Default to the first background
         return backgrounds[level] || backgrounds[0];
@@ -167,9 +167,9 @@ class Level {
 
     getWallForLevel() {
         const walls = {
-            0: '../../assets/blocks/marble_packed.png',
-            1: '../../assets/blocks/rock_packed.png',
-            2: '../../assets/blocks/stone_packed.png'
+            0: '../../assets/blocks/sand_packed.png', // yellow
+            1: '../../assets/blocks/marble_packed.png', // white
+            2: '../../assets/blocks/rock_packed.png', // dark grey
         }
         // Default to the first wall
         return walls[level] || walls[0];
@@ -199,7 +199,7 @@ class Level {
         const platforms = {
             0: '../../assets/interactable/platform_1.png',
             1: '../../assets/interactable/platform_2.png',
-            2: '../../assets/interactable/platform_3.png'
+            2: '../../assets/interactable/platform_2.png'
         }
         // Default to the first platform
         return platforms[level] || platforms[0];
