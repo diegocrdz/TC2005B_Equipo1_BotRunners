@@ -84,12 +84,9 @@ class Game {
         this.tutorial1Image = new GameObject(null, 360, 180,
                                             (canvasWidth / 2) - 175, canvasHeight / 3 - 100,
                                             'tutorial');
-        this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial1.png');
-        
         this.tutorial2Image = new GameObject(null, 360, 180,
                                             (canvasWidth / 2) - 175, canvasHeight / 3 - 100,
                                             'tutorial');
-        this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial2.png');
 
         // Health bar for the player
         this.playerHealthBar = new Bar(
@@ -535,6 +532,18 @@ class Game {
             }
         }
 
+        // Assign the tutorial image depending on the level
+        if (level == 0) {
+            this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial1.png');
+            this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial2.png');
+        } else if (level == 1) {
+            this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial3.png');
+            this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial4.png');
+        } else {
+            this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial5.png');
+            this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial6.png');
+        }
+
         // Draw the tutorial images
         if (rooms.get(this.levelNumber).type === "start") {
             this.tutorial1Image.draw(ctx, 1);
@@ -837,8 +846,11 @@ function setEventListeners() {
             return;
         }
 
-        if (event.code == "KeyW"){
-            game.player.jump(); 
+        if (event.code == "KeyW" || event.code == "Space") {
+            game.player.jump();
+            if (game.player.isJumping) {
+                game.player.doubleJump();
+            }
         }
         if (event.code == "KeyA") {
             game.player.startMovement("left");
@@ -848,10 +860,6 @@ function setEventListeners() {
         }
         if (event.code == "KeyS") {
             game.player.crouch();
-        }
-
-        if(event.code == 'KeyW' && game.player.isJumping){ //falta poner que no se pase del limite
-            game.player.doubleJump();
         }
 
         if(event.shiftKey){
