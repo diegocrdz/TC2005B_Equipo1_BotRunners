@@ -19,11 +19,11 @@ class Player extends AnimatedObject {
         this.isHit = false;
 
         // Double jump
-        this.canDoubleJump = true;
+        this.canDoubleJump = false;
         this.isDoubleJumping = false;
 
         // Dash
-        this.canDash = true;
+        this.canDash = false;
         this.isDashing =  false;
 
         // Player selection
@@ -386,43 +386,8 @@ class Player extends AnimatedObject {
             this.level++;
             this.xp = 0;
             this.xpToNextLevel += 15;
-            this.selectRandomAbility();
-        }
-    }
-
-    selectRandomAbility() {
-        let random = Math.floor(Math.random() * abilities.length);
-        let selectedAbility = abilities[random];
-        this.gainAbility(selectedAbility);
-    }
-
-    gainAbility(ability) {
-        if (ability == "damage")
-        {
-            this.damage += 10;
-            console.log("Damage increased to " + this.damage);
-        }
-        else if(ability == "health")
-        {
-            this.maxHealth += 10;
-            console.log("Max health increased to " + this.maxHealth);
-        }
-        else if(ability == "resistance")
-        {
-            this.resistance += 10;
-            console.log("Resistance increased to " + this.resistance);
-        }
-        else if(ability == "double jump" && abilities.includes(ability))
-        {
-            this.canDoubleJump = true;
-            abilities.splice(abilities.indexOf(ability), 1);
-            console.log("Double jump ability gained");
-        }
-        else if(ability == "dash" && abilities.includes(ability))
-        {
-            this.canDash = true;
-            abilities.splice(abilities.indexOf(ability), 1);
-            console.log("Dash ability gained");
+            
+            game.abilities.activate();
         }
     }
 
