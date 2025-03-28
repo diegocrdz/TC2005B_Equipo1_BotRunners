@@ -1,109 +1,97 @@
-// Minimap Generator
-function createMinimap(rooms) {
-    // SVG preparation
-    const svgWidth = 200;
-    const svgHeight = 200;
-    const centerX = svgWidth / 2;
-    const centerY = svgHeight / 2;
-    const roomRadius = 20;
-    const connectionLength = 50;
+class MiniMap extends GameObject {
+    constructor(_color, width, height, x, y, _type) {
+        super(_color, width, height, x, y, "minimap");
 
-    // Color mapping for room types
-    const roomTypeColors = {
-        "start": "#4CAF50",      // Green for start room
-        "boss": "#F44336",        // Red for boss room
-        "normal": "#2196F3",      // Blue for normal rooms
-        "button": "#FF9800",      // Orange for button rooms
-        "branch1": "#9C27B0",     // Purple for branch rooms
-        "branch2": "#9C27B0",     // Purple for branch rooms
-        "ladder1": "#795548",     // Brown for ladder rooms
-        "ladder2": "#795548"      // Brown for ladder rooms
-    };
+        this.isDrawn = false;
+    }
 
-    // Create SVG element
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", svgWidth);
-    svg.setAttribute("height", svgHeight);
-    svg.setAttribute("style", "position: absolute; top: 10px; right: 10px; background: rgba(240,240,240,0.8);");
+    draw(ctx, rooms, currentRoomId) {
+        // Dibuja el fondo del minimapa
+        ctx.fillStyle = "rgba(0, 0, 0, 0.5)"; // Fondo semitransparente
+        ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
 
-    // Background rect
-    const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    bgRect.setAttribute("width", "100%");
-    bgRect.setAttribute("height", "100%");
-    bgRect.setAttribute("fill", "#F0F0F0");
-    bgRect.setAttribute("opacity", "0.8");
-    svg.appendChild(bgRect);
+        // Tamaño de las salas
+        const roomWidth = this.size.x / numRooms;
+        const roomHeight = this.size.y / 3;
+        const spacing = 0; // Espaciado entre salas
 
-    // Title
-    const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    title.setAttribute("x", "10");
-    title.setAttribute("y", "20");
-    title.setAttribute("font-family", "Arial");
-    title.setAttribute("font-size", "12");
-    title.setAttribute("fill", "black");
-    title.textContent = "Minimap";
-    svg.appendChild(title);
+        // Dibuja las salas principales y sus ramas
+        for (let i = 0; i < numRooms; i++) {
+            const room = rooms.get(i);
+            const roomX = this.position.x + i * roomWidth;
+            const roomY = this.position.y + this.size.y / 3;
 
-    // Calculate room positions in a circular layout
-    const roomCount = rooms.size;
-    const angleStep = (2 * Math.PI) / roomCount;
+            // Dibuja la sala principal
+            this.drawRoomRect(ctx, room, roomX, roomY, roomWidth - spacing, roomHeight - spacing);
 
-    rooms.forEach((room, index) => {
-        const angle = index * angleStep;
-        const x = centerX + Math.cos(angle) * connectionLength;
-        const y = centerY + Math.sin(angle) * connectionLength;
-
-        // Room circle
-        const roomCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        roomCircle.setAttribute("cx", x);
-        roomCircle.setAttribute("cy", y);
-        roomCircle.setAttribute("r", roomRadius);
-        roomCircle.setAttribute("fill", roomTypeColors[room.type] || '#607D8B');
-        roomCircle.setAttribute("stroke", "black");
-        roomCircle.setAttribute("stroke-width", "2");
-        svg.appendChild(roomCircle);
-
-        // Room type label
-        const roomLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        roomLabel.setAttribute("x", x);
-        roomLabel.setAttribute("y", y);
-        roomLabel.setAttribute("text-anchor", "middle");
-        roomLabel.setAttribute("alignment-baseline", "middle");
-        roomLabel.setAttribute("font-family", "Arial");
-        roomLabel.setAttribute("font-size", "10");
-        roomLabel.setAttribute("fill", "white");
-        roomLabel.textContent = index;
-        svg.appendChild(roomLabel);
-
-        // Draw connections
-        room.connections.forEach(connectionId => {
-            if (connectionId > index) {  // Avoid drawing duplicate connections
-                const connectedRoom = rooms.get(connectionId);
-                const connAngle = connectionId * angleStep;
-                const connX = centerX + Math.cos(connAngle) * connectionLength;
-                const connY = centerY + Math.sin(connAngle) * connectionLength;
-
-                const connection = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                connection.setAttribute("x1", x);
-                connection.setAttribute("y1", y);
-                connection.setAttribute("x2", connX);
-                connection.setAttribute("y2", connY);
-                connection.setAttribute("stroke", "#616161");
-                connection.setAttribute("stroke-width", "2");
-                connection.setAttribute("stroke-dasharray", "5,5");
-                svg.appendChild(connection);
+            // Si es la sala actual, dibuja un rectángulo más pequeño dentro
+            if (room.id === currentRoomId) {
+                room.isExplored = true; // Marca la sala como explorada
+                this.drawPlayerRect(ctx, room, roomX, roomY, roomWidth - spacing, roomHeight - spacing);
             }
-        });
-    });
 
-    return svg;
+            // Dibuja las ramas conectadas
+            for (const connectionId of room.connections) {
+                const connectedRoom = rooms.get(connectionId);
+                const branchX = roomX; // Mantiene la misma posición X
+
+                if (connectedRoom.type === "button"
+                    || connectedRoom.type === "branch1") {
+                    // Dibuja la rama arriba
+                    const branchY = roomY - roomHeight - spacing; // Se mueve hacia arriba
+                    this.drawRoomRect(ctx, connectedRoom, branchX, branchY, roomWidth - spacing, roomHeight - spacing);
+                    if (connectedRoom.id === currentRoomId) {
+                        connectedRoom.isExplored = true; // Marca la sala como explorada
+                        this.drawPlayerRect(ctx, connectedRoom, branchX, branchY, roomWidth - spacing, roomHeight - spacing);
+                    }
+                } else if (connectedRoom.type === "branch2") {
+                    // Dibuja la rama abajo
+                    const branchY = roomY + roomHeight + spacing;
+                    this.drawRoomRect(ctx, connectedRoom, branchX, branchY, roomWidth - spacing, roomHeight - spacing);
+                    if (connectedRoom.id === currentRoomId) {
+                        connectedRoom.isExplored = true; // Marca la sala como explorada
+                        this.drawPlayerRect(ctx, connectedRoom, branchX, branchY, roomWidth - spacing, roomHeight - spacing);
+                    }
+                }
+            }
+        }
+    }
+
+    drawRoomRect(ctx, room, x, y, width, height, color) {
+
+        if (color !== undefined) {
+            ctx.fillStyle = color; // Color de la sala
+        }
+        else if (!room.isExplored) {
+            if (room.type === "boss") {
+                if (game.isButtonPressed) {
+                    ctx.fillStyle = "lightgreen"; // Color de la sala de jefe
+                } else {
+                    ctx.fillStyle = "darkred"; // Color de la sala de jefe
+                }
+            } else {
+                ctx.fillStyle = "gray"; // Color de la sala no explorada
+            }
+        }
+        else {
+            if (room.type === "button") {
+                ctx.fillStyle = "lightblue"; // Color de la sala de botón
+            } else {
+                ctx.fillStyle = "white"; // Color de la sala normal
+            }
+        }
+
+        ctx.fillRect(x, y, width, height); // Dibuja la sala
+        ctx.strokeStyle = "black"; // Color del borde
+        ctx.lineWidth = 2; // Grosor del borde
+        ctx.strokeRect(x, y, width, height); // Dibuja el borde
+    }
+
+    drawPlayerRect(ctx, room, x, y, width, height) {
+        const innerRectWidth = width * 0.5; // 50% del ancho
+        const innerRectHeight = height * 0.5; // 50% del alto
+        const innerRectX = x + (width - innerRectWidth) / 2; // Centrado
+        const innerRectY = y + (height - innerRectHeight) / 2; // Centrado
+        this.drawRoomRect(ctx, room, innerRectX, innerRectY, innerRectWidth, innerRectHeight, "lightgreen");
+    }
 }
-
-// Function to add minimap to the game
-function addMinimapToGame(rooms) {
-    const minimap = createMinimap(rooms);
-    document.body.appendChild(minimap);
-}
-
-// You can call this after generating levels
-// addMinimapToGame(rooms);

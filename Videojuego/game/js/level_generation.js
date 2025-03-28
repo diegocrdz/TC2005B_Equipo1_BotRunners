@@ -10,6 +10,9 @@ class Room {
         // "ladder1", "ladder2"
         this.type = type;
         this.connections = new Set(); // Rooms connected to this room
+        // Check if the room has been explored
+        // Used to update the minimap
+        this.isExplored = false;
     }
 
     connect(room) {

@@ -43,6 +43,8 @@ class Game {
         this.cinematicTimer = undefined;
         this.cinematicSkipped = false;
         this.labelSkip = new TextLabel(canvasWidth / 2 - 150, canvasHeight - 40, "20px monospace", "white");
+        // Minimap properties
+        this.minimap = new MiniMap(null, 200, 100, canvasWidth - 200, 0, 'minimap');
 
         // List of projectiles
         this.projectiles = [];
@@ -604,6 +606,9 @@ class Game {
         this.labelLevel.draw(ctx, `LVL: ${this.player.level}`);
         this.labelDamage.draw(ctx, `${this.player.damage}`);
         this.labelResistance.draw(ctx, `${this.player.resistance}`);
+
+        // Draw the minimap
+        this.minimap.draw(ctx, rooms, this.levelNumber);
     }
     // Pause or resume the game
     togglePause() {
@@ -876,7 +881,7 @@ function setEventListeners() {
         }
 
         // Pause the game
-        if (event.code == 'KeyP') {
+        if (event.code == 'KeyP' || event.code == 'Escape') {
             game.togglePause();
         }
 
