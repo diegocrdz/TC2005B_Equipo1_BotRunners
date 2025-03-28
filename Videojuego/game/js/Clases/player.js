@@ -442,7 +442,7 @@ class Player extends AnimatedObject {
                 this.health = this.maxHealth; // Cap health at the max value
             }
             this.hasUsedPotion = true; // Mark the potion as used
-            game.potionImage.setSprite('../../assets/objects/potion_empty.png');
+            game.potionImage.setSprite('../../assets/objects/battery_empty.png');
         }
     }
 }

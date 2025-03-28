@@ -120,7 +120,7 @@ class Game {
         this.potionImage = new GameObject(null, 60, 50,
                                         (canvasWidth / 2) - 222, canvasHeight - 70,
                                         'potion');
-        this.potionImage.setSprite('../../assets/objects/potion_full.png');
+        this.potionImage.setSprite('../../assets/objects/battery_full.png');
 
         // Weapon background and selection images
         this.weaponBackgroundImage = new GameObject(null, 70, 70, 0, 0, 'ui');
