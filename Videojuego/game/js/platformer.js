@@ -19,9 +19,6 @@ let game;
 let player;
 let level;
 
-// List of abilities that the player can gain
-let abilities = ["damage", "health", "resistance", "double jump", "dash"];
-
 // Scale of the whole world, to be applied to all objects
 // Each unit in the level file will be drawn as these many square pixels
 const scale = 32;
@@ -35,6 +32,9 @@ class Game {
         this.levelNumber = 0;
         this.player = level.player;
         this.actors = level.actors;
+
+        this.abilities = new popUpAbility();
+
         // Button state for the boss room
         this.isButtonPressed = false;
         // Cinematic properties
@@ -119,7 +119,7 @@ class Game {
             "black", // Background color
             "black" // Border color
         );
-        //with, height, x,y 
+        
         // Load the health potion image
         this.potionImage = new GameObject(null, 60, 50,
                                         (canvasWidth / 2) - 222, canvasHeight - 70,
@@ -229,6 +229,7 @@ class Game {
             }
 
         }
+        
         console.log(`############ LEVEL ${level} START ###################`);
     }
 
@@ -609,6 +610,8 @@ class Game {
 
         // Draw the minimap
         this.minimap.draw(ctx, rooms, this.levelNumber);
+        game.abilities.show();
+
     }
     // Pause or resume the game
     togglePause() {
@@ -908,6 +911,31 @@ function setEventListeners() {
         }
         if (event.key == 'ArrowDown') {
             game.player.isPressingDown = true;
+        }
+
+        //Use abilities
+        if (event.key == '4'){
+            if (game.abilities.canBeShown){
+                game.abilities.abilityCards[0].ability.effect();
+                game.abilities.isSelected = true;
+                game.abilities.hide();
+            }
+        }
+
+        if (event.key == '5'){
+            if (game.abilities.canBeShown){
+                game.abilities.abilityCards[1].ability.effect();
+                game.abilities.isSelected = true;
+                game.abilities.hide();
+            }
+        }
+
+        if (event.key == '6'){
+            if (game.abilities.canBeShown){
+                game.abilities.abilityCards[2].ability.effect();
+                game.abilities.isSelected = true;
+                game.abilities.hide();
+            }
         }
     });
 

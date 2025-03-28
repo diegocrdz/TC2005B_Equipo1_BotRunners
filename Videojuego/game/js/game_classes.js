@@ -172,6 +172,48 @@ class TextLabel {
     }
 }
 
+class cardTextLabel extends TextLabel {
+    constructor(x, y, font, color, maxWidth) {
+        super(x, y, font, color);
+        this.maxWidth = maxWidth;
+        this.lineHeight = 20;
+    }
+
+    draw(ctx, text) {
+        ctx.font = this.font;
+        ctx.fillStyle = this.color;
+
+        const lines =  this.wrapText(ctx, text);
+
+        lines.forEach((line, index) => {
+            ctx.fillText(line, this.x, this.y +index * this.lineHeight);
+        });
+    }
+        
+    wrapText(ctx, text) {
+        const words =  text.split(' ');
+        let lines = [];
+        let currentLine = '';
+
+        words.forEach((word) => {
+            const testLine = currentLine + (currentLine ? ' ' : '') + word;
+            const testWidth = ctx.measureText(testLine).width;
+            
+            if(testWidth > this.maxWidth) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = testLine;
+            }
+        });
+
+        if(currentLine) {
+            lines.push(currentLine);
+        }
+        return lines;
+    }
+}
+
 class Bar {
     constructor(x, y, width, height, maxValue, currentValue, barColor = "white", backgroundColor = "black", borderColor = "black") {
         this.position = new Vec(x, y); // Position of the bar
