@@ -1,5 +1,5 @@
 class Chronometer{ //reference: https://youtu.be/nO53--j1bDM?feature=shared
-    constructor(){
+    constructor() {
         this.$elapsedTime = document.querySelector("#elapsedTime"); //reference to the element in the html
         this.idInterval = 0; //id of the interval
         this.initialTime = null; //initial time

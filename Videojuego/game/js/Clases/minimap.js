@@ -115,3 +115,35 @@ class MiniMap extends GameObject {
         this.drawRoomRect(ctx, room, innerRectX, innerRectY, innerRectWidth, innerRectHeight, "lightgreen");
     }
 }
+
+// Class that shows the top right menu, containing:
+// - The minimap
+// - The chronometer
+class TopRightMenu extends GameObject {
+    constructor(_color, width, height, x, y, _type) {
+        super(_color, width, height, x, y, "trmenu");
+
+        this.minimap = new MiniMap(null,
+                                    200, 100,
+                                    canvasWidth - 200,
+                                    0,
+                                    'minimap');
+
+        this.labelTime =  new TextLabel(this.position.x + this.size.x / 2 - 30,
+                                        this.size.y - 10,
+                                        "23px monospace",
+                                        "white");
+    }
+
+    draw(ctx) {
+        // Draw the background of the menu
+        ctx.fillStyle = "rgba(0, 0, 0, 0.5)"; // Semi-transparent black
+        ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
+
+        // Draw the minimap
+        this.minimap.draw(ctx, rooms, game.levelNumber);
+
+        // Draw the label
+        this.labelTime.draw(ctx, game.chronometer.$elapsedTime.textContent);
+    }
+}

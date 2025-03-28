@@ -32,9 +32,8 @@ class Game {
         this.levelNumber = 0;
         this.player = level.player;
         this.actors = level.actors;
-
+        // Menu for displaying abilities
         this.abilities = new popUpAbility();
-
         // Button state for the boss room
         this.isButtonPressed = false;
         // Cinematic properties
@@ -43,8 +42,8 @@ class Game {
         this.cinematicTimer = undefined;
         this.cinematicSkipped = false;
         this.labelSkip = new TextLabel(canvasWidth / 2 - 150, canvasHeight - 40, "20px monospace", "white");
-        // Minimap properties
-        this.minimap = new MiniMap(null, 200, 100, canvasWidth - 200, 0, 'minimap');
+        // Minimap and chronometer menu
+        this.topRightMenu = new TopRightMenu(null, 200, 130, canvasWidth - 200, 0, 'trmenu');
 
         // List of projectiles
         this.projectiles = [];
@@ -54,9 +53,6 @@ class Game {
 
         this.labelDebug = new TextLabel(20, canvasHeight - 60,
                                         "20px Ubuntu Mono", "white");
-
-        this.labelTime =  new TextLabel(canvasWidth - 150, 105,
-                                        "23px monospace", "#434a5f");
         
         this.labelHP = new TextLabel(canvasWidth / 2 + 35, canvasHeight - 65,
                                     "10px monospace", "white");
@@ -600,7 +596,6 @@ class Game {
         // Draw the labels
         //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
         //this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
-        this.labelTime.draw(ctx, `${this.chronometer.$elapsedTime.textContent}`);
         this.labelHP.draw(ctx, `${this.player.health} / ${this.player.maxHealth}`);
         this.labelXP.draw(ctx, `${this.player.xp} / ${this.player.xpToNextLevel}`);
         this.labelLife.draw(ctx, `HP: ${this.player.health}`);
@@ -608,8 +603,8 @@ class Game {
         this.labelDamage.draw(ctx, `${this.player.damage}`);
         this.labelResistance.draw(ctx, `${this.player.resistance}`);
 
-        // Draw the minimap
-        this.minimap.draw(ctx, rooms, this.levelNumber);
+        // Draw the minimap and chronometer
+        this.topRightMenu.draw(ctx);
         game.abilities.show();
 
     }
