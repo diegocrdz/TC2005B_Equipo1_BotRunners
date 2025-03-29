@@ -44,6 +44,8 @@ class Game {
         this.labelSkip = new TextLabel(canvasWidth / 2 - 150, canvasHeight - 40, "20px monospace", "white");
         // Minimap and chronometer menu
         this.topRightMenu = new TopRightMenu(null, 200, 130, canvasWidth - 200, 0, 'trmenu');
+        // Pause menu
+        this.pauseMenu = new PauseMenu(null, canvasWidth, canvasHeight, 0, 0, 'pausemenu');
 
         // List of projectiles
         this.projectiles = [];
@@ -163,8 +165,6 @@ class Game {
                 { x: (canvasWidth / 2) - 227, y: canvasHeight - 78 }  // Potion background
             ];
 
-           
-
             // Draw weapon backgrounds
             weaponPositions.forEach((pos) => {
                 this.weaponBackgroundImage.position = new Vec(pos.x, pos.y);
@@ -187,17 +187,14 @@ class Game {
                 this.weaponSelectionImage.position = new Vec(weaponPositions[2].x, weaponPositions[2].y);
                 this.weaponSelectionImage.draw(ctx, 1);
             }
-
-        
         }
         
-
         this.drawWeapons = (ctx) => {
             this.armImage.draw(ctx, 1);
             this.slowPistolImage.draw(ctx, 1);
         };
         
-        //Method to draw the habilites signs
+        //Method to draw the abilities signs
         this.drawAbilities = (ctx) => {
             const damageX = (canvasWidth / 2) - 125;
             const habilitiesWidth = 25;
@@ -213,14 +210,13 @@ class Game {
             ctx.drawImage(this.damageImage, damageX, temporaryAbilitiesY, habilitiesWidth, habilitiesHeight);
             ctx.drawImage(this.resistanceImage, resistanceX, temporaryAbilitiesY, habilitiesWidth, habilitiesHeight);
             
-            if(game.player.canDoubleJump){
+            if (game.player.canDoubleJump) {
                 ctx.drawImage(this.doubleJumpImage, doubleJumpX, permanentAbilitiesY, habilitiesWidth, habilitiesHeight);
             }
             
-            if(game.player.canDash){
+            if (game.player.canDash) {
                 ctx.drawImage(this.dashImage, dashX, permanentAbilitiesY, habilitiesWidth, habilitiesHeight);
             }
-
         }
         
         console.log(`############ LEVEL ${level} START ###################`);
@@ -241,6 +237,18 @@ class Game {
             clearTimeout(this.cinematicTimer);
             this.startGame();
         }
+    }
+
+    pauseGame() {
+        this.state = 'paused';
+        console.log("Game paused");
+        this.chronometer.pause();
+    }
+
+    resumeGame() {
+        this.state = 'playing';
+        console.log("Game resumed");
+        this.chronometer.start();
     }
 
     startGame() {
@@ -339,6 +347,12 @@ class Game {
     // Function to 
 
     update(deltaTime) {
+
+        if (this.state === 'paused' || this.state === 'abilities') {
+            // Pause the game and do not update anything
+            return;
+        }
+
         this.player.update(this.level, deltaTime);
 
         for (let actor of this.actors) {
@@ -600,6 +614,7 @@ class Game {
         //Draw the weapons
         this.drawWeapons(ctx);
 
+        // Draw the abilities
         this.drawAbilities(ctx);
 
         // Draw the labels
@@ -614,12 +629,20 @@ class Game {
 
         // Draw the minimap and chronometer
         this.topRightMenu.draw(ctx);
-        game.abilities.show();
 
+        if (this.state === 'paused') {
+            // Pause the game and do not update anything
+            this.pauseMenu.draw(ctx);
+        } else if (this.state === 'abilities') {
+            // Draw the level up menu
+            game.abilities.show();
+        }
     }
     // Pause or resume the game
     togglePause() {
         this.paused = !this.paused;
+
+        this.state = this.paused ? 'paused' : 'playing'; // Update the game state
 
         if(this.paused){
             this.chronometer.pause(); //pauses chronometer
@@ -917,28 +940,19 @@ function setEventListeners() {
         }
 
         //Use abilities
-        if (event.key == '4'){
-            if (game.abilities.canBeShown){
+        if (game.state === 'abilities') {
+            if (event.key == '1') {
                 game.abilities.abilityCards[0].ability.effect();
-                game.abilities.isSelected = true;
-                game.abilities.hide();
-            }
-        }
-
-        if (event.key == '5'){
-            if (game.abilities.canBeShown){
+            } else if (event.key == '2') {
                 game.abilities.abilityCards[1].ability.effect();
-                game.abilities.isSelected = true;
-                game.abilities.hide();
-            }
-        }
-
-        if (event.key == '6'){
-            if (game.abilities.canBeShown){
+            } else if (event.key == '3') {
                 game.abilities.abilityCards[2].ability.effect();
-                game.abilities.isSelected = true;
-                game.abilities.hide();
+            } else {
+                return; // Ignore other keys
             }
+            game.abilities.isSelected = true;
+            game.abilities.hide();
+            game.state = 'playing'; // Resume the game after using an ability
         }
     });
 
@@ -974,7 +988,8 @@ function updateCanvas(frameTime) {
         frameStart = frameTime;
     }
     let deltaTime = frameTime - frameStart;
-    
+
+    /*
     if (!game.paused) { // Skip updates if the game is paused
         let deltaTime = frameTime - frameStart;
 
@@ -984,6 +999,11 @@ function updateCanvas(frameTime) {
 
         frameStart = frameTime; // Update time for the next frame
     }
+    */
+
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    game.update(deltaTime);
+    game.draw(ctx, scale);
 
     // Update time for the next frame
     frameStart = frameTime;

@@ -390,6 +390,7 @@ class Player extends AnimatedObject {
             this.xpToNextLevel += 15;
             
             game.abilities.activate();
+            game.state = "abilities";
         }
     }
 
