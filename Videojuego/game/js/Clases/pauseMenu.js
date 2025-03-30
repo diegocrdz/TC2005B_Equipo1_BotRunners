@@ -11,9 +11,9 @@ class PauseMenu extends GameObject {
         const buttonHeight = 50;
 
         this.buttons = [
-            this.continueButton = new Button("white", buttonWidth, buttonHeight, 0, 0, "continueButton", "Continuar"),
-            this.restartButton = new Button("white", buttonWidth, buttonHeight, 0, 0, "restartButton", "Reiniciar"),
-            this.menuButton = new Button("white", buttonWidth, buttonHeight, 0, 0, "menuButton", "Menú"),
+            this.continueButton = new MenuButton("white", buttonWidth, buttonHeight, 0, 0, "continueButton", "Continuar"),
+            this.restartButton = new MenuButton("white", buttonWidth, buttonHeight, 0, 0, "restartButton", "Reiniciar"),
+            this.menuButton = new MenuButton("white", buttonWidth, buttonHeight, 0, 0, "menuButton", "Menú"),
         ];
     }
 

@@ -214,7 +214,7 @@ class cardTextLabel extends TextLabel {
     }
 }
 
-class Button extends GameObject {
+class MenuButton extends GameObject {
     constructor(color, width, height, x, y, type, text) {
         super(color, width, height, x, y, type);
         this.text = text; // Button text

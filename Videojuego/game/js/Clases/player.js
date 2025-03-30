@@ -23,7 +23,7 @@ class Player extends AnimatedObject {
         this.isDoubleJumping = false;
 
         // Dash
-        this.canDash = true;
+        this.canDash = false;
         this.isDashing =  false;
 
         // Player selection

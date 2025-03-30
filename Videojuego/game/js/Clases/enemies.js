@@ -271,12 +271,12 @@ class BossEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
         super("red", width, height, x, y, "boss");
 
-        this.health = 200;
-        this.maxHealth = 200;
-        this.damage = 30;
+        this.health = 300;
+        this.maxHealth = 300;
+        this.damage = 40;
         this.xp_reward = 500;
 
-        this.speed = 0.002;
+        this.speed = 0.003;
         this.velocity = new Vec(this.speed, 0);
 
         // Jumping flag for special attack
