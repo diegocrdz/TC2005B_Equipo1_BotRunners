@@ -23,7 +23,7 @@ class Player extends AnimatedObject {
         this.isDoubleJumping = false;
 
         // Dash
-        this.canDash = false;
+        this.canDash = true;
         this.isDashing =  false;
 
         // Player selection
@@ -234,7 +234,7 @@ class Player extends AnimatedObject {
                 
                 let dashDistance = 5; // Total dash distance
                 let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
-                let step = 0.6; // Number of pixels that move in each frame
+                let step = 0.2; // Number of pixels that move in each frame
                 let moved = 0; // Tracks how many pixels the player has moved
         
                 let dashMove = () => {
@@ -242,7 +242,8 @@ class Player extends AnimatedObject {
                         let newXPosition = this.position.plus(new Vec(direction * step, 0)); //Calculates new position
         
                         // If there's a collision, the dash stops
-                        if (level.contact(newXPosition, this.size, 'wall')) {
+                        if (level.contact(newXPosition, this.size, 'wall')
+                            || (level.contact(newXPosition, this.size, 'box'))) {
                             this.isDashing = false;
                             return;
                         }

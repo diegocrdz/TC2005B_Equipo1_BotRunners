@@ -214,6 +214,27 @@ class cardTextLabel extends TextLabel {
     }
 }
 
+class Button extends GameObject {
+    constructor(color, width, height, x, y, type, text) {
+        super(color, width, height, x, y, type);
+        this.text = text; // Button text
+        this.isPressed = false; // Button state
+        this.isHovered = false; // Button hover state
+        this.label = new TextLabel(this.position.x + 10, this.position.y + (this.size.y / 2), "20px monospace", "black");
+    }
+
+    draw(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
+        this.lineWidth = 4;
+        ctx.strokeStyle = "black"; // Border color
+        ctx.strokeRect(this.position.x, this.position.y, this.size.x, this.size.y);
+
+        // Draw the button label
+        this.label.draw(ctx, this.text);
+    }
+}
+
 class Bar {
     constructor(x, y, width, height, maxValue, currentValue, barColor = "white", backgroundColor = "black", borderColor = "black") {
         this.position = new Vec(x, y); // Position of the bar

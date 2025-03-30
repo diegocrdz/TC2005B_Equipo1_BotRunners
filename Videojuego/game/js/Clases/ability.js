@@ -150,7 +150,8 @@ class popUpAbility{
         this.abilityCards = []; //resets the ability cards
         let i = 0; //index 
 
-        while(this.randomAbilities.length < 3){
+        // loop to generate 3 random abilities and colors
+        while(this.randomAbilities.length < 3) {
             let randomA =  Math.floor(Math.random() * abilitiesList.length); //random number between 0 and the length of the abilities list
             let randomC; //random number between 0 and the length of the colors list
         
@@ -158,7 +159,7 @@ class popUpAbility{
             //also, since each ability needs a color inmediately and we can't skip it like we can do with the abilities
             do { 
                 randomC = Math.floor(Math.random() * colorList.length);
-            } while (this.randomColors.includes(colorList[randomC]));
+            } while (this.randomColors.includes(colorList[randomC]) && this.randomColors.length < 3); //while the color is already in the array and the array is less than 6
             
             this.randomColors.push(colorList[randomC]);
 
@@ -172,14 +173,10 @@ class popUpAbility{
                     title: this.randomAbilities[i].title, 
                     description: this.randomAbilities[i].description,
                     ability : this.randomAbilities[i]
-                    }));
-
+                }));
                 i++;
             }
-
-            
         }
-            
         this.isGenerated = true; //sets the isGenerated to true so it doesn't generate again
     }
 
@@ -188,6 +185,11 @@ class popUpAbility{
     show(){
         if(this.canBeShown){
             if (this.isGenerated) {
+                // Draw the background of the pause menu
+                ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+                // Fill the entire canvas
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                
                 this.backgroundImage.draw(ctx, 1);
     
                 for(let i = 0; i < this.abilityCards.length; i++){

@@ -222,6 +222,9 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
             level[y][width - 1] = 'D'; 
         }
     }
+
+    // Place the player at the bottom of the level
+    level[height - 2][2] = '@';
     
     // Function to place elements in the level
     function placeRandomly(char, count, minY=1, maxY=height-2, minX=1, maxX=width-2) {
@@ -450,9 +453,6 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     placeRandomly('B', numBoxes, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
     placePipes();
     placeRandomly('P', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
-    
-    // Place the player at the bottom of the level
-    level[height - 2][2] = '@';
     
     return level.map(row => row.join('')).join('\n');
 }

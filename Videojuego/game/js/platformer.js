@@ -869,6 +869,23 @@ function setEventListeners() {
             return;
         }
 
+        // Use abilities
+        if (game.state === 'abilities') {
+            if (event.key == '1') {
+                game.abilities.abilityCards[0].ability.effect();
+            } else if (event.key == '2') {
+                game.abilities.abilityCards[1].ability.effect();
+            } else if (event.key == '3') {
+                game.abilities.abilityCards[2].ability.effect();
+            } else {
+                return; // Ignore other keys
+            }
+            game.abilities.isSelected = true;
+            game.abilities.hide();
+            game.state = 'playing'; // Resume the game after using an ability
+            return; // Ignore other keys
+        }
+
         if (event.code == "KeyW" || event.code == "Space") {
             game.player.jump();
             if (game.player.isJumping) {
@@ -937,22 +954,6 @@ function setEventListeners() {
         }
         if (event.key == 'ArrowDown') {
             game.player.isPressingDown = true;
-        }
-
-        //Use abilities
-        if (game.state === 'abilities') {
-            if (event.key == '1') {
-                game.abilities.abilityCards[0].ability.effect();
-            } else if (event.key == '2') {
-                game.abilities.abilityCards[1].ability.effect();
-            } else if (event.key == '3') {
-                game.abilities.abilityCards[2].ability.effect();
-            } else {
-                return; // Ignore other keys
-            }
-            game.abilities.isSelected = true;
-            game.abilities.hide();
-            game.state = 'playing'; // Resume the game after using an ability
         }
     });
 
