@@ -1,3 +1,7 @@
+/*
+ * Abilities for the game
+*/
+
 class Ability{
     constructor(name, title, description, image){
         this.name = name;

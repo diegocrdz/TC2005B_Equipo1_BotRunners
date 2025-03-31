@@ -1,6 +1,6 @@
 /*
- * Classes for the game
- */
+ * General classes for the game
+*/
 
 "use strict";
 
@@ -27,7 +27,6 @@ class Vec {
     }
 }
 
-
 class Rect {
     constructor(x, y, width, height) {
         this.x = x;
@@ -36,7 +35,6 @@ class Rect {
         this.height = height;
     }
 }
-
 
 class GameObject {
     constructor(color, width, height, x, y, type) {
@@ -172,6 +170,8 @@ class TextLabel {
     }
 }
 
+// Each label for the cards in the game
+// This class will wrap the text to fit inside the card
 class cardTextLabel extends TextLabel {
     constructor(x, y, font, color, maxWidth) {
         super(x, y, font, color);
@@ -189,16 +189,24 @@ class cardTextLabel extends TextLabel {
             ctx.fillText(line, this.x, this.y +index * this.lineHeight);
         });
     }
-        
+    
+    // Split the text into lines that fit within the maxWidth
     wrapText(ctx, text) {
+        // Split the text into words
         const words =  text.split(' ');
+        // Array to hold the lines of text
         let lines = [];
+        // Current line of text
         let currentLine = '';
 
+        // Loop through each word in the text
         words.forEach((word) => {
+            // Check if adding the next word exceeds the maxWidth
             const testLine = currentLine + (currentLine ? ' ' : '') + word;
             const testWidth = ctx.measureText(testLine).width;
             
+            // If the line exceeds the maxWidth, push the current line to the lines array
+            // and start a new line with the current word
             if(testWidth > this.maxWidth) {
                 lines.push(currentLine);
                 currentLine = word;
@@ -214,27 +222,53 @@ class cardTextLabel extends TextLabel {
     }
 }
 
+// Buttons for the menu
+// This class will be used for the buttons in the pause and main menu
 class MenuButton extends GameObject {
     constructor(color, width, height, x, y, type, text) {
         super(color, width, height, x, y, type);
         this.text = text; // Button text
         this.isPressed = false; // Button state
         this.isHovered = false; // Button hover state
-        this.label = new TextLabel(this.position.x + 10, this.position.y + (this.size.y / 2), "20px monospace", "black");
+        this.label = new TextLabel(this.position.x + 10, // x
+                                    this.position.y + (this.size.y / 2), // y
+                                    "20px monospace", // Font
+                                    "black"); // Color
     }
 
     draw(ctx) {
+        // Draw the button background
         ctx.fillStyle = this.color;
         ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
+        // Draw the button border
         this.lineWidth = 4;
         ctx.strokeStyle = "black"; // Border color
         ctx.strokeRect(this.position.x, this.position.y, this.size.x, this.size.y);
 
         // Draw the button label
         this.label.draw(ctx, this.text);
+
+        this.hover();
+    }
+
+    // Check if the mouse is inside the button
+    isMouseInside(x, y) {
+        return x > this.position.x && x < this.position.x + this.size.x &&
+               y > this.position.y && y < this.position.y + this.size.y;
+    }
+    
+    // Change the button if its hovered
+    hover() {
+        if (this.isHovered) {
+            this.color = "white";
+        } else {
+            this.color = "lightgrey";
+        }
     }
 }
 
+// Class for the bars in the game
+// This class will be used for the health and xp bars
 class Bar {
     constructor(x, y, width, height, maxValue, currentValue, barColor = "white", backgroundColor = "black", borderColor = "black") {
         this.position = new Vec(x, y); // Position of the bar

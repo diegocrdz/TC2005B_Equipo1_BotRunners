@@ -1,3 +1,7 @@
+/*
+ * Implementation of the player of the game
+*/
+
 // The project works only with very small values for velocities and acceleration
 const walkSpeed = 0.01;
 const initialJumpSpeed = -0.03;

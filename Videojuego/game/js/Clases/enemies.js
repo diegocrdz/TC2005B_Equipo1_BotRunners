@@ -1,3 +1,7 @@
+/*
+ * Enemies in the game
+*/
+
 class Enemy extends AnimatedObject {
     constructor(_color, width, height, x, y, _type) {
         super("red", width, height, x, y, _type);
@@ -117,27 +121,18 @@ class Enemy extends AnimatedObject {
 
     // Draw the health bar above the enemy
     drawHealthBar(ctx, scale) {
-        const barWidth = this.size.x * scale; // Width of the health bar
-        const barHeight = 6; // Height of the health bar
-        const x = this.position.x * scale; // X position of the health bar
-        const y = (this.position.y - 0.1) * scale; // Y position (above the enemy)
-
-        // Calculate the width of the health portion
-        const healthWidth = (this.health / this.maxHealth) * barWidth;
-
-        // Draw the background (red bar)
-        ctx.fillStyle = "black";
-        ctx.fillRect(x, y, barWidth, barHeight);
-
-        // Draw the foreground (green bar)
-        ctx.fillStyle = "red";
-        ctx.fillRect(x, y, healthWidth, barHeight);
-
-        // Optional: Draw a border around the health bar
-        ctx.strokeStyle = "black";
-        // Make the border bigger
-        ctx.lineWidth = 3;
-        ctx.strokeRect(x, y, barWidth, barHeight);
+        const healthBar = new Bar(
+                                this.position.x * scale, // x
+                                (this.position.y - 0.1) * scale, // y
+                                this.size.x * scale, // width
+                                6, // height
+                                this.maxHealth, // maxHealth
+                                this.health,  // currentHealth
+                                "red", // color
+                                "black", // borderColor
+                                "black"); // backgroundColor
+        
+        healthBar.draw(ctx);
     }
 
     startMovement(direction) {

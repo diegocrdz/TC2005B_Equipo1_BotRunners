@@ -1,6 +1,6 @@
 /*
  * Implementation of the game
- */
+*/
 
 "use strict";
 
@@ -981,6 +981,40 @@ function setEventListeners() {
             game.player.isPressingDown = false;
         }
     });
+
+    // Add event listeners for mouse events
+    // Mouse click event
+    canvas.addEventListener("click", event => {
+        // Check if the click is in one of the buttons of the pause menu
+        if (game.state === 'paused') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.pauseMenu.checkClick(mouseX, mouseY);
+        }
+    });
+    // Mouse move event
+    canvas.addEventListener("mousemove", event => {
+        // Check if the mouse is over one of the buttons of the pause menu
+        if (game.state === 'paused') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.pauseMenu.checkHover(mouseX, mouseY);
+        }
+    });
+}
+
+// Function to get the mouse position in the canvas
+function getMousePosition(event) {
+    // Get the canvas element
+    const rect = canvas.getBoundingClientRect();
+    // Get the mouse position in the canvas
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    // Multiply by the scale to get the correct position
+    // and subtract the top left corner of the canvas
+    const mouseX = (event.clientX - rect.left) * scaleX;
+    const mouseY = (event.clientY - rect.top) * scaleY;
+    return { x: mouseX, y: mouseY };
 }
 
 // Function that will be called for the game loop
@@ -989,18 +1023,6 @@ function updateCanvas(frameTime) {
         frameStart = frameTime;
     }
     let deltaTime = frameTime - frameStart;
-
-    /*
-    if (!game.paused) { // Skip updates if the game is paused
-        let deltaTime = frameTime - frameStart;
-
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-        game.update(deltaTime);
-        game.draw(ctx, scale);
-
-        frameStart = frameTime; // Update time for the next frame
-    }
-    */
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     game.update(deltaTime);

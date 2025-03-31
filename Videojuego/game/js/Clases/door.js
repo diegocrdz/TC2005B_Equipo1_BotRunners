@@ -1,3 +1,7 @@
+/*
+ * Doors used to move between rooms
+*/
+
 class Door extends GameObject {
     constructor(_color, width, height, x, y, _type, direction) {
         super("brown", width, height, x, y, "door");

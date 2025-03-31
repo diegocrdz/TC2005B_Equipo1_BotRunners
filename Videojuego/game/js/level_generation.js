@@ -1,3 +1,7 @@
+/*
+ * Level generation script for the game
+*/
+
 "use strict";
 
 // Room class to generate a graph of rooms with connections

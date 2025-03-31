@@ -1,3 +1,8 @@
+/*
+ * Minimap to help the player navigate through the game
+ * The top right menu contains the minimap and the chronometer
+*/
+
 class MiniMap extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super(_color, width, height, x, y, "minimap");

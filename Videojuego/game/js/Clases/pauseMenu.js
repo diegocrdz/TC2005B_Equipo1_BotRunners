@@ -1,3 +1,7 @@
+/*
+ * Implementation of the menu that appears when the game is paused.
+*/
+
 class PauseMenu extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super(_color, width, height, x, y, "minimap");
@@ -11,9 +15,12 @@ class PauseMenu extends GameObject {
         const buttonHeight = 50;
 
         this.buttons = [
-            this.continueButton = new MenuButton("white", buttonWidth, buttonHeight, 0, 0, "continueButton", "Continuar"),
-            this.restartButton = new MenuButton("white", buttonWidth, buttonHeight, 0, 0, "restartButton", "Reiniciar"),
-            this.menuButton = new MenuButton("white", buttonWidth, buttonHeight, 0, 0, "menuButton", "Menú"),
+            this.continueButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
+                                                "continue", "Continuar"),
+            this.restartButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
+                                                "restart", "Reiniciar"),
+            this.menuButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
+                                                "menu", "Menú"),
         ];
     }
 
@@ -41,8 +48,66 @@ class PauseMenu extends GameObject {
             button.label.x = button.position.x + 10;
             button.label.y = button.position.y + (button.size.y / 2) + 5;
 
+            if (button.isHovered) {
+                button.color = "white"; // Change button color on hover
+            }
+            else {
+                button.color = "lightgrey"; // Reset button color
+            }
+
             // Draw the button
             button.draw(ctx);
+        }
+    }
+
+    // Check if the mouse is inside any button
+    checkHover(x, y) {
+        // Store the hovered button
+        let hoveredButton = null;
+        // Check if the mouse is inside any button
+        for (const button of this.buttons) {
+            const isHovered = button.isMouseInside( x, y);
+            button.isHovered = isHovered;
+            if (isHovered) {
+                hoveredButton = button;
+            }
+        }
+        return hoveredButton;
+    }
+
+    // Check if the mouse is clicked on any button
+    checkClick(x, y) {
+        for (const button of this.buttons) {
+            // Check if the mouse is inside the button
+            const isClicked = button.isMouseInside(x, y);
+            button.isPressed = isClicked;
+            if (isClicked) {
+                // Call the button action
+                this.buttonClicked(button.type);
+                // Return the clicked button if needed
+                return button;
+            }
+        }
+        // If no button was clicked, return null
+        return null;
+    }
+
+    // Button click actions
+    buttonClicked(buttonType) {
+        // Decide what to do based on the button type
+        switch (buttonType) {
+            case "continue":
+                game.togglePause();
+                break;
+            case "restart":
+                game.togglePause();
+                restartRooms(true, 0, 6);
+                break;
+            case "menu":
+                // game.state = "menu";
+                break;
+            default:
+                break;
         }
     }
 }
