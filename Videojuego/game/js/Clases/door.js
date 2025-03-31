@@ -21,9 +21,12 @@ class Door extends GameObject {
     }
 
     open() {
+        const nextRoom = rooms.get(game.levelNumber + 1);
+
         // If the button hasnt been pressed, dont open
         if (this.direction === "right" // If the door leads to the right
-            && rooms.get(game.levelNumber + 1).type === "boss" // If the next room is the boss room
+            && nextRoom // If the next room exists
+            && nextRoom.type === "boss" // If the next room is the boss room
             && !game.isButtonPressed) { // If the button hasnt been pressed
             return;
         }

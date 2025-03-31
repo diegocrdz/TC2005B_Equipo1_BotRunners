@@ -19,6 +19,8 @@ class PauseMenu extends GameObject {
                                                 "continue", "Continuar"),
             this.restartButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
                                                 "restart", "Reiniciar"),
+            this.optionsButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
+                                                "options", "Opciones"),
             this.menuButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
                                                 "menu", "Menú"),
         ];
@@ -102,6 +104,9 @@ class PauseMenu extends GameObject {
             case "restart":
                 game.togglePause();
                 restartRooms(true, 0, 6);
+                break;
+            case "options":
+                // game.state = "options";
                 break;
             case "menu":
                 // game.state = "menu";
