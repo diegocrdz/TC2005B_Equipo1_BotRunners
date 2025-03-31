@@ -1,13 +1,13 @@
 /*
- * Implementation of the menu that appears when the game is paused.
+ * Implementation of the menu that appears when the player dies
 */
 
-class PauseMenu extends GameObject {
+class LooseMenu extends GameObject {
     constructor(_color, width, height, x, y, _type) {
-        super(_color, width, height, x, y, "pausemenu");
+        super(_color, width, height, x, y, "loosemenu");
 
-        this.pauseLabel = new TextLabel(this.size.x / 2 - 100,
-                                        this.size.y / 4,
+        this.gameOverLabel = new TextLabel(this.size.x / 2 - 160,
+                                        this.size.y / 4 + 50,
                                         "40px 'Press Start 2P'",
                                         "white");
         
@@ -15,12 +15,8 @@ class PauseMenu extends GameObject {
         const buttonHeight = 50;
 
         this.buttons = [
-            this.continueButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
-                                                "continue", "Continuar"),
-            this.restartButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
-                                                "restart", "Reiniciar"),
-            this.optionsButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
-                                                "options", "Opciones"),
+            this.retryButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
+                                                "retry", "Reintentar"),
             this.menuButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
                                                 "menu", "Menú"),
         ];
@@ -28,16 +24,16 @@ class PauseMenu extends GameObject {
 
     draw(ctx) {
         // Draw the background of the pause menu
-        ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+        ctx.fillStyle = "rgba(53, 19, 19, 0.9)";
         // Fill the entire canvas
         ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
 
         // Draw the pause label
-        this.pauseLabel.draw(ctx, "PAUSA");
+        this.gameOverLabel.draw(ctx, "PERDISTE");
 
         // Define button positions
         let initialButtonX = this.size.x / 2 - 100;
-        let initialButtonY = this.size.y / 3;
+        let initialButtonY = this.size.y / 3 + 50;
         const spacing = 10; // Space between buttons
 
         for (let i=0; i<this.buttons.length; i++) {
@@ -98,15 +94,8 @@ class PauseMenu extends GameObject {
     buttonClicked(buttonType) {
         // Decide what to do based on the button type
         switch (buttonType) {
-            case "continue":
-                game.togglePause();
-                break;
-            case "restart":
-                game.togglePause();
+            case "retry":
                 restartRooms(true, 0, 6);
-                break;
-            case "options":
-                // game.state = "options";
                 break;
             case "menu":
                 // game.state = "menu";

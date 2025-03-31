@@ -401,7 +401,7 @@ class Player extends AnimatedObject {
 
     die() {
         console.log("Player died");
-        restartRooms(true, 0, 6);
+        game.state = "gameover";
     }
 
     hit() {
@@ -428,6 +428,10 @@ class Player extends AnimatedObject {
             this.selectedWeapon = 1;
             this.setSprite('../../assets/characters/skippy/skippy_1.png', new Rect(0, 0, 24, 24));
         } else if (number === 2) {
+            // The player cant select the gun in the first level
+            if (level === 0) {
+                return;
+            }
             this.selectedWeapon = 2;
             this.setSprite('../../assets/characters/skippy/skippy_3.png', new Rect(0, 0, 24, 24));
         } else if (number === 3) {

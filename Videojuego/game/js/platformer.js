@@ -46,6 +46,8 @@ class Game {
         this.topRightMenu = new TopRightMenu(null, 200, 130, canvasWidth - 200, 0, 'trmenu');
         // Pause menu
         this.pauseMenu = new PauseMenu(null, canvasWidth, canvasHeight, 0, 0, 'pausemenu');
+        // Loose menu
+        this.looseMenu = new LooseMenu(null, canvasWidth, canvasHeight, 0, 0, 'loosemenu');
 
         // List of projectiles
         this.projectiles = [];
@@ -348,7 +350,9 @@ class Game {
 
     update(deltaTime) {
 
-        if (this.state === 'paused' || this.state === 'abilities') {
+        if (this.state === 'paused'
+            || this.state === 'abilities'
+            || this.state === 'gameover') {
             // Pause the game and do not update anything
             return;
         }
@@ -636,6 +640,10 @@ class Game {
         } else if (this.state === 'abilities') {
             // Draw the level up menu
             game.abilities.show();
+        } else if (this.state === 'gameover') {
+            // Draw the game over menu
+            this.looseMenu.draw(ctx);
+            return;
         }
     }
     // Pause or resume the game
@@ -991,6 +999,12 @@ function setEventListeners() {
             const mouseY = getMousePosition(event).y;
             game.pauseMenu.checkClick(mouseX, mouseY);
         }
+
+        if (game.state === 'gameover') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.looseMenu.checkClick(mouseX, mouseY);
+        }
     });
     // Mouse move event
     canvas.addEventListener("mousemove", event => {
@@ -999,6 +1013,12 @@ function setEventListeners() {
             const mouseX = getMousePosition(event).x;
             const mouseY = getMousePosition(event).y;
             game.pauseMenu.checkHover(mouseX, mouseY);
+        }
+
+        if (game.state === 'gameover') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.looseMenu.checkHover(mouseX, mouseY);
         }
     });
 }
