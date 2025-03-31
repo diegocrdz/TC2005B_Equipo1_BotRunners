@@ -80,7 +80,9 @@ CREATE TABLE partidas (
   id_partida SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
   fecha_inicio DATETIME DEFAULT CURRENT_TIMESTAMP,
   fecha_fin DATETIME,
-  PRIMARY KEY (id_partida)
+  id_jugador SMALLINT UNSIGNED,
+  PRIMARY KEY (id_partida),
+  FOREIGN KEY (id_jugador) REFERENCES jugador(id_jugador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -120,7 +122,7 @@ CREATE TABLE enemigos (
   salud SMALLINT UNSIGNED,
   dano SMALLINT UNSIGNED,
   movimiento ENUM("seguir jugador", "ignorar jugador"),
-  fase_ataque ENUM("normal. salto"),
+  fase_ataque ENUM("normal", "salto"),
   velocidad_movimiento FLOAT,
   recompensa_xp SMALLINT UNSIGNED,
   PRIMARY KEY (id_enemigo)
@@ -150,7 +152,7 @@ CREATE TABLE objetos (
 CREATE TABLE jugadores_habilidades (
   id_jugador SMALLINT UNSIGNED NOT NULL,
   id_habilidad SMALLINT UNSIGNED NOT NULL,
-  PRIMARY KEY (id_jugador),
+  PRIMARY KEY (id_jugador, id_habilidad),
   FOREIGN KEY (id_jugador) REFERENCES jugadores(id_jugador),
   FOREIGN KEY (id_habilidad) REFERENCES habilidades(id_habilidad)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -178,7 +180,7 @@ CREATE TABLE inventarios (
 CREATE TABLE enemigos_salas (
   id_sala SMALLINT UNSIGNED NOT NULL,
   id_enemigo SMALLINT UNSIGNED NOT NULL,
-  PRIMARY KEY (id_sala),
+  PRIMARY KEY (id_sala, id_enemigo),
   FOREIGN KEY (id_sala) REFERENCES salas(id_sala),
   FOREIGN KEY (id_enemigo) REFERENCES enemigos(id_enemigo)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -190,7 +192,7 @@ CREATE TABLE enemigos_salas (
 CREATE TABLE objetos_salas (
   id_sala SMALLINT UNSIGNED NOT NULL,
   id_objeto SMALLINT UNSIGNED NOT NULL,
-  PRIMARY KEY (id_sala),
+  PRIMARY KEY (id_sala, id_objeto),  -- Clave primaria compuesta
   FOREIGN KEY (id_sala) REFERENCES salas(id_sala),
   FOREIGN KEY (id_objeto) REFERENCES objetos(id_objeto)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
