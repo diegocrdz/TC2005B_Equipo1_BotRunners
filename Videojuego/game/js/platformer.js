@@ -126,6 +126,29 @@ class Game {
                                         'potion');
         this.potionImage.setSprite('../../assets/objects/battery_full.png');
 
+        // Load the sounds
+
+        //Level music:
+        this.musicLevel1 = new Audio('../../../Videojuego/assets/Sounds/music/level_1.mp3');
+        this.musicLevel1.loop = true; 
+
+        this.musicLevel2 = new Audio('../../../Videojuego/assets/Sounds/music/level_2.ogg');
+        this.musicLevel2.loop = true; 
+
+        this.musicLevel3 = new Audio('../../../Videojuego/assets/Sounds/music/level_3.ogg');
+        this.musicLevel3.loop = true; 
+
+        //boss music:
+        this.musicBoss1 = new Audio('../../../Videojuego/assets/Sounds/music/boss_1.ogg');
+        this.musicBoss1.loop = true; 
+
+        this.musicBoss2 = new Audio('../../../Videojuego/assets/Sounds/music/boss_2.ogg');
+        this.musicBoss2.loop = true; 
+
+        this.musicFinalBoss = new Audio('../../../Videojuego/assets/Sounds/music/final_boss.mp3');
+        this.musicFinalBoss.loop = true; 
+
+
         // Weapon background and selection images
         this.weaponBackgroundImage = new GameObject(null, 70, 70, 0, 0, 'ui');
         this.weaponBackgroundImage.setSprite('../../../Videojuego/assets/objects/gray_weapon_background.png');
@@ -197,7 +220,10 @@ class Game {
 
         
         }
+
         
+        
+
 
         this.drawWeapons = (ctx) => {
             this.armImage.draw(ctx, 1);
@@ -248,6 +274,12 @@ class Game {
             clearTimeout(this.cinematicTimer);
             this.startGame();
         }
+        // MUSIC LEVEL 1
+        console.log("Reproduciendo música del nivel 1");
+        this.musicLevel1.play().catch(error => {
+            console.error("Error al reproducir el audio:", error);
+        });
+       
     }
 
     startGame() {
@@ -292,6 +324,16 @@ class Game {
                 return;
             }
         }
+
+
+        if (levelNumber === 5) {
+            this.musicBoss1.play();
+            this.musicLevel1.pause();
+        } else {
+            this.musicBoss1.pause(); // Pausa la música si no es el primer nivel
+            this.musicLevel1.play();
+        }
+
 
         this.level = new Level(GAME_LEVELS[levelNumber]); // Create a new level
         this.levelNumber = levelNumber;
@@ -937,6 +979,8 @@ function setEventListeners() {
                 game.abilities.hide();
             }
         }
+
+        
     });
 
     window.addEventListener("keyup", event => {
