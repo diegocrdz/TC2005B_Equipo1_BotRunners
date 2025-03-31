@@ -47,6 +47,8 @@ class Game {
         // Pause menu
         this.pauseMenu = new PauseMenu(null, canvasWidth, canvasHeight, 0, 0, 'pausemenu');
 
+        this.mainMenu = new MainMenu(null, canvasWidth, canvasHeight, 0, 0, 'mainmenu');
+
         // List of projectiles
         this.projectiles = [];
 
@@ -636,7 +638,11 @@ class Game {
         } else if (this.state === 'abilities') {
             // Draw the level up menu
             game.abilities.show();
+        } else if(this.state === 'mainMenu') { 
+            // Draw the main menu
+            this.mainMenu.draw(ctx);
         }
+        
     }
     // Pause or resume the game
     togglePause() {
@@ -792,8 +798,7 @@ function gameStart() {
     level = 0;
 
     // Register the game object, which creates all other objects
-    game = new Game('cinematic', new Level(GAME_LEVELS[0]));
-    game.startCinematic();
+    game = new Game('mainMenu', new Level(GAME_LEVELS[0])); //main menu
 
     game.chronometer = new Chronometer(); //initiates chronometer
     game.chronometer.start(); //starts chronometer
@@ -869,22 +874,6 @@ function setEventListeners() {
             return;
         }
 
-        // Use abilities
-        if (game.state === 'abilities') {
-            if (event.key == '1') {
-                game.abilities.abilityCards[0].ability.effect();
-            } else if (event.key == '2') {
-                game.abilities.abilityCards[1].ability.effect();
-            } else if (event.key == '3') {
-                game.abilities.abilityCards[2].ability.effect();
-            } else {
-                return; // Ignore other keys
-            }
-            game.abilities.isSelected = true;
-            game.abilities.hide();
-            game.state = 'playing'; // Resume the game after using an ability
-            return; // Ignore other keys
-        }
 
         if (event.code == "KeyW" || event.code == "Space") {
             game.player.jump();
@@ -985,20 +974,47 @@ function setEventListeners() {
     // Add event listeners for mouse events
     // Mouse click event
     canvas.addEventListener("click", event => {
+        if (game.state === 'mainMenu') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.mainMenu.checkClick(mouseX, mouseY);
+        }
         // Check if the click is in one of the buttons of the pause menu
         if (game.state === 'paused') {
             const mouseX = getMousePosition(event).x;
             const mouseY = getMousePosition(event).y;
             game.pauseMenu.checkClick(mouseX, mouseY);
         }
+        
+        if(game.state === 'abilities') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.abilities.checkClick(mouseX, mouseY);
+            game.abilities.isSelected = true;
+            game.abilities.hide();
+            game.togglePause();
+            game.state = 'playing'; // Resume the game
+        }
     });
     // Mouse move event
     canvas.addEventListener("mousemove", event => {
+        if (game.state === 'mainMenu') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.mainMenu.checkHover(mouseX, mouseY);
+        }
+
         // Check if the mouse is over one of the buttons of the pause menu
         if (game.state === 'paused') {
             const mouseX = getMousePosition(event).x;
             const mouseY = getMousePosition(event).y;
             game.pauseMenu.checkHover(mouseX, mouseY);
+        }
+
+        if(game.state === 'abilities') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.abilities.checkHover(mouseX, mouseY);
         }
     });
 }
