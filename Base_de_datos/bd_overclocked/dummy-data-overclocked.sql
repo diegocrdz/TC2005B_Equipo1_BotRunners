@@ -281,28 +281,28 @@ INSERT INTO salas (id_nivel, numero_objetos, numero_enemigos) VALUES
 -- TABLA INTERMEDIA ENEMIGOS SALAS:
 
 -- Sala 2 del Nivel 1 (solo un enemigo normal)
-INSERT INTO enemigos_salas (id_sala, id_enemigo) VALUES 
-(2, 1);  -- Solo un enemigo normal en la sala 2 del nivel 1
+INSERT INTO enemigos_salas (id_sala, id_enemigo, enemigos_derrotados) VALUES 
+(2, 1, TRUE);  -- Solo un enemigo normal en la sala 2 del nivel 1
 
 -- Sala 6 de cada nivel (solo un jefe)
-INSERT INTO enemigos_salas (id_sala, id_enemigo) VALUES 
-(6, 8),  -- Jefe del nivel 1
-(12, 9), -- Jefe del nivel 2
-(18, 10); -- Jefe del nivel 3
+INSERT INTO enemigos_salas (id_sala, id_enemigo, enemigos_derrotados) VALUES 
+(6, 8, TRUE),  -- Jefe del nivel 1
+(12, 9, TRUE), -- Jefe del nivel 2
+(18, 10, FALSE); -- Jefe del nivel 3
 
 -- Otras salas (máximo 3 enemigos por sala)
-INSERT INTO enemigos_salas (id_sala, id_enemigo) VALUES 
-(3, 2), (3, 4), -- Sala 3 (nivel 1)
-(4, 1), (4, 3), (4, 5), -- Sala 4 (nivel 1)
-(5, 6), (5, 7), -- Sala 5 (nivel 1)
-(7, 2), (7, 5), -- Sala 7 (nivel 2)
-(8, 1), (8, 4), (8, 7), -- Sala 8 (nivel 2)
-(9, 3), (9, 6), -- Sala 9 (nivel 2)
-(10, 5), (10, 2), -- Sala 10 (nivel 2)
-(11, 4), (11, 6), -- Sala 11 (nivel 2)
-(13, 2), (13, 5), (13, 7), -- Sala 13 (nivel 3)
-(14, 3), (14, 6), -- Sala 14 (nivel 3)
-(15, 1), (15, 4), (15, 7); -- Sala 15 (nivel 3)
+INSERT INTO enemigos_salas (id_sala, id_enemigo, enemigos_derrotados) VALUES 
+(3, 2, TRUE), (3, 4, TRUE), -- Sala 3 (nivel 1)
+(4, 1, TRUE), (4, 3, TRUE), (4, 5, TRUE), -- Sala 4 (nivel 1)
+(5, 6, TRUE), (5, 7, TRUE), -- Sala 5 (nivel 1)
+(7, 2, TRUE), (7, 5, TRUE), -- Sala 7 (nivel 2)
+(8, 1, TRUE), (8, 4, TRUE), (8, 7, TRUE), -- Sala 8 (nivel 2)
+(9, 3, TRUE), (9, 6, TRUE), -- Sala 9 (nivel 2)
+(10, 5, TRUE), (10, 2, TRUE), -- Sala 10 (nivel 2)
+(11, 4, TRUE), (11, 6, TRUE), -- Sala 11 (nivel 2)
+(13, 2, TRUE), (13, 5, TRUE), (13, 7, TRUE), -- Sala 13 (nivel 3)
+(14, 3, TRUE), (14, 6, TRUE), -- Sala 14 (nivel 3)
+(15, 1, TRUE), (15, 4, TRUE), (15, 7, FALSE); -- Sala 15 (nivel 3)
 
 -- TABLA ENEMIGOS (se toma en cuenta que solo las sextas salas tienen jefes, la sexta sala del nivel 3 genera al jefe final en estado de ataque normal)
 INSERT INTO enemigos (tipo, salud, dano, movimiento, fase_ataque, velocidad_movimiento, recompensa_xp) VALUES
@@ -335,17 +335,17 @@ INSERT INTO objetos (nombre, tipo, afecta_jugador, efecto) VALUES
 
 -- OBJETOS SALAS:
 -- Suponiendo que tenemos salas con id_sala 1 a 10. Solo son dummies 
-INSERT INTO objetos_salas (id_sala, id_objeto) VALUES
-(1, 1),  -- Puerta en la sala 1
-(1, 2),  -- Caja en la sala 1
-(2, 3),  -- Tubería en la sala 2
-(3, 4),  -- Picos en la sala 3
-(4, 5),  -- Escalera en la sala 4
-(5, 6),  -- Botón en la sala 5
-(6, 1),  -- Puerta en la sala 6
-(7, 2),  -- Caja en la sala 7
-(8, 3),  -- Tubería en la sala 8
-(9, 4);  -- Picos en la sala 9
+INSERT INTO objetos_salas (id_sala, id_objeto, desbloquea_sala_final, estado) VALUES
+(1, 1, FALSE, 'desactivado'),  -- Puerta en la sala 1
+(1, 2, FALSE, 'NA'),  -- Caja en la sala 1
+(2, 3, FALSE, 'NA'),  -- Tubería en la sala 2
+(3, 4, FALSE, 'NA'),  -- Picos en la sala 3
+(4, 5, FALSE, 'NA'),  -- Escalera en la sala 4
+(5, 6, TRUE, 'activado'),  -- Botón en la sala 5
+(6, 1, FALSE, 'activado'),  -- Puerta en la sala 6
+(7, 2, FALSE, 'NA'),  -- Caja en la sala 7
+(8, 3, FALSE, 'NA'),  -- Tubería en la sala 8
+(9, 4, FALSE, 'NA');  -- Picos en la sala 9
 
 -- Estadísticas 
 INSERT INTO estadisticas (id_jugador, tiempo_mejor_partida, numero_muertes, enemigos_derrotados, dano_infligido, dano_recibido, partidas_completadas)  
@@ -464,4 +464,71 @@ INSERT INTO inventarios (id_jugador, id_arma_cuerpo, id_arma_distancia, estado_p
 (29, 1, 3, FALSE, 0),
 (30, 2, 4, TRUE, 60);
 
+-- TABLA INTERMEDIA PARTIDA_NIVEL_SALA:
 
+INSERT INTO partida_nivel_sala (id_partida, id_nivel, id_sala) VALUES
+
+-- Partida 1
+-- Nivel 1
+(1, 1, 1),
+(1, 1, 2),
+(1, 1, 3),
+(1, 1, 4),
+(1, 1, 5),
+(1, 1, 6),
+(1, 1, 7),
+(1, 1, 8),
+-- Nivel 2
+(1, 2, 9),
+(1, 2, 10),
+(1, 2, 11),
+(1, 2, 12),
+(1, 2, 13),
+(1, 2, 14),
+(1, 2, 15),
+-- Nivel 3
+(1, 3, 16),
+(1, 3, 17),
+(1, 3, 18),
+(1, 3, 19),
+(1, 3, 20),
+(1, 3, 21),
+(1, 3, 22),
+(1, 3, 23),
+(1, 3, 24),
+
+-- Partida 2
+-- Nivel 1
+(2, 4, 25),
+(2, 4, 26), 
+(2, 4, 27),
+(2, 4, 28),
+(2, 4, 29),
+(2, 4, 30),
+-- Nivel 2
+(2, 5, 31),
+(2, 5, 32),
+(2, 5, 33),
+(2, 5, 34),
+(2, 5, 35),
+(2, 5, 36),
+(2, 5, 37),
+(2, 5, 38),
+-- Nivel 3
+(2, 6, 39),
+(2, 6, 40),
+(2, 6, 41),
+(2, 6, 42),
+(2, 6, 43),
+(2, 6, 44),
+(2, 6, 45),
+
+-- Partida 3
+-- Nivel 1
+(3, 7, 46),
+(3, 7, 47),
+(3, 7, 48),
+(3, 7, 49),
+(3, 7, 50),
+(3, 7, 51),
+(3, 7, 52);
