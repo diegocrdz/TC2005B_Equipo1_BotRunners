@@ -21,6 +21,7 @@ class Player extends AnimatedObject {
         this.isAttacking = false;
         this.isShooting = false;
         this.isHit = false;
+        this.firstTimePlaying = true;
 
         // Double jump
         this.canDoubleJump = false;
@@ -37,16 +38,29 @@ class Player extends AnimatedObject {
         this.isPressingUp = false;
         this.isPressingDown = false;
 
+        // Weapon properties
+        this.weapons = {
+            // Basic weapons
+            arm: new Weapon("arm", 20, 500),
+            slow_gun: new Weapon("slowGun", 10, 800),
+            // Better wapons
+            romoticArm: new Weapon("romoticArm", 25, 250),
+            fast_gun: new Weapon("fastGun", 15, 400),
+        }
+        // Equip initial weapons
+        this.updateWeapons();
+
+        this.damage = 20;
+        this.attackCooldown = this.meleeWeapon.cooldown;
+        this.shootCooldown = this.gunWeapon.cooldown;
+
         // Player properties
         this.health = 100;
         this.maxHealth = 100;
-        this.damage = 20;
         this.resistance = 0;
         this.xp = 0;
         this.xpToNextLevel = 100;
         this.level = 0;
-        this.attackCooldown = 400;
-        this.shootCooldown = 400;
 
         // Sprite images to update depending on the level
         this.meleeSprite = null;
@@ -130,12 +144,34 @@ class Player extends AnimatedObject {
             this.land(); 
         }
 
+        // Update the weapons
+        this.updateWeapons();
+
         this.updateFrame(deltaTime);
     }
 
     draw(ctx, scale) {
         super.draw(ctx, scale);
         this.drawHitbox(ctx, scale);
+    }
+
+    updateWeapons() {
+        if (!this.firstTimePlaying) {
+            return;
+        }
+        if (level === 0) {
+            this.meleeWeapon = this.weapons.arm;
+            this.gunWeapon = this.weapons.slow_gun;
+        } else if (level === 1) {
+            this.meleeWeapon = this.weapons.arm;
+            this.gunWeapon = this.weapons.slow_gun;
+        } else {
+            this.firstTimePlaying = false;
+            this.meleeWeapon = this.weapons.romoticArm;
+            this.gunWeapon = this.weapons.fast_gun;
+        }
+        this.attackCooldown = this.meleeWeapon.cooldown;
+        this.shootCooldown = this.gunWeapon.cooldown;
     }
 
     // Start moving the player in a certain direction
@@ -429,6 +465,10 @@ class Player extends AnimatedObject {
     }
 
     updateSprites() {
+        if (!this.firstTimePlaying) {
+            return;
+        }
+        // Update the sprites based on the level
         if (level === 0 || level === 1) {
             this.meleeSprite = '../../assets/characters/skippy/skippy_1.png';
             this.gunSprite = '../../assets/characters/skippy/skippy_3.png';
@@ -448,7 +488,7 @@ class Player extends AnimatedObject {
             this.setSprite(this.meleeSprite, new Rect(0, 0, 24, 24));
         } else if (number === 2) {
             // The player cant select the gun in the first level
-            if (level === 0) {
+            if (level === 0 && this.firstTimePlaying) {
                 return;
             }
             this.selectedWeapon = 2;

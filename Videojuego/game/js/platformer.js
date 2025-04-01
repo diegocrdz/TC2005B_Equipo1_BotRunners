@@ -619,16 +619,22 @@ class Game {
         this.potionImage.draw(ctx, 1);
         
         //Draw the weapons
-        if (level === 0) {
-            this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1_locked.png');
-        }
-        else if (level === 1) {
-            this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
-        }
-        else {
+        if (this.player.firstTimePlaying) {
+            if (level === 0) {
+                this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1_locked.png');
+            }
+            else if (level === 1) {
+                this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
+            }
+            else {
+                this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
+                this.armImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
+            }
+        } else {
             this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
             this.armImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
         }
+        
         this.drawWeapons(ctx);
 
         // Draw the abilities
