@@ -283,7 +283,7 @@ class Game {
         console.log("Game resumed");
         this.chronometer.start();
     }
-
+    
     pauseGame() {
         this.state = 'paused';
         console.log("Game paused");
