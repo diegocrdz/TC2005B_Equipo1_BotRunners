@@ -1,3 +1,7 @@
+/*
+ * Buttons placed in the game to unlock the door to the boss room
+*/
+
 class Button extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super("blue", width, height, x, y, "button");

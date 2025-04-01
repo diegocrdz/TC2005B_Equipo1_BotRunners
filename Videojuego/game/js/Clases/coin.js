@@ -1,3 +1,8 @@
+/*
+ * Coins that the player can collect to gain experience points
+ * Coins are also dropped by enemies when they die
+*/
+
 class Coin extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super("yellow", width, height, x, y, "coin");

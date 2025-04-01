@@ -1,3 +1,7 @@
+/*
+ * Projectiles shot by the player when using the gun
+*/
+
 class Projectile extends GameObject {
     constructor(_color, width, height, x, y, _type, direction) {
         super("blue", width, height, x, y, "projectile");

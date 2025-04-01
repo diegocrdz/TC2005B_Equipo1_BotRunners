@@ -1,3 +1,7 @@
+/*
+ * Implementation of the player of the game
+*/
+
 // The project works only with very small values for velocities and acceleration
 const walkSpeed = 0.01;
 const initialJumpSpeed = -0.03;
@@ -43,6 +47,12 @@ class Player extends AnimatedObject {
         this.level = 0;
         this.attackCooldown = 400;
         this.shootCooldown = 400;
+
+        // Sprite images to update depending on the level
+        this.meleeSprite = null;
+        this.gunSprite = null;
+        this.attackSprite = null;
+        this.updateSprites(); // Update the sprites based on the level
 
         // Movement variables to define directions and animations
         this.movement = {
@@ -234,7 +244,7 @@ class Player extends AnimatedObject {
                 
                 let dashDistance = 5; // Total dash distance
                 let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
-                let step = 0.6; // Number of pixels that move in each frame
+                let step = 0.2; // Number of pixels that move in each frame
                 let moved = 0; // Tracks how many pixels the player has moved
         
                 let dashMove = () => {
@@ -242,7 +252,8 @@ class Player extends AnimatedObject {
                         let newXPosition = this.position.plus(new Vec(direction * step, 0)); //Calculates new position
         
                         // If there's a collision, the dash stops
-                        if (level.contact(newXPosition, this.size, 'wall')) {
+                        if (level.contact(newXPosition, this.size, 'wall')
+                            || (level.contact(newXPosition, this.size, 'box'))) {
                             this.isDashing = false;
                             return;
                         }
@@ -272,7 +283,7 @@ class Player extends AnimatedObject {
         let originalSize = this.size.x;
 
         // Change to the attack sprite and rect
-        this.setSprite('../../assets/characters/skippy/skippy_attack_1.png', new Rect(0, 0, 32, 24));
+        this.setSprite(this.attackSprite, new Rect(0, 0, 32, 24));
         this.size.x = 4; // Adjust the size to match the new sprite
 
         // Save the original hitbox size and position
@@ -294,7 +305,7 @@ class Player extends AnimatedObject {
             this.isAttacking = false;
             this.size.x = originalSize; // Adjust the size to match the new sprite
             // Restore the original sprite and rect
-            this.setSprite('../../assets/characters/skippy/skippy_1.png', new Rect(0, 0, 24, 24));
+            this.setSprite(this.meleeSprite, new Rect(0, 0, 24, 24));
             // Restore hitbox size and position
             this.hWidth = originalHWidth;
             this.offsetX = originalOffsetX;
@@ -390,12 +401,13 @@ class Player extends AnimatedObject {
             this.xpToNextLevel += 15;
             
             game.abilities.activate();
+            game.state = "abilities";
         }
     }
 
     die() {
         console.log("Player died");
-        restartRooms(true, 0, 6);
+        game.state = "gameover";
     }
 
     hit() {
@@ -416,14 +428,31 @@ class Player extends AnimatedObject {
         }, hitData.duration);
     }
 
+    updateSprites() {
+        if (level === 0 || level === 1) {
+            this.meleeSprite = '../../assets/characters/skippy/skippy_1.png';
+            this.gunSprite = '../../assets/characters/skippy/skippy_3.png';
+            this.attackSprite = '../../assets/characters/skippy/skippy_attack_1.png';
+        } else {
+            this.meleeSprite = '../../assets/characters/skippy/skippy_2.png';
+            this.gunSprite = '../../assets/characters/skippy/skippy_4.png';
+            this.attackSprite = '../../assets/characters/skippy/skippy_attack_2.png';
+        }
+    }
+
     selectWeapon(number) {
         let lastWeapon = this.selectedWeapon;
+
         if (number === 1) {
             this.selectedWeapon = 1;
-            this.setSprite('../../assets/characters/skippy/skippy_1.png', new Rect(0, 0, 24, 24));
+            this.setSprite(this.meleeSprite, new Rect(0, 0, 24, 24));
         } else if (number === 2) {
+            // The player cant select the gun in the first level
+            if (level === 0) {
+                return;
+            }
             this.selectedWeapon = 2;
-            this.setSprite('../../assets/characters/skippy/skippy_3.png', new Rect(0, 0, 24, 24));
+            this.setSprite(this.gunSprite, new Rect(0, 0, 24, 24));
         } else if (number === 3) {
             this.selectedWeapon = 3;
             setTimeout(() => {

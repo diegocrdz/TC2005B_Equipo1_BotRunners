@@ -1,3 +1,7 @@
+/*
+ * Actors of each level of the game
+*/
+
 class Level {
     constructor(plan) {
         // Split the plan string into a matrix of strings

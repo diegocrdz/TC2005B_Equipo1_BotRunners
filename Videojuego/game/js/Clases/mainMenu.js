@@ -1,0 +1,126 @@
+/*
+ * Implementation of the menu that appears when the game is paused.
+*/
+
+class MainMenu extends GameObject {
+    constructor(_color, width, height, x, y, _type) {
+        super(_color, width, height, x, y, "minimap");
+
+        this.background = new GameObject(null, canvasWidth, canvasHeight, 0, 0, 'background');
+        this.background.setSprite('../../assets/backgrounds/mainMenu.png');
+
+        this.title =  new GameObject(null, 515, 100, canvasWidth / 2 - 255, canvasHeight / 4 - 70, 'title');
+        this.title.setSprite('../../img/logo_overclocked.png');
+        
+        const buttonWidth = 200;
+        const buttonHeight = 50;
+
+        this.buttons = [
+            this.playButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                "play", "Jugar", "#c1cad6", "#c1cad6"),
+            this.optionsButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                "options", "Opciones", "#c1cad6", "#c1cad6"),
+            this.statisticsButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                "statistics", "Estadísticas", "#c1cad6", "#c1cad6"),
+            this.signUpButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                "signUp", "Iniciar Sesión", "#c1cad6", "#c1cad6"),
+        ];
+    }
+
+    draw(ctx) {
+        this.background.draw(ctx, 1); // Draw the background
+
+        // Draw the pause label
+        this.title.draw(ctx, 1);
+
+        // Define button positions
+        let initialButtonX = this.size.x / 2 - 100;
+        let initialButtonY = this.size.y / 3;
+        const spacing = 10; // Space between buttons
+
+        for (let i=0; i<this.buttons.length; i++) {
+            const button = this.buttons[i];
+
+            // Set the button position based on the index
+            button.position.x = initialButtonX;
+            button.position.y = initialButtonY + (i * (button.size.y + spacing)); // Add some space between buttons
+            
+            button.label.x = button.position.x + 10;
+            button.label.y = button.position.y + (button.size.y / 2) + 5;
+
+            if (button.isHovered) {
+                button.borderColor = "white"; // Change button color on hover
+                button.textColor = "white"; // Change text color on hover
+                
+            }
+            else {
+                button.borderColor = "#c1cad6"; // Change button color on hover
+                button.textColor = "#c1cad6";
+                button.color = "#5A5D8B"; // Reset button color
+            }
+
+            // Draw the button
+            button.draw(ctx);
+        }
+    }
+
+    // Check if the mouse is inside any button
+    checkHover(x, y) {
+        // Store the hovered button
+        let hoveredButton = null;
+        // Check if the mouse is inside any button
+        for (const button of this.buttons) {
+            const isHovered = button.isMouseInside( x, y);
+            button.isHovered = isHovered;
+            if (isHovered) {
+                hoveredButton = button;
+            }
+        }
+        return hoveredButton;
+    }
+
+    // Check if the mouse is clicked on any button
+    checkClick(x, y) {
+        for (const button of this.buttons) {
+            // Check if the mouse is inside the button
+            const isClicked = button.isMouseInside(x, y);
+            button.isPressed = isClicked;
+            if (isClicked) {
+                // Call the button action
+                this.buttonClicked(button.type);
+                // Return the clicked button if needed
+                return button;
+            }
+        }
+        // If no button was clicked, return null
+        return null;
+    }
+
+    // Button click actions
+    buttonClicked(buttonType) {
+        // Decide what to do based on the button type
+        switch (buttonType) {
+            case "play":
+                game.startCinematic();
+                break;
+            case "restart":
+                game.togglePause();
+                restartRooms(true, 0, 6);
+                break;
+            case "options":
+                // game.state = "options";
+                break;
+            case "menu":
+                // game.state = "menu";
+                break;
+            case "statistics":
+                // game.state = "statistics";
+                break;
+            case "signUp":
+                // game.state = "signUp";
+                break;
+            default:
+                break;
+        }
+    }
+}

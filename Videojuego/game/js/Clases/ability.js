@@ -1,3 +1,7 @@
+/*
+ * Abilities for the game
+*/
+
 class Ability{
     constructor(name, title, description, image){
         this.name = name;
@@ -87,16 +91,22 @@ class AbilityCard{
     constructor({position, urlSprite, image, title, description, ability}){
         this.position = position;
         this.urlSprite = urlSprite;
+        this.border = '../../../Videojuego/assets/objects/cardborder1.png';
         this.image = image;
         this.title = title;
         this.description = description;
         this.ability = ability; //reference to the ability object
+
+        this.width = canvasWidth - 610;
+        this.height = 320;
+
+        this.isHovered = false;
     }
 
     draw(){
         let card1 = new GameObject(null, 
-            canvasWidth - 610, //width
-            320,  //height
+            this.width, //width
+            this.height,  //height
              this.position.x + 10,  //x
              this.position.y, //y
             'background');
@@ -118,6 +128,28 @@ class AbilityCard{
                                     "11px monospace", "white", 120);
         card1Description.draw(ctx, this.description);
 
+        
+        this.drawBorder();
+        
+
+    }
+
+    drawBorder(){
+        let card1Border = new GameObject(null, this.width, this.height,
+            this.position.x + 10, this.position.y, 'background');
+
+        card1Border.setSprite(this.border);
+        if(this.isHovered){
+            card1Border.draw(ctx, 1);
+        }else{
+            return;
+        }
+
+    }
+
+    isMouseInside(x, y) {
+        return x > this.position.x && x < this.position.x + this.width &&
+               y > this.position.y && y < this.position.y + this.height;
     }
 
 }
@@ -150,7 +182,8 @@ class popUpAbility{
         this.abilityCards = []; //resets the ability cards
         let i = 0; //index 
 
-        while(this.randomAbilities.length < 3){
+        // loop to generate 3 random abilities and colors
+        while(this.randomAbilities.length < 3) {
             let randomA =  Math.floor(Math.random() * abilitiesList.length); //random number between 0 and the length of the abilities list
             let randomC; //random number between 0 and the length of the colors list
         
@@ -158,7 +191,7 @@ class popUpAbility{
             //also, since each ability needs a color inmediately and we can't skip it like we can do with the abilities
             do { 
                 randomC = Math.floor(Math.random() * colorList.length);
-            } while (this.randomColors.includes(colorList[randomC]));
+            } while (this.randomColors.includes(colorList[randomC]) && this.randomColors.length < 3); //while the color is already in the array and the array is less than 6
             
             this.randomColors.push(colorList[randomC]);
 
@@ -172,14 +205,10 @@ class popUpAbility{
                     title: this.randomAbilities[i].title, 
                     description: this.randomAbilities[i].description,
                     ability : this.randomAbilities[i]
-                    }));
-
+                }));
                 i++;
             }
-
-            
         }
-            
         this.isGenerated = true; //sets the isGenerated to true so it doesn't generate again
     }
 
@@ -188,6 +217,11 @@ class popUpAbility{
     show(){
         if(this.canBeShown){
             if (this.isGenerated) {
+                // Draw the background of the pause menu
+                ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+                // Fill the entire canvas
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                
                 this.backgroundImage.draw(ctx, 1);
     
                 for(let i = 0; i < this.abilityCards.length; i++){
@@ -212,5 +246,34 @@ class popUpAbility{
 
         this.generateAbilities();
     }
+
+    
+        // Check if the mouse is clicked on any button
+        checkClick(x, y) {
+            for (const AbilityCard of this.abilityCards) {
+                // Check if the mouse is inside the button
+                const isClicked = AbilityCard.isMouseInside(x, y);
+                if (isClicked) {
+                    // Call the button action
+                    AbilityCard.ability.effect(); // Call the effect of the ability
+                    // Return the clicked button if needed
+                }
+            }
+        }
+
+     // Check if the mouse is clicked on any button
+     checkHover(x, y) {
+        for (const AbilityCard of this.abilityCards) {
+            // Check if the mouse is inside the button
+            const isHovered = AbilityCard.isMouseInside(x, y);
+            if (isHovered) {
+                AbilityCard.isHovered = true; // Set the hovered state to true
+            }else{
+                AbilityCard.isHovered = false; // Set the hovered state to false
+            }
+        }
+    }
+    
 }
+
 
