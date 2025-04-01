@@ -2,38 +2,36 @@
  * Implementation of the menu that appears when the game is paused.
 */
 
-class PauseMenu extends GameObject {
+class MainMenu extends GameObject {
     constructor(_color, width, height, x, y, _type) {
-        super(_color, width, height, x, y, "pausemenu");
+        super(_color, width, height, x, y, "minimap");
 
-        this.pauseLabel = new TextLabel(this.size.x / 2 - 100,
-                                        this.size.y / 4,
-                                        "40px 'Press Start 2P'",
-                                        "white");
+        this.background = new GameObject(null, canvasWidth, canvasHeight, 0, 0, 'background');
+        this.background.setSprite('../../assets/backgrounds/mainMenu.png');
+
+        this.title =  new GameObject(null, 515, 100, canvasWidth / 2 - 255, canvasHeight / 4 - 70, 'title');
+        this.title.setSprite('../../img/logo_overclocked.png');
         
         const buttonWidth = 200;
         const buttonHeight = 50;
 
         this.buttons = [
-            this.continueButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
-                                                "continue", "Continuar", "black", "black"),
-            this.restartButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
-                                                "restart", "Reiniciar","black", "black"),
-            this.optionsButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
-                                                "options", "Opciones","black", "black"),
-            this.menuButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
-                                                "menu", "Menú", "black", "black"),
+            this.playButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                "play", "Jugar", "#c1cad6", "#c1cad6"),
+            this.optionsButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                "options", "Opciones", "#c1cad6", "#c1cad6"),
+            this.statisticsButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                "statistics", "Estadísticas", "#c1cad6", "#c1cad6"),
+            this.signUpButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                "signUp", "Iniciar Sesión", "#c1cad6", "#c1cad6"),
         ];
     }
 
     draw(ctx) {
-        // Draw the background of the pause menu
-        ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-        // Fill the entire canvas
-        ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
+        this.background.draw(ctx, 1); // Draw the background
 
         // Draw the pause label
-        this.pauseLabel.draw(ctx, "PAUSA");
+        this.title.draw(ctx, 1);
 
         // Define button positions
         let initialButtonX = this.size.x / 2 - 100;
@@ -51,17 +49,20 @@ class PauseMenu extends GameObject {
             button.label.y = button.position.y + (button.size.y / 2) + 5;
 
             if (button.isHovered) {
-                button.color = "white"; // Change button color on hover
+                button.borderColor = "white"; // Change button color on hover
+                button.textColor = "white"; // Change text color on hover
+                
             }
             else {
-                button.color = "lightgrey"; // Reset button color
+                button.borderColor = "#c1cad6"; // Change button color on hover
+                button.textColor = "#c1cad6";
+                button.color = "#5A5D8B"; // Reset button color
             }
 
             // Draw the button
             button.draw(ctx);
         }
     }
-    
 
     // Check if the mouse is inside any button
     checkHover(x, y) {
@@ -99,8 +100,8 @@ class PauseMenu extends GameObject {
     buttonClicked(buttonType) {
         // Decide what to do based on the button type
         switch (buttonType) {
-            case "continue":
-                game.togglePause();
+            case "play":
+                game.startCinematic();
                 break;
             case "restart":
                 game.togglePause();
@@ -111,6 +112,12 @@ class PauseMenu extends GameObject {
                 break;
             case "menu":
                 // game.state = "menu";
+                break;
+            case "statistics":
+                // game.state = "statistics";
+                break;
+            case "signUp":
+                // game.state = "signUp";
                 break;
             default:
                 break;

@@ -91,16 +91,22 @@ class AbilityCard{
     constructor({position, urlSprite, image, title, description, ability}){
         this.position = position;
         this.urlSprite = urlSprite;
+        this.border = '../../../Videojuego/assets/objects/cardborder1.png';
         this.image = image;
         this.title = title;
         this.description = description;
         this.ability = ability; //reference to the ability object
+
+        this.width = canvasWidth - 610;
+        this.height = 320;
+
+        this.isHovered = false;
     }
 
     draw(){
         let card1 = new GameObject(null, 
-            canvasWidth - 610, //width
-            320,  //height
+            this.width, //width
+            this.height,  //height
              this.position.x + 10,  //x
              this.position.y, //y
             'background');
@@ -122,6 +128,28 @@ class AbilityCard{
                                     "11px monospace", "white", 120);
         card1Description.draw(ctx, this.description);
 
+        
+        this.drawBorder();
+        
+
+    }
+
+    drawBorder(){
+        let card1Border = new GameObject(null, this.width, this.height,
+            this.position.x + 10, this.position.y, 'background');
+
+        card1Border.setSprite(this.border);
+        if(this.isHovered){
+            card1Border.draw(ctx, 1);
+        }else{
+            return;
+        }
+
+    }
+
+    isMouseInside(x, y) {
+        return x > this.position.x && x < this.position.x + this.width &&
+               y > this.position.y && y < this.position.y + this.height;
     }
 
 }
@@ -218,5 +246,34 @@ class popUpAbility{
 
         this.generateAbilities();
     }
+
+    
+        // Check if the mouse is clicked on any button
+        checkClick(x, y) {
+            for (const AbilityCard of this.abilityCards) {
+                // Check if the mouse is inside the button
+                const isClicked = AbilityCard.isMouseInside(x, y);
+                if (isClicked) {
+                    // Call the button action
+                    AbilityCard.ability.effect(); // Call the effect of the ability
+                    // Return the clicked button if needed
+                }
+            }
+        }
+
+     // Check if the mouse is clicked on any button
+     checkHover(x, y) {
+        for (const AbilityCard of this.abilityCards) {
+            // Check if the mouse is inside the button
+            const isHovered = AbilityCard.isMouseInside(x, y);
+            if (isHovered) {
+                AbilityCard.isHovered = true; // Set the hovered state to true
+            }else{
+                AbilityCard.isHovered = false; // Set the hovered state to false
+            }
+        }
+    }
+    
 }
+
 

@@ -163,9 +163,9 @@ class TextLabel {
         this.color = color;
     }
 
-    draw(ctx, text) {
+    draw(ctx, text, color) {
         ctx.font = this.font;
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = color || this.color;
         ctx.fillText(text, this.x, this.y);
     }
 }
@@ -225,15 +225,18 @@ class cardTextLabel extends TextLabel {
 // Buttons for the menu
 // This class will be used for the buttons in the pause and main menu
 class MenuButton extends GameObject {
-    constructor(color, width, height, x, y, type, text) {
+    constructor(color, width, height, x, y, type, text, textColor, borderColor) {
         super(color, width, height, x, y, type);
         this.text = text; // Button text
+        this.textColor = textColor; // Button text color
+        this.borderColor = borderColor; // Button border color
+
         this.isPressed = false; // Button state
         this.isHovered = false; // Button hover state
         this.label = new TextLabel(this.position.x + 10, // x
                                     this.position.y + (this.size.y / 2), // y
                                     "20px monospace", // Font
-                                    "black"); // Color
+                                    this.textColor); // Color
     }
 
     draw(ctx) {
@@ -242,13 +245,12 @@ class MenuButton extends GameObject {
         ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
         // Draw the button border
         this.lineWidth = 4;
-        ctx.strokeStyle = "black"; // Border color
+        ctx.strokeStyle = this.borderColor; // Border color
         ctx.strokeRect(this.position.x, this.position.y, this.size.x, this.size.y);
 
         // Draw the button label
-        this.label.draw(ctx, this.text);
+        this.label.draw(ctx, this.text, this.textColor);
 
-        this.hover();
     }
 
     // Check if the mouse is inside the button
@@ -256,15 +258,8 @@ class MenuButton extends GameObject {
         return x > this.position.x && x < this.position.x + this.size.x &&
                y > this.position.y && y < this.position.y + this.size.y;
     }
-    
-    // Change the button if its hovered
-    hover() {
-        if (this.isHovered) {
-            this.color = "white";
-        } else {
-            this.color = "lightgrey";
-        }
-    }
+
+
 }
 
 // Class for the bars in the game
