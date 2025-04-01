@@ -354,7 +354,8 @@ class Game {
 
         if (this.state === 'paused'
             || this.state === 'abilities'
-            || this.state === 'gameover') {
+            || this.state === 'gameover'
+            || this.state === 'mainMenu') {
             // Pause the game and do not update anything
             return;
         }
@@ -618,6 +619,16 @@ class Game {
         this.potionImage.draw(ctx, 1);
         
         //Draw the weapons
+        if (level === 0) {
+            this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1_locked.png');
+        }
+        else if (level === 1) {
+            this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
+        }
+        else {
+            this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
+            this.armImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
+        }
         this.drawWeapons(ctx);
 
         // Draw the abilities
@@ -860,6 +871,8 @@ function restartRooms(restartPlayer, levelNumer, numRooms) {
     if (!restartPlayer && savedPlayer) {
         game.player = savedPlayer;
         game.player.hasUsedPotion = false; // Reset the potion usage
+        // Update the player sprites
+        game.player.updateSprites();
     }
 
     // If the chronometer doesnt exist, create a new one
@@ -880,7 +893,9 @@ function setEventListeners() {
             }
             return;
         }
-
+        else if (game.state === 'mainMenu') {
+            return; // Block all actions
+        }
 
         if (event.code == "KeyW" || event.code == "Space") {
             game.player.jump();
@@ -924,7 +939,7 @@ function setEventListeners() {
 
         // Pause the game
         if (event.code == 'KeyP' || event.code == 'Escape') {
-            game.togglePause();
+            game.state = 'paused';
         }
 
         // Restart the game

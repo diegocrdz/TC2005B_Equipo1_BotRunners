@@ -16,9 +16,9 @@ class LooseMenu extends GameObject {
 
         this.buttons = [
             this.retryButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
-                                                "retry", "Reintentar"),
+                                                "retry", "Reintentar", "black", "black"),
             this.menuButton = new MenuButton(_color, buttonWidth, buttonHeight, 0, 0,
-                                                "menu", "Menú"),
+                                                "menu", "Menú", "black", "black"),
         ];
     }
 
@@ -98,7 +98,8 @@ class LooseMenu extends GameObject {
                 restartRooms(true, 0, 6);
                 break;
             case "menu":
-                // game.state = "menu";
+                restartRooms(true, 0, 6);
+                game.state = "mainMenu";
                 break;
             default:
                 break;

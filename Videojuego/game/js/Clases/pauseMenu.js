@@ -100,17 +100,17 @@ class PauseMenu extends GameObject {
         // Decide what to do based on the button type
         switch (buttonType) {
             case "continue":
-                game.togglePause();
+                game.state = "playing";
                 break;
             case "restart":
-                game.togglePause();
                 restartRooms(true, 0, 6);
                 break;
             case "options":
                 // game.state = "options";
                 break;
             case "menu":
-                // game.state = "menu";
+                restartRooms(true, 0, 6);
+                game.state = "mainMenu";
                 break;
             default:
                 break;
