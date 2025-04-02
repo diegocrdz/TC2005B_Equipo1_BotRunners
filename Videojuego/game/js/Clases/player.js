@@ -272,42 +272,47 @@ class Player extends AnimatedObject {
         }
     }
 
-    dash(level) {
-        if(this.canDash){
-            if (!this.isDashing) {
-                this.isDashing = true;
-                this.canDash = false;
+    dash(level, deltaTime) {
+        if(this.canDash && !this.isDashing){
+            // The player cant dash while already dashing
+            this.isDashing = true;
+            this.canDash = false;
+            
+            let dashDistance = 5; // Total dash distance
+            let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
+            let dashSpeed = 0.05; // Speed of the dash
+            let moved = 0; // Tracks how many pixels the player has moved
+            let step = dashSpeed * deltaTime; // Calculates the step size based on the speed and delta time
+
+            let dashMove = () => {
                 
-                let dashDistance = 5; // Total dash distance
-                let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
-                let step = 0.2; // Number of pixels that move in each frame
-                let moved = 0; // Tracks how many pixels the player has moved
-        
-                let dashMove = () => {
-                    if (moved < dashDistance) {
-                        let newXPosition = this.position.plus(new Vec(direction * step, 0)); //Calculates new position
-        
-                        // If there's a collision, the dash stops
-                        if (level.contact(newXPosition, this.size, 'wall')
-                            || (level.contact(newXPosition, this.size, 'box'))) {
-                            this.isDashing = false;
-                            return;
-                        }
-        
-                        this.position = newXPosition;
-                        moved += step;
-        
-                        requestAnimationFrame(dashMove); //Continues the dash "animation" in the next frame
+                if (moved < dashDistance) {
+                    //Calculates new position
+                    let newXPosition = this.position.plus(new Vec(direction * step, 0));
+    
+                    // If there's a collision, the dash stops
+                    if (level.contact(newXPosition, this.size, 'wall')
+                        || (level.contact(newXPosition, this.size, 'box'))) {
+                        this.isDashing = false;
+                        return;
                     }
-                };
-        
-                dashMove(); //initiates animated dash
-                
-                setTimeout(() => {
-                    this.isDashing = false;
-                    this.canDash = true;
-                }, 5000); // 5 second cooldown
-            }
+                    
+                    // Move the player
+                    this.position = newXPosition;
+                    moved += step;
+                    
+                    // Continues the dash "animation" in the next frame
+                    requestAnimationFrame(dashMove);
+                }
+            };
+    
+            dashMove(); //initiates animated dash
+            
+            // Set a timeout to reset the dash state
+            setTimeout(() => {
+                this.isDashing = false;
+                this.canDash = true;
+            }, 2000); // 2 second cooldown
         }
     }
 

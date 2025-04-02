@@ -13,6 +13,8 @@ let ctx;
 
 // The time at the previous frame
 let frameStart;
+// Time since the last frame
+let deltaTime = 0;
 
 // Variables for the game
 let game;
@@ -937,7 +939,7 @@ function setEventListeners() {
         }
 
         if(event.shiftKey){
-            game.player.dash(game.level);
+            game.player.dash(game.level, deltaTime);
         }
 
         // Attack with the melee weapon
@@ -1118,7 +1120,7 @@ function updateCanvas(frameTime) {
     if (frameStart === undefined) {
         frameStart = frameTime;
     }
-    let deltaTime = frameTime - frameStart;
+    deltaTime = frameTime - frameStart;
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     game.update(deltaTime);
