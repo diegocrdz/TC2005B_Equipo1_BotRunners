@@ -101,6 +101,7 @@ class PauseMenu extends GameObject {
         switch (buttonType) {
             case "continue":
                 game.state = "playing";
+                game.chronometer.start(); // Start the chronometer
                 break;
             case "restart":
                 restartRooms(true, 0, 6);

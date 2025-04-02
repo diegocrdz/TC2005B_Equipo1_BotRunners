@@ -23,7 +23,7 @@ class MainMenu extends GameObject {
             this.statisticsButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
                                                 "statistics", "Estadísticas", "#c1cad6", "#c1cad6"),
             this.signUpButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
-                                                "signUp", "Iniciar Sesión", "#c1cad6", "#c1cad6"),
+                                                "login", "Iniciar Sesión", "#c1cad6", "#c1cad6"),
         ];
     }
 
@@ -116,8 +116,8 @@ class MainMenu extends GameObject {
             case "statistics":
                 // game.state = "statistics";
                 break;
-            case "signUp":
-                // game.state = "signUp";
+            case "login":
+                game.state = "login";
                 break;
             default:
                 break;
