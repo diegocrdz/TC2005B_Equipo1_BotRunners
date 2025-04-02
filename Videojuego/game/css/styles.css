@@ -133,3 +133,50 @@ canvas {
   font-family: monospace;
   padding: 5px 20px;
 }
+
+/* Login */
+.login-container {
+  display: none; /* Oculta el contenedor por defecto */
+  color: white;
+  position: absolute; /* Posición absoluta en la pantalla */
+  top: 50%; /* Centrado vertical */
+  left: 50%; /* Centrado horizontal */
+  transform: translate(-50%, -50%); /* Centra el objeto por su mitad */
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 50px;
+  border: 2px solid white;
+  font-family: 'Press Start 2P';
+}
+.login-container h2 {
+  margin-bottom: 50px;
+}
+.login-container form {
+  display: flex;
+  flex-direction: column; /* Alinea los elementos en columna */
+  gap: 20px;
+}
+/* Estilo de los inputs */
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  padding: 10px;
+  border: 2px solid #434A5F;
+  background-color: #1c1e25;
+  color: white;
+  font-family: 'Press Start 2P';
+  font-size: 16px;
+}
+/* Estilo e botones */
+.login-container button {
+  padding: 10px;
+  border: 2px solid #434A5F;
+  background-color: #6C6EA0;
+  color: white;
+  font-family: 'Press Start 2P';
+  font-size: 16px;
+  cursor: pointer;
+}
+.login-container button:hover {
+  background-color: #ffcd81;
+  color: black;
+  transform: scale(1.05); /* Efecto de zoom */
+}

@@ -6,26 +6,11 @@
 class Chronometer {
     constructor() {
         this.$elapsedTime = document.querySelector("#elapsedTime"); //reference to the element in the html
-        this.idInterval = 0; //id of the interval
+        this.idInterval = null; //id of the interval
         this.initialTime = null; //initial time
         this.temporaryDifference = 0; //temporary difference
+        this.isRunning = false; //boolean to check if the chronometer is running
         this.init(); //initiates the chronometer
-
-        // Arrow function to refresh the displayed time
-        this.refreshTime = () => {
-
-            // if the initial time is not set, do nothing
-            if (!this.initialTime) {
-            return;
-            }
-            // Get the current time
-            const now = new Date();
-            // Calculate the difference between the current time and the initial time
-            const difference = now.getTime() - this.initialTime.getTime();
-            
-            // Update the elapsed time element in minutes and seconds
-            this.$elapsedTime.textContent = this.secondsToMinutes(Math.floor(difference / 1000));
-        }
     }
         
     addZeros(value) {
@@ -43,25 +28,56 @@ class Chronometer {
         return `${this.addZeros(minutes)}:${this.addZeros(seconds)}`; 
     }
 
+    // Arrow function to refresh the displayed time
+    refreshTime = () => {
+
+        // if the initial time is not set, do nothing
+        if (!this.initialTime) {
+            return;
+        }
+        // Get the current time
+        const now = new Date();
+        // Calculate the difference between the current time and the initial time
+        // Add the temporary difference to handle pause and resume
+        const difference = now.getTime() - this.initialTime.getTime() + this.temporaryDifference;
+        
+        // Update the elapsed time element in minutes and seconds
+        this.$elapsedTime.textContent = this.secondsToMinutes(Math.floor(difference / 1000));
+    }
+
     start(){
-        const now =  new Date(); // Get the current time
-        this.initialTime = new Date(now.getTime() - this.temporaryDifference); // Set the initial time
-        clearInterval(this.idInterval); 
+        // Check if the chronometer is already running
+        if (this.isRunning) {
+            return; // If it's running, do nothing
+        }
+        // Set the initial time to the current time
+        this.initialTime = new Date();
         // Set the interval to refresh the time every second
         this.idInterval = setInterval(this.refreshTime, 1000);
+        this.isRunning = true; // Set the chronometer as running
     }
 
     pause(){
-        // Calculates the temporary difference
-        this.temporaryDifference = new Date().getTime() - this.initialTime.getTime();
-        clearInterval(this.idInterval); 
+        // Check if the chronometer is not running
+        if (!this.isRunning) {
+            return; // If it's not running, do nothing
+        }
+        const now = new Date(); // Get the current time
+        // Calculate the temporary difference
+        // This is the time elapsed since the chronometer started
+        this.temporaryDifference += now.getTime() - this.initialTime.getTime();
+        // Clear the interval to stop refreshing the time
+        clearInterval(this.idInterval);
+        this.isRunning = false; // Set the chronometer as not running
     }
     
-
     reset(){
+        // Clear the interval to stop refreshing the time
         clearInterval(this.idInterval);
-        this.temporaryDifference = 0;
-        this.init(); //resets the time by calling init
+        this.temporaryDifference = 0; // Reset the temporary difference
+        this.initialTime = null; // Reset the initial time
+        this.isRunning = false; // Set the chronometer as not running
+        this.init(); // Reset the displayed time
     }
 
     init(){

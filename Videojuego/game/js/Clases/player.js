@@ -21,6 +21,7 @@ class Player extends AnimatedObject {
         this.isAttacking = false;
         this.isShooting = false;
         this.isHit = false;
+        this.firstTimePlaying = true;
 
         // Double jump
         this.canDoubleJump = false;
@@ -37,16 +38,29 @@ class Player extends AnimatedObject {
         this.isPressingUp = false;
         this.isPressingDown = false;
 
+        // Weapon properties
+        this.weapons = {
+            // Basic weapons
+            arm: new Weapon("arm", 20, 500),
+            slow_gun: new Weapon("slowGun", 10, 800),
+            // Better wapons
+            romoticArm: new Weapon("romoticArm", 25, 250),
+            fast_gun: new Weapon("fastGun", 15, 400),
+        }
+        // Equip initial weapons
+        this.updateWeapons();
+
+        this.damage = 20;
+        this.attackCooldown = this.meleeWeapon.cooldown;
+        this.shootCooldown = this.gunWeapon.cooldown;
+
         // Player properties
         this.health = 100;
         this.maxHealth = 100;
-        this.damage = 20;
         this.resistance = 0;
         this.xp = 0;
         this.xpToNextLevel = 100;
         this.level = 0;
-        this.attackCooldown = 400;
-        this.shootCooldown = 400;
 
         // Sprite images to update depending on the level
         this.meleeSprite = null;
@@ -130,12 +144,34 @@ class Player extends AnimatedObject {
             this.land(); 
         }
 
+        // Update the weapons
+        this.updateWeapons();
+
         this.updateFrame(deltaTime);
     }
 
     draw(ctx, scale) {
         super.draw(ctx, scale);
         this.drawHitbox(ctx, scale);
+    }
+
+    updateWeapons() {
+        if (!this.firstTimePlaying) {
+            return;
+        }
+        if (level === 0) {
+            this.meleeWeapon = this.weapons.arm;
+            this.gunWeapon = this.weapons.slow_gun;
+        } else if (level === 1) {
+            this.meleeWeapon = this.weapons.arm;
+            this.gunWeapon = this.weapons.slow_gun;
+        } else {
+            this.firstTimePlaying = false;
+            this.meleeWeapon = this.weapons.romoticArm;
+            this.gunWeapon = this.weapons.fast_gun;
+        }
+        this.attackCooldown = this.meleeWeapon.cooldown;
+        this.shootCooldown = this.gunWeapon.cooldown;
     }
 
     // Start moving the player in a certain direction
@@ -236,42 +272,47 @@ class Player extends AnimatedObject {
         }
     }
 
-    dash(level) {
-        if(this.canDash){
-            if (!this.isDashing) {
-                this.isDashing = true;
-                this.canDash = false;
+    dash(level, deltaTime) {
+        if(this.canDash && !this.isDashing){
+            // The player cant dash while already dashing
+            this.isDashing = true;
+            this.canDash = false;
+            
+            let dashDistance = 5; // Total dash distance
+            let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
+            let dashSpeed = 0.05; // Speed of the dash
+            let moved = 0; // Tracks how many pixels the player has moved
+            let step = dashSpeed * deltaTime; // Calculates the step size based on the speed and delta time
+
+            let dashMove = () => {
                 
-                let dashDistance = 5; // Total dash distance
-                let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
-                let step = 0.2; // Number of pixels that move in each frame
-                let moved = 0; // Tracks how many pixels the player has moved
-        
-                let dashMove = () => {
-                    if (moved < dashDistance) {
-                        let newXPosition = this.position.plus(new Vec(direction * step, 0)); //Calculates new position
-        
-                        // If there's a collision, the dash stops
-                        if (level.contact(newXPosition, this.size, 'wall')
-                            || (level.contact(newXPosition, this.size, 'box'))) {
-                            this.isDashing = false;
-                            return;
-                        }
-        
-                        this.position = newXPosition;
-                        moved += step;
-        
-                        requestAnimationFrame(dashMove); //Continues the dash "animation" in the next frame
+                if (moved < dashDistance) {
+                    //Calculates new position
+                    let newXPosition = this.position.plus(new Vec(direction * step, 0));
+    
+                    // If there's a collision, the dash stops
+                    if (level.contact(newXPosition, this.size, 'wall')
+                        || (level.contact(newXPosition, this.size, 'box'))) {
+                        this.isDashing = false;
+                        return;
                     }
-                };
-        
-                dashMove(); //initiates animated dash
-                
-                setTimeout(() => {
-                    this.isDashing = false;
-                    this.canDash = true;
-                }, 5000); // 5 second cooldown
-            }
+                    
+                    // Move the player
+                    this.position = newXPosition;
+                    moved += step;
+                    
+                    // Continues the dash "animation" in the next frame
+                    requestAnimationFrame(dashMove);
+                }
+            };
+    
+            dashMove(); //initiates animated dash
+            
+            // Set a timeout to reset the dash state
+            setTimeout(() => {
+                this.isDashing = false;
+                this.canDash = true;
+            }, 2000); // 2 second cooldown
         }
     }
 
@@ -395,10 +436,13 @@ class Player extends AnimatedObject {
 
     gainXp(amount) {
         this.xp += amount;
+        sfx.collect.play(); // Play the collect sound
         if (this.xp >= this.xpToNextLevel) {
             this.level++;
             this.xp = 0;
             this.xpToNextLevel += 15;
+
+            sfx.levelUp.play(); // Play the level up sound
             
             game.abilities.activate();
             game.state = "abilities";
@@ -406,6 +450,7 @@ class Player extends AnimatedObject {
     }
 
     die() {
+        sfx.gameOver.play(); // Play the game over sound
         console.log("Player died");
         game.state = "gameover";
     }
@@ -429,6 +474,10 @@ class Player extends AnimatedObject {
     }
 
     updateSprites() {
+        if (!this.firstTimePlaying) {
+            return;
+        }
+        // Update the sprites based on the level
         if (level === 0 || level === 1) {
             this.meleeSprite = '../../assets/characters/skippy/skippy_1.png';
             this.gunSprite = '../../assets/characters/skippy/skippy_3.png';
@@ -448,7 +497,7 @@ class Player extends AnimatedObject {
             this.setSprite(this.meleeSprite, new Rect(0, 0, 24, 24));
         } else if (number === 2) {
             // The player cant select the gun in the first level
-            if (level === 0) {
+            if (level === 0 && this.firstTimePlaying) {
                 return;
             }
             this.selectedWeapon = 2;

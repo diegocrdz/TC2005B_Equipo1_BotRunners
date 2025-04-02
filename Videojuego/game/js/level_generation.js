@@ -463,19 +463,25 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
 
 // List of generated levels
 let GAME_LEVELS = [];
-
+// Rooms to be generates
+let rooms;
+// Level of rooms in all levels
 let numRooms = 6;
-let levelGenerator = new LevelGenerator(numRooms);
-let rooms = levelGenerator.generate();
-console.log(rooms);
 
-// Fill the list of levels with the generated rooms
-for (let i = 0; i < rooms.size; i++) {
-    let level = generateRandomLevel(levelWidth, 16, 10, 1, 1, 3, rooms.get(i).type);
-    GAME_LEVELS.push(level);
-}
+function generateLevel(numRooms) {
+    GAME_LEVELS = []; // Reset the levels array
+    let levelGenerator = new LevelGenerator(numRooms);
+    rooms = levelGenerator.generate();
+    console.log(rooms);
 
-// Print the generated levels to the console
-for (let i = 0; i < GAME_LEVELS.length; i++) {
-    console.log(GAME_LEVELS[i]);
+    // Fill the list of levels with the generated rooms
+    for (let i = 0; i < rooms.size; i++) {
+        let level = generateRandomLevel(levelWidth, 16, 10, 1, 1, 3, rooms.get(i).type);
+        GAME_LEVELS.push(level);
+    }
+
+    // Print the generated levels to the console
+    for (let i = 0; i < GAME_LEVELS.length; i++) {
+        console.log(GAME_LEVELS[i]);
+    }
 }

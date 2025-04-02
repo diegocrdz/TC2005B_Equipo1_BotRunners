@@ -153,7 +153,7 @@ CREATE TABLE jugadores_habilidades (
   id_jugador SMALLINT UNSIGNED NOT NULL,
   id_habilidad SMALLINT UNSIGNED NOT NULL,
   PRIMARY KEY (id_jugador, id_habilidad),
-  FOREIGN KEY (id_jugador) REFERENCES jugadores(id_jugador),
+  FOREIGN KEY (id_jugador) REFERENCES jugador(id_jugador),
   FOREIGN KEY (id_habilidad) REFERENCES habilidades(id_habilidad)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -168,7 +168,7 @@ CREATE TABLE inventarios (
   estado_pocion BOOL,
   curacion_pocion SMALLINT UNSIGNED NOT NULL,
   PRIMARY KEY (id_jugador),
-  FOREIGN KEY (id_jugador) REFERENCES jugadores(id_jugador),
+  FOREIGN KEY (id_jugador) REFERENCES jugador(id_jugador),
   FOREIGN KEY (id_arma_cuerpo) REFERENCES armas(id_arma),
   FOREIGN KEY (id_arma_distancia) REFERENCES armas(id_arma)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -180,6 +180,7 @@ CREATE TABLE inventarios (
 CREATE TABLE enemigos_salas (
   id_sala SMALLINT UNSIGNED NOT NULL,
   id_enemigo SMALLINT UNSIGNED NOT NULL,
+  enemigos_derrotados BOOL,
   PRIMARY KEY (id_sala, id_enemigo),
   FOREIGN KEY (id_sala) REFERENCES salas(id_sala),
   FOREIGN KEY (id_enemigo) REFERENCES enemigos(id_enemigo)
@@ -192,7 +193,23 @@ CREATE TABLE enemigos_salas (
 CREATE TABLE objetos_salas (
   id_sala SMALLINT UNSIGNED NOT NULL,
   id_objeto SMALLINT UNSIGNED NOT NULL,
+  desbloquea_sala_final BOOL,
+  estado ENUM('NA', 'activado', 'desactivado'),
   PRIMARY KEY (id_sala, id_objeto),  -- Clave primaria compuesta
   FOREIGN KEY (id_sala) REFERENCES salas(id_sala),
   FOREIGN KEY (id_objeto) REFERENCES objetos(id_objeto)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Estructura para la tabla partida_nivel_sala
+--
+
+CREATE TABLE partida_nivel_sala (
+  id_partida SMALLINT UNSIGNED NOT NULL,
+  id_nivel SMALLINT UNSIGNED NOT NULL,
+  id_sala SMALLINT UNSIGNED NOT NULL,
+  PRIMARY KEY (id_partida, id_nivel, id_sala),  -- Clave primaria compuesta
+  FOREIGN KEY (id_partida) REFERENCES partidas(id_partida),
+  FOREIGN KEY (id_nivel) REFERENCES niveles(id_nivel),
+  FOREIGN KEY (id_sala) REFERENCES salas(id_sala)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

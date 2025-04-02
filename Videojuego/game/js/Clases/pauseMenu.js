@@ -85,6 +85,7 @@ class PauseMenu extends GameObject {
             const isClicked = button.isMouseInside(x, y);
             button.isPressed = isClicked;
             if (isClicked) {
+                sfx.click.play(); // Play the click sound
                 // Call the button action
                 this.buttonClicked(button.type);
                 // Return the clicked button if needed
@@ -101,6 +102,7 @@ class PauseMenu extends GameObject {
         switch (buttonType) {
             case "continue":
                 game.state = "playing";
+                game.chronometer.start(); // Start the chronometer
                 break;
             case "restart":
                 restartRooms(true, 0, 6);

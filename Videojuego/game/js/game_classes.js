@@ -250,7 +250,6 @@ class MenuButton extends GameObject {
 
         // Draw the button label
         this.label.draw(ctx, this.text, this.textColor);
-
     }
 
     // Check if the mouse is inside the button
@@ -258,8 +257,6 @@ class MenuButton extends GameObject {
         return x > this.position.x && x < this.position.x + this.size.x &&
                y > this.position.y && y < this.position.y + this.size.y;
     }
-
-
 }
 
 // Class for the bars in the game

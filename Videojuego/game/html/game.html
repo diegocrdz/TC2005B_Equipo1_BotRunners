@@ -9,6 +9,7 @@
 
         <!-- Classes of the game -->
         <script src="../js/game_classes.js"></script>
+        <script src="../js/Clases/weapon.js"></script>
         <script src="../js/Clases/player.js"></script>
         <script src="../js/Clases/enemies.js"></script>
         <script src="../js/Clases/ability.js"></script>
@@ -22,6 +23,7 @@
         <script src="../js/Clases/pauseMenu.js"></script>
         <script src="../js/Clases/looseMenu.js"></script>
         <script src="../js/Clases/mainMenu.js"></script>
+        <script src="../js/sfx.js"></script>
 
         <!-- Main scripts of the game -->
         <script src="../js/platformer.js"></script>
@@ -33,12 +35,23 @@
             <img src="../../img/logo_overclocked.png" alt="overclocked-logo">
             <nav>
                 <a href="../../../Web/HTML/inicio.html">Inicio</a>
-                <a href = "../../Videojuego/game/html/game.html">Jugar</a>
+                <a href = "game.html">Jugar</a>
                 <a href="../../../Web/HTML/creditos.html">Créditos</a>
             </nav>
         </header>
 
         <canvas id="canvas"></canvas>
+
+        <div class="login-container">
+            <button id="backButton">X</button>
+            <h2>Iniciar sesión</h2>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Usuario" required>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button id="loginButton" type="submit">Iniciar sesión</button>
+                <button id="registerButton" type="submit">Registrarse</button>
+            </form>
+        </div>
 
         <div id="timerContainer">
             <h2 id = "elapsedTime"></h2>
