@@ -50,6 +50,8 @@ class Game {
         this.looseMenu = new LooseMenu(null, canvasWidth, canvasHeight, 0, 0, 'loosemenu');
         // Main menu
         this.mainMenu = new MainMenu(null, canvasWidth, canvasHeight, 0, 0, 'mainmenu');
+        // Sign up menu
+        this.signUpMenu = new SignUpMenu(null, canvasWidth, canvasHeight, 0, 0, 'signupmenu');
 
         // List of projectiles
         this.projectiles = [];
@@ -355,7 +357,8 @@ class Game {
         if (this.state === 'paused'
             || this.state === 'abilities'
             || this.state === 'gameover'
-            || this.state === 'mainMenu') {
+            || this.state === 'mainMenu'
+            || this.state === 'signUp') {
             // Pause the game and do not update anything
             return;
         }
@@ -659,6 +662,9 @@ class Game {
         } else if(this.state === 'mainMenu') { 
             // Draw the main menu
             this.mainMenu.draw(ctx);
+        } else if(this.state === 'signUp') {
+            // Draw the sign up menu
+            this.signUpMenu.draw(ctx);
         }
     }
     
@@ -893,7 +899,7 @@ function setEventListeners() {
             }
             return;
         }
-        else if (game.state === 'mainMenu') {
+        else if (game.state === 'mainMenu' || game.state === 'signUp') {
             return; // Block all actions
         }
 
@@ -1001,6 +1007,11 @@ function setEventListeners() {
             const mouseY = getMousePosition(event).y;
             game.mainMenu.checkClick(mouseX, mouseY);
         }
+        if (game.state === 'signUp') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.signUpMenu.checkClick(mouseX, mouseY);
+        }
         if (game.state === 'paused') {
             const mouseX = getMousePosition(event).x;
             const mouseY = getMousePosition(event).y;
@@ -1028,6 +1039,11 @@ function setEventListeners() {
             const mouseX = getMousePosition(event).x;
             const mouseY = getMousePosition(event).y;
             game.mainMenu.checkHover(mouseX, mouseY);
+        }
+        if( game.state === 'signUp') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.signUpMenu.checkHover(mouseX, mouseY);
         }
         if (game.state === 'paused') {
             const mouseX = getMousePosition(event).x;

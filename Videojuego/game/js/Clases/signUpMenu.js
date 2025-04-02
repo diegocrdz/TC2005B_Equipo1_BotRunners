@@ -2,39 +2,44 @@
  * Implementation of the menu that appears when the game is paused.
 */
 
-class MainMenu extends GameObject {
+class SignUpMenu extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super(_color, width, height, x, y, "minimap");
 
         this.background = new GameObject(null, canvasWidth, canvasHeight, 0, 0, 'background');
-        this.background.setSprite('../../assets/backgrounds/mainMenu.png');
+        this.background.setSprite('../../assets/backgrounds/signupbackground.png');
 
-        this.title =  new GameObject(null, 515, 100, canvasWidth / 2 - 255, canvasHeight / 4 - 70, 'title');
-        this.title.setSprite('../../img/logo_overclocked.png');
+        this.signUpLabel = new TextLabel(this.size.x / 2 - 278,
+            this.size.y / 4,
+            "40px 'Press Start 2P'",
+            "#272b36");
         
-        const buttonWidth = 200;
+        const buttonWidth = 300;
         const buttonHeight = 50;
 
         this.buttons = [
-            this.playButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
-                                                "play", "Jugar", "#c1cad6", "#c1cad6"),
-            this.optionsButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
-                                                "options", "Opciones", "#c1cad6", "#c1cad6"),
-            this.statisticsButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
-                                                "statistics", "Estadísticas", "#c1cad6", "#c1cad6"),
+            this.usernameButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                    "username", "Usuario", "white", "#c1cad6"),
+            this.passwordButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                    "password", "Contraseña", "white", "#c1cad6"),
             this.signUpButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
-                                                "signUp", "Iniciar Sesión", "#c1cad6", "#c1cad6"),
+                                                    "signUp", "Iniciar Sesión", "white", "#c1cad6"),
+            this.registerButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
+                                                    "register", "Registrarse", "white", "#c1cad6"),
         ];
+
+        this.returnButton  = new MenuButton(null, 200, buttonHeight, 30, canvasHeight - 80,
+                                                    "return", "Regresar", "white", "#c1cad6");
     }
 
     draw(ctx) {
         this.background.draw(ctx, 1); // Draw the background
-
         // Draw the pause label
-        this.title.draw(ctx, 1);
+        this.signUpLabel.draw(ctx, 'INICIAR SESIÓN');
+        this.returnButton.draw(ctx); // Draw the return button
 
         // Define button positions
-        let initialButtonX = this.size.x / 2 - 100;
+        let initialButtonX = this.size.x / 2 - 150;
         let initialButtonY = this.size.y / 3;
         const spacing = 10; // Space between buttons
 
@@ -56,11 +61,22 @@ class MainMenu extends GameObject {
             else {
                 button.borderColor = "#c1cad6"; // Change button color on hover
                 button.textColor = "#c1cad6";
-                button.color = "#5A5D8B"; // Reset button color
+                button.color = "#272b36"; // Reset button color
             }
 
             // Draw the button
             button.draw(ctx);
+        }
+
+        if (this.returnButton.isHovered) {
+            this.returnButton.borderColor = "white"; // Change button color on hover
+            this.returnButton.textColor = "white"; // Change text color on hover
+            
+        }
+        else {
+            this.returnButton.borderColor = "#c1cad6"; // Change button color on hover
+            this.returnButton.textColor = "#c1cad6";
+            this.returnButton.color = "#272b36"; // Reset button color
         }
     }
 
@@ -76,7 +92,14 @@ class MainMenu extends GameObject {
                 hoveredButton = button;
             }
         }
+    
+        const isHovered = this.returnButton.isMouseInside( x, y);
+        this.returnButton.isHovered = isHovered;
+        if (isHovered) {
+            hoveredButton = this.returnButton;
+        }
         return hoveredButton;
+
     }
 
     // Check if the mouse is clicked on any button
@@ -92,6 +115,11 @@ class MainMenu extends GameObject {
                 return button;
             }
         }
+        const isClicked = this.returnButton.isMouseInside( x, y);
+        this.returnButton.isPressed = isClicked;
+        if (isClicked) {
+            this.buttonClicked(this.returnButton.type);
+        }
         // If no button was clicked, return null
         return null;
     }
@@ -100,24 +128,12 @@ class MainMenu extends GameObject {
     buttonClicked(buttonType) {
         // Decide what to do based on the button type
         switch (buttonType) {
-            case "play":
-                game.startCinematic();
-                break;
-            case "restart":
-                game.togglePause();
-                restartRooms(true, 0, 6);
-                break;
-            case "options":
-                // game.state = "options";
-                break;
-            case "menu":
-                // game.state = "menu";
-                break;
-            case "statistics":
-                // game.state = "statistics";
-                break;
             case "signUp":
-                game.state = "signUp";
+                break;
+            case "register":
+                break;
+            case "return":
+                game.state = "mainMenu";
                 break;
             default:
                 break;
