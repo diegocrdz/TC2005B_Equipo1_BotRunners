@@ -431,10 +431,13 @@ class Player extends AnimatedObject {
 
     gainXp(amount) {
         this.xp += amount;
+        sfx.collect.play(); // Play the collect sound
         if (this.xp >= this.xpToNextLevel) {
             this.level++;
             this.xp = 0;
             this.xpToNextLevel += 15;
+
+            sfx.levelUp.play(); // Play the level up sound
             
             game.abilities.activate();
             game.state = "abilities";
@@ -442,6 +445,7 @@ class Player extends AnimatedObject {
     }
 
     die() {
+        sfx.gameOver.play(); // Play the game over sound
         console.log("Player died");
         game.state = "gameover";
     }

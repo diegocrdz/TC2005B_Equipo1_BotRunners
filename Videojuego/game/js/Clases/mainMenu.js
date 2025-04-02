@@ -86,6 +86,7 @@ class MainMenu extends GameObject {
             const isClicked = button.isMouseInside(x, y);
             button.isPressed = isClicked;
             if (isClicked) {
+                sfx.click.play(); // Play the click sound
                 // Call the button action
                 this.buttonClicked(button.type);
                 // Return the clicked button if needed

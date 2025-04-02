@@ -359,7 +359,8 @@ class Game {
             || this.state === 'abilities'
             || this.state === 'gameover'
             || this.state === 'mainMenu'
-            || this.state === 'login') {
+            || this.state === 'login'
+            || this.state === 'options') {
             // Pause the game and do not update anything
             this.chronometer.pause(); // Pause the chronometer
             return;
@@ -962,6 +963,7 @@ function setEventListeners() {
         // Pause the game
         if (event.code == 'KeyP' || event.code == 'Escape') {
             game.state = 'paused';
+            sfx.pause.play(); // Play the pause sound
         }
 
         // Restart the game

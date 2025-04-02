@@ -254,6 +254,7 @@ class popUpAbility{
                 // Check if the mouse is inside the button
                 const isClicked = AbilityCard.isMouseInside(x, y);
                 if (isClicked) {
+                    sfx.click.play(); // Play the click sound
                     // Call the button action
                     AbilityCard.ability.effect(); // Call the effect of the ability
                     // Return the clicked button if needed
