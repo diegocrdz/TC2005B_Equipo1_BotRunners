@@ -147,6 +147,13 @@ class Game {
         this.musicFinalBoss = new Audio('../../../Videojuego/assets/Sounds/music/final_boss.mp3');
         this.musicFinalBoss.loop = true; 
 
+        //menus
+        this.musicMenu = new Audio('../../../Videojuego/assets/Sounds/music/menu.ogg');
+        this.musicMenu.loop = true; 
+
+        this.musicPause = new Audio('../../../Videojuego/assets/Sounds/music/pause.ogg');
+        this.musicPause.loop = true; 
+
 
         // Weapon background and selection images
         this.weaponBackgroundImage = new GameObject(null, 70, 70, 0, 0, 'ui');
@@ -272,18 +279,6 @@ class Game {
        
     }
 
-    pauseGame() {
-        this.state = 'paused';
-        console.log("Game paused");
-        this.chronometer.pause();
-    }
-
-    resumeGame() {
-        this.state = 'playing';
-        console.log("Game resumed");
-        this.chronometer.start();
-    }
-    
     pauseGame() {
         this.state = 'paused';
         console.log("Game paused");
@@ -698,6 +693,28 @@ class Game {
         // Draw the minimap and chronometer
         this.topRightMenu.draw(ctx);
 
+        switch(level){
+            case 0:
+                if (this.state === 'paused'){
+                    this.musicLevel1.pause();
+                    this.musicPause.play();
+                }
+                else if (this.state === 'playing'){
+                    this.musicLevel1.play();
+                    this.musicPause.pause();              
+                }
+            case 1:
+                if (this.state === 'paused'){
+                    this.musicLevel2.pause();
+                    this.musicPause.play();
+                }
+                else if (this.state === 'playing'){
+                    this.musicLevel2.play();
+                    this.musicPause.pause();              
+                }
+                break;
+        }
+
         if (this.state === 'paused') {
             // Pause the game and do not update anything
             this.pauseMenu.draw(ctx);
@@ -720,13 +737,15 @@ class Game {
         this.state = this.paused ? 'paused' : 'playing'; // Update the game state
 
         if(this.paused){
-            this.chronometer.pause(); //pauses chronometer
+            this.chronometer.pause(); //pauses chronometer 
         } else{
             this.chronometer.start(); //resumes chronometer
-        }
-
         console.log(this.paused ? "Game paused" : "Game resumed");
+       
+        }
     }
+
+
 
     // Increase the stats of the enemies depending on the level of the game
     adjustDificulty() {
