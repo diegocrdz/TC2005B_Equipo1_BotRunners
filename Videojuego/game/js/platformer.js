@@ -130,36 +130,6 @@ class Game {
                                         'potion');
         this.potionImage.setSprite('../../assets/objects/battery_full.png');
 
-        // Load the sounds
-
-        //Level music:
-        this.musicLevel1 = new Audio('../../../Videojuego/assets/Sounds/music/level_1.mp3');
-        this.musicLevel1.loop = true; 
-
-        this.musicLevel2 = new Audio('../../../Videojuego/assets/Sounds/music/level_2.ogg');
-        this.musicLevel2.loop = true; 
-
-        this.musicLevel3 = new Audio('../../../Videojuego/assets/Sounds/music/level_3.ogg');
-        this.musicLevel3.loop = true; 
-
-        //boss music:
-        this.musicBoss1 = new Audio('../../../Videojuego/assets/Sounds/music/boss_1.ogg');
-        this.musicBoss1.loop = true; 
-
-        this.musicBoss2 = new Audio('../../../Videojuego/assets/Sounds/music/boss_2.ogg');
-        this.musicBoss2.loop = true; 
-
-        this.musicFinalBoss = new Audio('../../../Videojuego/assets/Sounds/music/final_boss.mp3');
-        this.musicFinalBoss.loop = true; 
-
-        //menus
-        this.musicMenu = new Audio('../../../Videojuego/assets/Sounds/music/menu.ogg');
-        this.musicMenu.loop = true; 
-
-        this.musicPause = new Audio('../../../Videojuego/assets/Sounds/music/pause.ogg');
-        this.musicPause.loop = true; 
-
-
         // Weapon background and selection images
         this.weaponBackgroundImage = new GameObject(null, 70, 70, 0, 0, 'ui');
         this.weaponBackgroundImage.setSprite('../../../Videojuego/assets/objects/gray_weapon_background.png');
@@ -227,7 +197,7 @@ class Game {
                 this.weaponSelectionImage.draw(ctx, 1);
             }
         }
-
+        
         this.drawWeapons = (ctx) => {
             this.armImage.draw(ctx, 1);
             this.slowPistolImage.draw(ctx, 1);
@@ -276,12 +246,6 @@ class Game {
             clearTimeout(this.cinematicTimer);
             this.startGame();
         }
-        // MUSIC LEVEL 1
-        console.log("Reproduciendo música del nivel 1");
-        this.musicLevel1.play().catch(error => {
-            console.error("Error al reproducir el audio:", error);
-        });
-       
     }
 
     pauseGame() {
@@ -338,16 +302,6 @@ class Game {
                 return;
             }
         }
-
-
-        if (levelNumber === 5) {
-            this.musicBoss1.play();
-            this.musicLevel1.pause();
-        } else {
-            this.musicBoss1.pause(); // Pausa la música si no es el primer nivel
-            this.musicLevel1.play();
-        }
-
 
         this.level = new Level(GAME_LEVELS[levelNumber]); // Create a new level
         this.levelNumber = levelNumber;
@@ -419,6 +373,41 @@ class Game {
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
         }
+
+        //music
+        if (this.state = 'playing'){
+            switch(level){
+                case 0:
+                    music.level1.play();
+                    if (this.levelNumber === 5 && level === 0){
+                        music.level1.pause();
+                        music.musicBoss1.play();
+                    }
+                    else{
+                        music.musicBoss1.pause();
+                    }
+                    break;
+                case 1:
+                    music.level2.play();
+                    music.level1.pause();
+                    if (this.levelNumber === 5 && level === 1){
+                        music.level2.pause();
+                        music.musicBoss2.play();
+                    }
+                    break;
+                case 2:
+                    music.level3.play();
+                    music.level2.pause();
+                    music.musicBoss2.pause();
+                    if (this.levelNumber === 5 && level === 2){
+                        music.level3.pause();
+                        music.musicFinalBoss.play();
+                    }
+                    break;                
+            }
+        }
+        
+        
         
         // Update projectiles
         this.projectiles.forEach(projectile => projectile.update(this.level, deltaTime));
@@ -711,28 +700,6 @@ class Game {
         // Draw the minimap and chronometer
         this.topRightMenu.draw(ctx);
 
-        switch(level){
-            case 0:
-                if (this.state === 'paused'){
-                    this.musicLevel1.pause();
-                    this.musicPause.play();
-                }
-                else if (this.state === 'playing'){
-                    this.musicLevel1.play();
-                    this.musicPause.pause();              
-                }
-            case 1:
-                if (this.state === 'paused'){
-                    this.musicLevel2.pause();
-                    this.musicPause.play();
-                }
-                else if (this.state === 'playing'){
-                    this.musicLevel2.play();
-                    this.musicPause.pause();              
-                }
-                break;
-        }
-
         if (this.state === 'paused') {
             // Pause the game and do not update anything
             this.pauseMenu.draw(ctx);
@@ -764,15 +731,13 @@ class Game {
         this.state = this.paused ? 'paused' : 'playing'; // Update the game state
 
         if(this.paused){
-            this.chronometer.pause(); //pauses chronometer 
+            this.chronometer.pause(); //pauses chronometer
         } else{
             this.chronometer.start(); //resumes chronometer
-        console.log(this.paused ? "Game paused" : "Game resumed");
-       
         }
+
+        console.log(this.paused ? "Game paused" : "Game resumed");
     }
-
-
 
     // Increase the stats of the enemies depending on the level of the game
     adjustDificulty() {
@@ -910,7 +875,7 @@ function init() {
 
 function gameStart() {
     // Set the global variable of level to 0
-    level = 0;
+    level = 1;
 
     // List of generated levels
     generateLevel(6) // Generate level with 6 rooms
