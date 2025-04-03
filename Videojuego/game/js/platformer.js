@@ -403,6 +403,9 @@ class Game {
                         music.level3.pause();
                         music.musicFinalBoss.play();
                     }
+                    if (this.levelNumber !==5){
+                        music.musicFinalBoss.pause();
+                    }
                     break;                
             }
         }
