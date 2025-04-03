@@ -13,6 +13,8 @@ let ctx;
 
 // The time at the previous frame
 let frameStart;
+// Time since the last frame
+let deltaTime = 0;
 
 // Variables for the game
 let game;
@@ -42,6 +44,9 @@ class Game {
         this.cinematicTimer = undefined;
         this.cinematicSkipped = false;
         this.labelSkip = new TextLabel(canvasWidth / 2 - 150, canvasHeight - 40, "20px monospace", "white");
+        // Win cinematic properties
+        this.winImage = new GameObject(null, canvasWidth, canvasHeight, 0, 0, 'cinematic');
+        this.winImage.setSprite('../../assets/cinematics/win.png');
         // Minimap and chronometer menu
         this.topRightMenu = new TopRightMenu(null, 200, 130, canvasWidth - 200, 0, 'trmenu');
         // Pause menu
@@ -260,6 +265,7 @@ class Game {
     startGame() {
         this.state = 'playing';
         console.log("Game started");
+        this.chronometer.reset();
         this.chronometer.start();
     }
 
@@ -295,7 +301,6 @@ class Game {
                 console.log("You win");
                 this.state = 'win';
                 this.levelNumber = 0;
-                restartRooms(false, 0, 6);
                 return;
             }
         }
@@ -358,8 +363,10 @@ class Game {
             || this.state === 'abilities'
             || this.state === 'gameover'
             || this.state === 'mainMenu'
-            || this.state === 'signUp') {
+            || this.state === 'login'
+            || this.state === 'options') {
             // Pause the game and do not update anything
+            this.chronometer.pause(); // Pause the chronometer
             return;
         }
 
@@ -548,6 +555,10 @@ class Game {
             this.cinematicImage.draw(ctx, 1);
             return;
         }
+        else if (this.state === 'win') {
+            this.winImage.draw(ctx, 1);
+            return;
+        }
 
         // First draw the background tiles
         for (let actor of this.actors) {
@@ -622,16 +633,22 @@ class Game {
         this.potionImage.draw(ctx, 1);
         
         //Draw the weapons
-        if (level === 0) {
-            this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1_locked.png');
-        }
-        else if (level === 1) {
-            this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
-        }
-        else {
+        if (this.player.firstTimePlaying) {
+            if (level === 0) {
+                this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1_locked.png');
+            }
+            else if (level === 1) {
+                this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
+            }
+            else {
+                this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
+                this.armImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
+            }
+        } else {
             this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
             this.armImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
         }
+        
         this.drawWeapons(ctx);
 
         // Draw the abilities
@@ -659,12 +676,18 @@ class Game {
         } else if (this.state === 'gameover') {
             // Draw the game over menu
             this.looseMenu.draw(ctx);
-        } else if(this.state === 'mainMenu') { 
+        } else if (this.state === 'mainMenu') { 
             // Draw the main menu
             this.mainMenu.draw(ctx);
-        } else if(this.state === 'signUp') {
-            // Draw the sign up menu
-            this.signUpMenu.draw(ctx);
+            // Hide the login container
+            const loginContainer = document.querySelector('.login-container');
+            loginContainer.style.display = 'none'; // Show the login container
+        } else if (this.state === 'login') {
+            // Draw the login menu over the game
+            const loginContainer = document.querySelector('.login-container');
+            loginContainer.style.display = 'block'; // Show the login container
+            // Keep the main menu displayed
+            this.mainMenu.draw(ctx);
         }
     }
     
@@ -821,6 +844,9 @@ function gameStart() {
     // Set the global variable of level to 0
     level = 0;
 
+    // List of generated levels
+    generateLevel(6) // Generate level with 6 rooms
+
     // Register the game object, which creates all other objects
     game = new Game('mainMenu', new Level(GAME_LEVELS[0])); //main menu
 
@@ -842,29 +868,16 @@ function restartRooms(restartPlayer, levelNumer, numRooms) {
 
     // Check if the player should be restarted
     let savedPlayer = null;
+    let savedChronometer = null;
     if (!restartPlayer) {
         // Save the current player
         savedPlayer = game.player;
+        // Save the current chronometer
+        savedChronometer = game.chronometer;
     }
     
     // Generate a new set of rooms
-    // Clear the list of levels
-    GAME_LEVELS = [];
-    numRooms = 6;
-    levelGenerator = new LevelGenerator(numRooms);
-    rooms = levelGenerator.generate();
-    console.log(rooms);
-
-    // Fill the list of levels with the generated rooms
-    for (let i = 0; i < rooms.size; i++) {
-        let level = generateRandomLevel(levelWidth, 16, 10, 1, 1, 3, rooms.get(i).type);
-        GAME_LEVELS.push(level);
-    }
-
-    // Print the generated levels to the console
-    for (let i = 0; i < GAME_LEVELS.length; i++) {
-        console.log(GAME_LEVELS[i]);
-    }
+    generateLevel(numRooms);
 
     // Check if the chronometer exists
     if (game.chronometer) {
@@ -874,20 +887,23 @@ function restartRooms(restartPlayer, levelNumer, numRooms) {
     // Create a new game object with the new level
     game = new Game('playing', new Level(GAME_LEVELS[0]));
 
-    if (!restartPlayer && savedPlayer) {
+    if (!restartPlayer) {
         game.player = savedPlayer;
         game.player.hasUsedPotion = false; // Reset the potion usage
         // Update the player sprites
         game.player.updateSprites();
+        // Set the chronometer to the saved one
+        game.chronometer = savedChronometer;
+        game.chronometer.start(); // Start the saved chronometer
+    } else {
+        // If the chronometer doesnt exist, create a new one
+        if (!game.chronometer) {
+            game.chronometer = new Chronometer(); // if the chronometer doesnt exists, it creates a new one
+        }
+        // Reset and start the chronometer
+        game.chronometer.reset();
+        game.chronometer.start();
     }
-
-    // If the chronometer doesnt exist, create a new one
-    if (!game.chronometer) {
-        game.chronometer = new Chronometer(); // if the chronometer doesnt exists, it creates a new one
-    }
-    // Reset and start the chronometer
-    game.chronometer.reset();
-    game.chronometer.start();
 }
 
 function setEventListeners() {
@@ -898,8 +914,13 @@ function setEventListeners() {
                 game.skipCinematic();
             }
             return;
-        }
-        else if (game.state === 'mainMenu' || game.state === 'signUp') {
+        } else if (game.state === 'win') {
+            if (event.key == ' ') {
+                // Restart the game but keep the player
+                restartRooms(false, 0, 6);
+            }
+            return;
+        } else if (game.state === 'mainMenu') {
             return; // Block all actions
         }
 
@@ -920,7 +941,7 @@ function setEventListeners() {
         }
 
         if(event.shiftKey){
-            game.player.dash(game.level);
+            game.player.dash(game.level, deltaTime);
         }
 
         // Attack with the melee weapon
@@ -946,6 +967,7 @@ function setEventListeners() {
         // Pause the game
         if (event.code == 'KeyP' || event.code == 'Escape') {
             game.state = 'paused';
+            sfx.pause.play(); // Play the pause sound
         }
 
         // Restart the game
@@ -1028,7 +1050,7 @@ function setEventListeners() {
             game.abilities.checkClick(mouseX, mouseY);
             game.abilities.isSelected = true;
             game.abilities.hide();
-            game.togglePause();
+            game.chronometer.start(); // Resume the chronometer
             game.state = 'playing'; // Resume the game
         }
     });
@@ -1061,6 +1083,34 @@ function setEventListeners() {
             game.abilities.checkHover(mouseX, mouseY);
         }
     });
+
+    // Login button click event
+    // Quit login button
+    document.getElementById('backButton').addEventListener('click', function(event) {
+        // Hide the login container after login
+        game.state = 'mainMenu';
+    });
+    // Login button
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        // Prevent the page from refreshing
+        event.preventDefault();
+        
+        // Get the values of the username and password fields
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+    
+        // Check if the username and password are not empty
+        if (username && password) {
+            game.state = "mainMenu"; // o "playing" si no quieres menú
+            console.log(username, password);
+        } else {
+            alert("Completa todos los campos");
+        }
+
+        // Clear the input fields
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+    });
 }
 
 // Function to get the mouse position in the canvas
@@ -1082,7 +1132,7 @@ function updateCanvas(frameTime) {
     if (frameStart === undefined) {
         frameStart = frameTime;
     }
-    let deltaTime = frameTime - frameStart;
+    deltaTime = frameTime - frameStart;
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     game.update(deltaTime);

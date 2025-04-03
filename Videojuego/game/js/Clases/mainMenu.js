@@ -10,7 +10,7 @@ class MainMenu extends GameObject {
         this.background.setSprite('../../assets/backgrounds/mainMenu.png');
 
         this.title =  new GameObject(null, 515, 100, canvasWidth / 2 - 255, canvasHeight / 4 - 70, 'title');
-        this.title.setSprite('../../img/logo_overclocked.png');
+        this.title.setSprite('../../docs/img/logo_overclocked.png');
         
         const buttonWidth = 200;
         const buttonHeight = 50;
@@ -23,7 +23,7 @@ class MainMenu extends GameObject {
             this.statisticsButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
                                                 "statistics", "Estadísticas", "#c1cad6", "#c1cad6"),
             this.signUpButton = new MenuButton(null, buttonWidth, buttonHeight, 0, 0,
-                                                "signUp", "Iniciar Sesión", "#c1cad6", "#c1cad6"),
+                                                "login", "Iniciar Sesión", "#c1cad6", "#c1cad6"),
         ];
     }
 
@@ -86,6 +86,7 @@ class MainMenu extends GameObject {
             const isClicked = button.isMouseInside(x, y);
             button.isPressed = isClicked;
             if (isClicked) {
+                sfx.click.play(); // Play the click sound
                 // Call the button action
                 this.buttonClicked(button.type);
                 // Return the clicked button if needed
@@ -116,8 +117,8 @@ class MainMenu extends GameObject {
             case "statistics":
                 // game.state = "statistics";
                 break;
-            case "signUp":
-                game.state = "signUp";
+            case "login":
+                game.state = "login";
                 break;
             default:
                 break;
