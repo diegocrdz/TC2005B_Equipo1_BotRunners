@@ -1,6 +1,23 @@
+-- Datos de Base de Datos Overclocked
+-- Version 1.0
+-- Fecha: 2 de abril de 2025
+-- Desarrollado por: Equipo BotRunners
+-- Desripción: Inserción de datos a la base de datos Overclocked
+-- Desarrollado como parte del bloque TC2005B - Tecnológico de Monterrey, Campus Santa Fe
+
+SET NAMES utf8mb4;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+SET @old_autocommit=@@autocommit;
+
 USE overclocked;
--- Jugadores
-INSERT INTO jugador (nombre_usuario, clave, tipo_cuenta, nivel_xp, cantidad_xp, salud, dano, resistencia)  
+
+--
+-- Datos para la tabla jugadores
+--
+
+INSERT INTO jugadores (nombre_usuario, contrasena, tipo_cuenta, nivel_xp, cantidad_xp, salud, dano, resistencia)  
 VALUES  
 ('Lorechewtat', 'Lore123', 'registrado', 10, 3500, 120, 20, 3),  
 ('Diegocrdz', 'Diegooo1', 'registrado', 12, 4200, 130, 22, 4),  
@@ -32,10 +49,14 @@ VALUES
 ('VictoriaFalcon', 'victoria321', 'registrado', 17, 5800, 160, 30, 8),  
 ('EmilioDash', 'emilio654', 'registrado', 3, 1000, 80, 11, 1),  
 ('DianaNova', 'diana987', 'registrado', 18, 6000, 165, 32, 9);  
--- insertar para partidas
+
+--
+-- Datos para la tabla partidas
+--
 
 INSERT INTO partidas (fecha_inicio, fecha_fin, id_jugador)  
-VALUES  
+VALUES
+-- Se seleccionan valores aleatorios para el id_jugador
 ('2025-04-01 12:00:00', '2025-04-01 12:30:00', FLOOR(1 + (RAND() * 30))),  
 ('2025-04-01 13:00:00', '2025-04-01 13:45:00', FLOOR(1 + (RAND() * 30))),  
 ('2025-04-01 14:00:00', '2025-04-01 14:30:00', FLOOR(1 + (RAND() * 30))),  
@@ -67,264 +88,280 @@ VALUES
 ('2025-04-03 20:00:00', '2025-04-03 20:45:00', FLOOR(1 + (RAND() * 30))),  
 ('2025-04-03 21:00:00', '2025-04-03 21:25:00', FLOOR(1 + (RAND() * 30)));
 
--- Para la tabla partidas:
-INSERT INTO niveles (id_partida, nombre_nivel, tematica, numero_salas) VALUES
+--
+-- Datos para la tabla niveles
+--
+
+INSERT INTO niveles (id_partida, num_nivel, tematica, numero_salas) VALUES
+-- Se usan valores aleatorios para el número de salas
 -- Partida 1: Jugador llegó hasta el nivel 2
-(1, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(1, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(1, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(1, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 2: Jugador completó los 3 niveles
-(2, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(2, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
-(2, 'nivel 3', 'fabrica', FLOOR(6 + (RAND() * 9))),
+(2, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(2, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(2, 3, 'fabrica', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 3: Perdió en el primer nivel
-(3, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
+(3, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 4: Llegó hasta el nivel 2
-(4, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(4, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(4, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(4, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 5: Completó los 3 niveles
-(5, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(5, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
-(5, 'nivel 3', 'fabrica', FLOOR(6 + (RAND() * 9))),
+(5, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(5, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(5, 3, 'fabrica', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 6: Perdió en el primer nivel
-(6, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
+(6, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 7: Completó los 3 niveles
-(7, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(7, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
-(7, 'nivel 3', 'fabrica', FLOOR(6 + (RAND() * 9))),
+(7, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(7, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(7, 3, 'fabrica', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 8: Llegó hasta el nivel 2
-(8, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(8, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(8, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(8, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 9: Perdió en el primer nivel
-(9, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
+(9, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 10: Completó los 3 niveles
-(10, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(10, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
-(10, 'nivel 3', 'fabrica', FLOOR(6 + (RAND() * 9))),
+(10, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(10, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(10, 3, 'fabrica', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 11: Llegó hasta el nivel 2
-(11, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(11, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(11, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(11, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 12: Perdió en el primer nivel
-(12, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
+(12, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 13: Completó los 3 niveles
-(13, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(13, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
-(13, 'nivel 3', 'fabrica', FLOOR(6 + (RAND() * 9))),
+(13, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(13, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(13, 3, 'fabrica', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 14: Llegó hasta el nivel 2
-(14, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(14, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(14, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(14, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 15: Perdió en el primer nivel
-(15, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
+(15, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 16: Completó los 3 niveles
-(16, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(16, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
-(16, 'nivel 3', 'fabrica', FLOOR(6 + (RAND() * 9))),
+(16, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(16, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(16, 3, 'fabrica', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 17: Llegó hasta el nivel 2
-(17, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(17, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(17, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(17, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 18: Perdió en el primer nivel
-(18, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
+(18, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 19: Completó los 3 niveles
-(19, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(19, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
-(19, 'nivel 3', 'fabrica', FLOOR(6 + (RAND() * 9))),
+(19, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(19, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(19, 3, 'fabrica', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 20: Llegó hasta el nivel 2
-(20, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(20, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(20, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(20, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 21: Perdió en el primer nivel
-(21, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
+(21, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 22: Completó los 3 niveles
-(22, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(22, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
-(22, 'nivel 3', 'fabrica', FLOOR(6 + (RAND() * 9))),
+(22, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(22, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(22, 3, 'fabrica', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 23: Llegó hasta el nivel 2
-(23, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(23, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(23, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(23, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 24: Perdió en el primer nivel
-(24, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
+(24, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 25: Completó los 3 niveles
-(25, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(25, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
-(25, 'nivel 3', 'fabrica', FLOOR(6 + (RAND() * 9))),
+(25, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(25, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(25, 3, 'fabrica', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 26: Llegó hasta el nivel 2
-(26, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(26, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(26, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(26, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 27: Perdió en el primer nivel
-(27, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
+(27, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 28: Completó los 3 niveles
-(28, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(28, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9))),
-(28, 'nivel 3', 'fabrica', FLOOR(6 + (RAND() * 9))),
+(28, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(28, 2, 'laboratorio', FLOOR(6 + (RAND() * 9))),
+(28, 3, 'fabrica', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 29: Perdió en el primer nivel
-(29, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
+(29, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
 
 -- Partida 30: Llegó hasta el nivel 2
-(30, 'nivel 1', 'escuela', FLOOR(6 + (RAND() * 9))),
-(30, 'nivel 2', 'laboratorio', FLOOR(6 + (RAND() * 9)));
+(30, 1, 'escuela', FLOOR(6 + (RAND() * 9))),
+(30, 2, 'laboratorio', FLOOR(6 + (RAND() * 9)));
 
--- PARA SALAS
-INSERT INTO salas (id_nivel, numero_objetos, numero_enemigos) VALUES
+--
+-- Datos para la tabla salas
+--
+
+INSERT INTO salas (id_nivel, tipo, explorada, num_objetos, num_enemigos, num_orbes_xp) VALUES
 -- Salas para Nivel 1 de la Partida 1
-(1, 3, 2),
-(1, 5, 4),
-(1, 2, 1),
-(1, 4, 3),
-(1, 6, 5),
-(1, 3, 2),
-(1, 5, 4),
-(1, 2, 1),
+(1, 'inicio', TRUE, 3, 2, 3),
+(1, 'sala2', TRUE, 5, 4, 3),
+(1, 'normal', TRUE, 2, 1, 3),
+(1, 'normal', TRUE, 4, 3, 3),
+(1, 'normal', TRUE, 6, 5, 3),
+(1, 'jefe', TRUE, 3, 2, 3),
+(1, 'boton', TRUE, 5, 4, 3),
+(1, 'rama2', TRUE, 2, 1, 3),
 
 -- Salas para Nivel 2 de la Partida 1
-(2, 6, 5),
-(2, 3, 2),
-(2, 4, 3),
-(2, 5, 4),
-(2, 7, 6),
-(2, 3, 2),
-(2, 6, 5),
+(2, "inicio", TRUE, 6, 5, 3),
+(2, "sala2", TRUE, 3, 2, 3),
+(2, "normal", TRUE, 4, 3, 3),
+(2, "normal", TRUE, 5, 4, 3),
+(2, "escalera1", TRUE, 7, 6, 3),
+(2, "jefe", FALSE, 3, 2, 3),
+(2, "escalera2", FALSE, 6, 5, 3),
 
 -- Salas para Nivel 3 de la Partida 1
-(3, 4, 3),
-(3, 6, 5),
-(3, 5, 4),
-(3, 7, 6),
-(3, 2, 1),
-(3, 3, 2),
-(3, 4, 3),
-(3, 5, 4),
-(3, 6, 5),
+(3, "inicio", TRUE, 4, 3, 3),
+(3, "sala2", TRUE, 6, 5, 3),
+(3, "normal", TRUE, 5, 4, 3),
+(3, "escalera1", TRUE, 7, 6, 3),
+(3, "sala2", TRUE, 2, 1, 3),
+(3, "jefe", TRUE, 3, 2, 3),
+(3, "boton", TRUE, 4, 3, 3),
+(3, "rama1", TRUE, 5, 4, 3),
+(3, "rama2", FALSE, 6, 5, 3),
 
 -- Salas para Nivel 1 de la Partida 2
-(4, 3, 2),
-(4, 6, 5),
-(4, 2, 1),
-(4, 4, 3),
-(4, 5, 4),
-(4, 7, 6),
+(4, "inicio", TRUE, 3, 2, 3),
+(4, "sala2", TRUE, 6, 5, 3),
+(4, "normal", TRUE, 2, 1, 3),
+(4, "normal", TRUE, 4, 3, 3),
+(4, "normal", TRUE, 5, 4, 3),
+(4, "jefe", TRUE, 7, 6, 3),
 
 -- Salas para Nivel 2 de la Partida 2
-(5, 6, 5),
-(5, 3, 2),
-(5, 4, 3),
-(5, 5, 4),
-(5, 7, 6),
-(5, 3, 2),
-(5, 6, 5),
-(5, 2, 1),
+(5, "inicio", TRUE, 6, 5, 3),
+(5, "sala2", TRUE, 3, 2, 3),
+(5, "normal", TRUE, 4, 3, 3),
+(5, "normal", TRUE, 5, 4, 3),
+(5, "normal", TRUE, 7, 6, 3),
+(5, "jefe", TRUE, 3, 2, 3),
+(5, "boton", TRUE, 6, 5, 3),
+(5, "rama1", TRUE, 2, 1, 3),
 
 -- Salas para Nivel 3 de la Partida 2
-(6, 4, 3),
-(6, 6, 5),
-(6, 5, 4),
-(6, 7, 6),
-(6, 2, 1),
-(6, 3, 2),
-(6, 4, 3),
+(6, "inicio", TRUE, 4, 3, 3),
+(6, "sala2", TRUE, 6, 5, 3),
+(6, "normal", TRUE, 5, 4, 3),
+(6, "normal", TRUE, 7, 6, 3),
+(6, "normal", TRUE, 2, 1, 3),
+(6, "jefe", TRUE, 3, 2, 3),
+(6, "boton", TRUE, 4, 3, 3),
 
 -- Salas para Nivel 1 de la Partida 3
-(7, 3, 2),
-(7, 6, 5),
-(7, 2, 1),
-(7, 4, 3),
-(7, 5, 4),
-(7, 7, 6),
-(7, 3, 2),
+(7, "inicio", TRUE, 3, 2, 3),
+(7, "sala2", TRUE, 6, 5, 3),
+(7, "normal", TRUE, 2, 1, 3),
+(7, "normal", TRUE, 4, 3, 3),
+(7, "normal", TRUE, 5, 4, 3),
+(7, "jefe", TRUE, 7, 6, 3),
+(7, "boton", TRUE, 3, 2, 3),
 
 -- Salas para Nivel 2 de la Partida 3
-(8, 6, 5),
-(8, 3, 2),
-(8, 4, 3),
-(8, 5, 4),
-(8, 7, 6),
-(8, 3, 2),
-(8, 6, 5),
-(8, 2, 1),
+(8, "inicio", TRUE, 6, 5, 3),
+(8, "sala2", TRUE, 3, 2, 3),
+(8, "normal", TRUE, 4, 3, 3),
+(8, "normal", TRUE, 5, 4, 3),
+(8, "normal", TRUE, 7, 6, 3),
+(8, "jefe", TRUE, 3, 2, 3),
+(8, "boton", TRUE, 6, 5, 3),
+(8, "rama1", TRUE, 2, 1, 3),
 
 -- Salas para Nivel 3 de la Partida 3
-(9, 4, 3),
-(9, 6, 5),
-(9, 5, 4),
-(9, 7, 6),
-(9, 2, 1),
-(9, 3, 2),
-(9, 4, 3),
-(9, 5, 4);
+(9, "inicio", TRUE, 4, 3, 3),
+(9, "sala2", TRUE, 6, 5, 3),
+(9, "normal", TRUE, 5, 4, 3),
+(9, "normal", TRUE, 7, 6, 3),
+(9, "normal", TRUE, 2, 1, 3),
+(9, "jefe", TRUE, 3, 2, 3),
+(9, "boton", TRUE, 4, 3, 3),
+(9, "rama1", TRUE, 5, 4, 3);
 
-
--- TABLA INTERMEDIA ENEMIGOS SALAS:
+--
+-- Datos para la tabla enemigos_salas
+--
 
 -- Sala 2 del Nivel 1 (solo un enemigo normal)
-INSERT INTO enemigos_salas (id_sala, id_enemigo, enemigos_derrotados) VALUES 
-(2, 1, TRUE);  -- Solo un enemigo normal en la sala 2 del nivel 1
+INSERT INTO enemigos_salas (id_sala, id_enemigo) VALUES 
+(2, 1);  -- Solo un enemigo normal en la sala 2 del nivel 1
 
 -- Sala 6 de cada nivel (solo un jefe)
-INSERT INTO enemigos_salas (id_sala, id_enemigo, enemigos_derrotados) VALUES 
-(6, 8, TRUE),  -- Jefe del nivel 1
-(12, 9, TRUE), -- Jefe del nivel 2
-(18, 10, FALSE); -- Jefe del nivel 3
+INSERT INTO enemigos_salas (id_sala, id_enemigo) VALUES 
+(6, 8),  -- Jefe del nivel 1
+(12, 9), -- Jefe del nivel 2
+(18, 10); -- Jefe del nivel 3
 
 -- Otras salas (máximo 3 enemigos por sala)
-INSERT INTO enemigos_salas (id_sala, id_enemigo, enemigos_derrotados) VALUES 
-(3, 2, TRUE), (3, 4, TRUE), -- Sala 3 (nivel 1)
-(4, 1, TRUE), (4, 3, TRUE), (4, 5, TRUE), -- Sala 4 (nivel 1)
-(5, 6, TRUE), (5, 7, TRUE), -- Sala 5 (nivel 1)
-(7, 2, TRUE), (7, 5, TRUE), -- Sala 7 (nivel 2)
-(8, 1, TRUE), (8, 4, TRUE), (8, 7, TRUE), -- Sala 8 (nivel 2)
-(9, 3, TRUE), (9, 6, TRUE), -- Sala 9 (nivel 2)
-(10, 5, TRUE), (10, 2, TRUE), -- Sala 10 (nivel 2)
-(11, 4, TRUE), (11, 6, TRUE), -- Sala 11 (nivel 2)
-(13, 2, TRUE), (13, 5, TRUE), (13, 7, TRUE), -- Sala 13 (nivel 3)
-(14, 3, TRUE), (14, 6, TRUE), -- Sala 14 (nivel 3)
-(15, 1, TRUE), (15, 4, TRUE), (15, 7, FALSE); -- Sala 15 (nivel 3)
+INSERT INTO enemigos_salas (id_sala, id_enemigo) VALUES 
+(3, 2), (3, 4), -- Sala 3 (nivel 1)
+(4, 1), (4, 3), (4, 5), -- Sala 4 (nivel 1)
+(5, 6), (5, 7), -- Sala 5 (nivel 1)
+(7, 2), (7, 5), -- Sala 7 (nivel 2)
+(8, 1), (8, 4), (8, 7), -- Sala 8 (nivel 2)
+(9, 3), (9, 6), -- Sala 9 (nivel 2)
+(10, 5), (10, 2), -- Sala 10 (nivel 2)
+(11, 4), (11, 6), -- Sala 11 (nivel 2)
+(13, 2), (13, 5), (13, 7), -- Sala 13 (nivel 3)
+(14, 3), (14, 6), -- Sala 14 (nivel 3)
+(15, 1), (15, 4), (15, 7); -- Sala 15 (nivel 3)
 
--- TABLA ENEMIGOS (se toma en cuenta que solo las sextas salas tienen jefes, la sexta sala del nivel 3 genera al jefe final en estado de ataque normal)
+--
+-- Datos para la tabla enemigos
+--
+
+-- Se toma en cuenta que solo las sextas salas tienen jefes, la sexta sala del nivel 3 genera al jefe final en estado de ataque normal)
+
 INSERT INTO enemigos (tipo, salud, dano, movimiento, fase_ataque, velocidad_movimiento, recompensa_xp) VALUES
 -- Enemigos normales
-('normal', 100, 10, 'seguir jugador', NULL, 1.2, 50),
-('normal', 120, 12, 'seguir jugador', NULL, 1.0, 60),
-('normal', 80, 8, 'ignorar jugador', NULL, 1.5, 40),
+('normal', 100, 10, 'seguir jugador', 'normal', 1.2, 50),
+('normal', 120, 12, 'seguir jugador', 'normal', 1.0, 60),
+('normal', 80, 8, 'ignorar jugador', 'normal', 1.5, 40),
 
 -- Enemigos pesados
-('pesado', 200, 20, 'seguir jugador', NULL, 0.8, 100),
-('pesado', 220, 25, 'seguir jugador', NULL, 0.7, 120),
+('pesado', 200, 20, 'seguir jugador', 'normal', 0.8, 100),
+('pesado', 220, 25, 'seguir jugador', 'normal', 0.7, 120),
 
 -- Enemigos voladores
-('volador', 90, 15, 'seguir jugador', NULL, 1.8, 70),
-('volador', 100, 18, 'seguir jugador', NULL, 1.6, 80),
+('volador', 90, 15, 'seguir jugador', 'normal', 1.8, 70),
+('volador', 100, 18, 'seguir jugador', 'normal', 1.6, 80),
 
 -- Jefes (uno por nivel)
-('jefe', 500, 50, 'seguir jugador', NULL, 1.0, 500), -- Nivel 1
-('jefe', 600, 60, 'seguir jugador', NULL, 0.9, 600), -- Nivel 2
+('jefe', 500, 50, 'seguir jugador', 'normal', 1.0, 500), -- Nivel 1
+('jefe', 600, 60, 'seguir jugador', 'normal', 0.9, 600), -- Nivel 2
 ('jefe', 700, 70, 'seguir jugador', 'normal', 0.8, 700); -- Jefe del nivel 3, fase de ataque "normal"
 
--- Tabla objetos:
+--
+-- Datos para la tabla objetos
+--
+
 INSERT INTO objetos (nombre, tipo, afecta_jugador, efecto) VALUES
 ('puerta', 'interactivo', FALSE, 'colision'),
 ('caja', 'obstaculo', TRUE, 'colision'),
@@ -333,21 +370,27 @@ INSERT INTO objetos (nombre, tipo, afecta_jugador, efecto) VALUES
 ('escalera', 'interactivo', FALSE, 'colision'),
 ('boton', 'interactivo', FALSE, 'activar');
 
--- OBJETOS SALAS:
--- Suponiendo que tenemos salas con id_sala 1 a 10. Solo son dummies 
-INSERT INTO objetos_salas (id_sala, id_objeto, desbloquea_sala_final, estado) VALUES
-(1, 1, FALSE, 'desactivado'),  -- Puerta en la sala 1
-(1, 2, FALSE, 'NA'),  -- Caja en la sala 1
-(2, 3, FALSE, 'NA'),  -- Tubería en la sala 2
-(3, 4, FALSE, 'NA'),  -- Picos en la sala 3
-(4, 5, FALSE, 'NA'),  -- Escalera en la sala 4
-(5, 6, TRUE, 'activado'),  -- Botón en la sala 5
-(6, 1, FALSE, 'activado'),  -- Puerta en la sala 6
-(7, 2, FALSE, 'NA'),  -- Caja en la sala 7
-(8, 3, FALSE, 'NA'),  -- Tubería en la sala 8
-(9, 4, FALSE, 'NA');  -- Picos en la sala 9
+--
+-- Datos para la tabla objetos_salas
+--
 
--- Estadísticas 
+-- Suponiendo que tenemos salas con id_sala 1 a 10. Solo son dummies 
+INSERT INTO objetos_salas (id_sala, id_objeto) VALUES
+(1, 1),  -- Puerta en la sala 1
+(1, 2),  -- Caja en la sala 1
+(2, 3),  -- Tubería en la sala 2
+(3, 4),  -- Picos en la sala 3
+(4, 5),  -- Escalera en la sala 4
+(5, 6),  -- Botón en la sala 5
+(6, 1),  -- Puerta en la sala 6
+(7, 2),  -- Caja en la sala 7
+(8, 3),  -- Tubería en la sala 8
+(9, 4);  -- Picos en la sala 9
+
+--
+-- Datos para la tabla estadisticas
+--
+
 INSERT INTO estadisticas (id_jugador, tiempo_mejor_partida, numero_muertes, enemigos_derrotados, dano_infligido, dano_recibido, partidas_completadas)  
 VALUES  
 (1, '00:15:30', 3, 25, 1200, 900, 5),  
@@ -381,7 +424,10 @@ VALUES
 (29, '00:23:50', 7, 39, 1850, 1270, 9),  
 (30, '00:12:25', 2, 20, 1020, 810, 4);  
 
--- PARA HABILIDADES:
+--
+-- Datos para la tabla habilidades
+--
+
 INSERT INTO habilidades (tipo, nombre, desbloqueado, velocidad_uso)  
 VALUES  
 ("mejora de estadisticas", "salud", TRUE, 0.0),  
@@ -390,7 +436,10 @@ VALUES
 ("movilidad", "doble salto", TRUE, 1.5),  
 ("movilidad", "dash", TRUE, 0.8);  
 
--- Tabla intermedia jugador_habilidades:
+--
+-- Datos para la tabla jugador_habilidades
+--
+
 INSERT INTO jugadores_habilidades (id_jugador, id_habilidad)  
 VALUES  
 (1, 1), (1, 4),  
@@ -424,14 +473,20 @@ VALUES
 (29, 2),  
 (30, 3), (30, 4);  
 
--- ARMAS
+--
+-- Datos para la tabla armas
+--
+
 INSERT INTO armas (nombre, tipo, dano, velocidad_ataque, desbloqueo_nivel) VALUES
 ("brazo robotico", "cuerpo a cuerpo", 20, 1.2, 1),
 ("llave de acero", "cuerpo a cuerpo", 40, 1.2, 2),
 ("pistola laser lenta", "distancia", 20, 1, 3),
 ("pistola laser rapida", "distancia", 15, 0.5, 4);
 
--- Inventario:
+--
+-- Datos para la tabla inventario
+--
+
 INSERT INTO inventarios (id_jugador, id_arma_cuerpo, id_arma_distancia, estado_pocion, curacion_pocion) VALUES
 (1, 1, 3, TRUE, 50),
 (2, 2, 4, FALSE, 0),
@@ -463,72 +518,3 @@ INSERT INTO inventarios (id_jugador, id_arma_cuerpo, id_arma_distancia, estado_p
 (28, 2, 4, TRUE, 50),
 (29, 1, 3, FALSE, 0),
 (30, 2, 4, TRUE, 60);
-
--- TABLA INTERMEDIA PARTIDA_NIVEL_SALA:
-
-INSERT INTO partida_nivel_sala (id_partida, id_nivel, id_sala) VALUES
-
--- Partida 1
--- Nivel 1
-(1, 1, 1),
-(1, 1, 2),
-(1, 1, 3),
-(1, 1, 4),
-(1, 1, 5),
-(1, 1, 6),
-(1, 1, 7),
-(1, 1, 8),
--- Nivel 2
-(1, 2, 9),
-(1, 2, 10),
-(1, 2, 11),
-(1, 2, 12),
-(1, 2, 13),
-(1, 2, 14),
-(1, 2, 15),
--- Nivel 3
-(1, 3, 16),
-(1, 3, 17),
-(1, 3, 18),
-(1, 3, 19),
-(1, 3, 20),
-(1, 3, 21),
-(1, 3, 22),
-(1, 3, 23),
-(1, 3, 24),
-
--- Partida 2
--- Nivel 1
-(2, 4, 25),
-(2, 4, 26), 
-(2, 4, 27),
-(2, 4, 28),
-(2, 4, 29),
-(2, 4, 30),
--- Nivel 2
-(2, 5, 31),
-(2, 5, 32),
-(2, 5, 33),
-(2, 5, 34),
-(2, 5, 35),
-(2, 5, 36),
-(2, 5, 37),
-(2, 5, 38),
--- Nivel 3
-(2, 6, 39),
-(2, 6, 40),
-(2, 6, 41),
-(2, 6, 42),
-(2, 6, 43),
-(2, 6, 44),
-(2, 6, 45),
-
--- Partida 3
--- Nivel 1
-(3, 7, 46),
-(3, 7, 47),
-(3, 7, 48),
-(3, 7, 49),
-(3, 7, 50),
-(3, 7, 51),
-(3, 7, 52);
