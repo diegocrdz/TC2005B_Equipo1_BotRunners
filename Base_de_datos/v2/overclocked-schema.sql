@@ -375,7 +375,7 @@ SELECT
   -- 1. Selecciona tiempo_mejor_partida de la tabla estadísticas en segundos (Ej: 00:01:20 -> 80)
   -- 2. Obtiene el promedio de los tiempos (100 + 120 + 130 / 3 = 116)
   -- 3. Convierte los segundos a tiempo (116 -> (00:01:56)
-  (SELECT SEC_TO_TIME(AVG(TIME_TO_SEC(tiempo_mejor_partida))) FROM estadisticas) AS tiempo_mejor_partida_promedio,
+  (SELECT SEC_TO_TIME(ROUND(AVG(TIME_TO_SEC(tiempo_mejor_partida)))) FROM estadisticas) AS tiempo_mejor_partida_promedio,
   -- Sumatorias
   (SELECT SUM(enemigos_derrotados) FROM overclocked.estadisticas) AS enemigos_derrotados,
   (SELECT SUM(numero_muertes) FROM overclocked.estadisticas) AS muertes_jugador,
