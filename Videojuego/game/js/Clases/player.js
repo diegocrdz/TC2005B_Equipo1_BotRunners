@@ -24,7 +24,7 @@ class Player extends AnimatedObject {
         this.firstTimePlaying = true;
 
         // Double jump
-        this.canDoubleJump = true;
+        this.canDoubleJump = false;
         this.isDoubleJumping = false;
 
         // Dash
@@ -141,7 +141,13 @@ class Player extends AnimatedObject {
             && (!level.contact(newYPosition, this.size, 'box'))) {
             this.position = newYPosition;
         } else {
-            this.land(); 
+            // If the player collides with the ground, stop moving down
+            if (this.velocity.y > 0) {
+                this.land(); 
+            } else {
+                // If the player collides with the ceiling, stop moving up
+                this.velocity.y = 0;
+            }
         }
 
         // Update the weapons
@@ -175,6 +181,7 @@ class Player extends AnimatedObject {
 
     // Start moving the player in a certain direction
     startMovement(direction) {
+
         const dirData = this.movement[direction];
         this.isFacingRight = direction == "right"; // Check if the direction is right
 
@@ -182,7 +189,13 @@ class Player extends AnimatedObject {
             dirData.status = true;
             this.velocity[dirData.axis] = dirData.sign * walkSpeed; // Set the velocity
 
-            if (this.isHit) { // If the player is hit, keep the hit animation
+            // If the player is attacking, the sprite sheet changes to the attack sprite
+            // To prevent the player switching to an invalid animation
+            // The player animation doesnt change while attacking
+            if (this.isAttacking) {
+                return;
+            }
+            else if (this.isHit) { // If the player is hit, keep the hit animation
                 this.hit();
             }
             else if (this.isCrouching) { // If the player is crouching, keep crouching
@@ -198,13 +211,21 @@ class Player extends AnimatedObject {
         const dirData = this.movement[direction];
         dirData.status = false;
         this.velocity[dirData.axis] = 0;
-        this.setAnimation(...dirData.idleFrames, dirData.repeat, 100);
+        // Avoid switching animations while attacking
+        if (this.isAttacking) {
+            return;
+        } else {
+            this.setAnimation(...dirData.idleFrames, dirData.repeat, 100);
+        }
     }
 
     crouch() {
         this.isCrouching = true;
         const crouchData = this.movement.crouch;
-        if (this.isFacingRight) {
+        // Avoid switching animations while attacking
+        if (this.isAttacking) {
+            return;
+        } else if (this.isFacingRight) {
             this.setAnimation(...crouchData.right, crouchData.repeat, crouchData.duration);
         } else {
             this.setAnimation(...crouchData.left, crouchData.repeat, crouchData.duration);
@@ -228,7 +249,9 @@ class Player extends AnimatedObject {
             this.isJumping = true;
             const jumpData = this.movement.jump;
             sfx.jump.play(); // Play the jump sound
-            if (this.isFacingRight) {
+            if (this.isAttacking) {
+                return;
+            } else if (this.isFacingRight) {
                 this.setAnimation(...jumpData.right, jumpData.repeat, jumpData.duration);
             } else {
                 this.setAnimation(...jumpData.left, jumpData.repeat, jumpData.duration);
@@ -454,6 +477,7 @@ class Player extends AnimatedObject {
 
     die() {
         sfx.gameOver.play(); // Play the game over sound
+        // Make the player disappear
         console.log("Player died");
         game.state = "gameover";
     }

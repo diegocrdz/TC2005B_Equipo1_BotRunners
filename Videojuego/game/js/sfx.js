@@ -18,7 +18,7 @@ const sfx = {
     dash : new Audio("../../assets/sfx/dash.mp3"),
     shoot : new Audio("../../assets/sfx/shoot.ogg"),
     bossDie : new Audio("../../assets/sfx/bossDie.ogg"),
-    enemyDie : new Audio("../../assets/sfx/enemyDie1.wav"),
+    enemyDie : new Audio("../../assets/sfx/enemyDie3.ogg"),
     button : new Audio("../../assets/sfx/button.wav"),
 };
 
