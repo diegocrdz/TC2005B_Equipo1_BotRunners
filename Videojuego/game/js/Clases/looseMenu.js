@@ -101,7 +101,8 @@ class LooseMenu extends GameObject {
             case "menu":
                 restartRooms(true, 0, 6);
                 game.state = "mainMenu";
-                selectMusic(this.level, this.levelNumber, 'mainMenu')
+                selectMusicMenus('mainMenu');
+                selectMusic(this.level, this.levelNumber, 'mainMenu');
                 break;
             default:
                 break;
