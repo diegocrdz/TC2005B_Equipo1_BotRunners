@@ -50,7 +50,7 @@ class Player extends AnimatedObject {
         // Equip initial weapons
         this.updateWeapons();
 
-        this.damage = 20;
+        this.damage = 100;
         this.attackCooldown = this.meleeWeapon.cooldown;
         this.shootCooldown = this.gunWeapon.cooldown;
 
