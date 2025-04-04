@@ -1104,7 +1104,7 @@ function setEventListeners() {
     
         // Check if the username and password are not empty
         if (username && password) {
-            game.state = "mainMenu"; // o "playing" si no quieres menú
+            game.state = "mainMenu";
             console.log(username, password);
         } else {
             alert("Completa todos los campos");
@@ -1136,6 +1136,22 @@ function setEventListeners() {
         updateVolume(musicSlider, sfxSlider);
 
         sfx.click.play(); // Play the click sound
+    });
+
+    // Update the label for the music slider
+    // The input event is triggered when the slider value changes
+    musicSlider.addEventListener('input', function () {
+        const label = document.querySelector('label[for="musicSlider"]');
+        // Update the label and multiply by 100 to get the percentage
+        label.textContent = `Volumen Música: ${Math.round(musicSlider.value * 100)}`;
+    });
+
+    // Update the label for the SFX slider
+    // The input event is triggered when the slider value changes
+    sfxSlider.addEventListener('input', function () {
+        const label = document.querySelector('label[for="sfxSlider"]');
+        // Update the label and multiply by 100 to get the percentage
+        label.textContent = `Volumen Efectos: ${Math.round(sfxSlider.value * 100)}`;
     });
 }
 
