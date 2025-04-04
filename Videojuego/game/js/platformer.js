@@ -1038,6 +1038,11 @@ function setEventListeners() {
             const mouseY = getMousePosition(event).y;
             game.mainMenu.checkClick(mouseX, mouseY);
         }
+        if (game.state === 'signUp') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.signUpMenu.checkClick(mouseX, mouseY);
+        }
         if (game.state === 'paused') {
             const mouseX = getMousePosition(event).x;
             const mouseY = getMousePosition(event).y;
@@ -1065,6 +1070,11 @@ function setEventListeners() {
             const mouseX = getMousePosition(event).x;
             const mouseY = getMousePosition(event).y;
             game.mainMenu.checkHover(mouseX, mouseY);
+        }
+        if( game.state === 'signUp') {
+            const mouseX = getMousePosition(event).x;
+            const mouseY = getMousePosition(event).y;
+            game.signUpMenu.checkHover(mouseX, mouseY);
         }
         if (game.state === 'paused') {
             const mouseX = getMousePosition(event).x;

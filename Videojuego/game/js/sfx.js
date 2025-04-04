@@ -12,6 +12,14 @@ const sfx = {
     pause: new Audio("../../assets/sfx/pause.ogg"),
     gameOver: new Audio("../../assets/sfx/loose.ogg"),
     levelUp: new Audio("../../assets/sfx/levelup.ogg"),
+    jump : new Audio("../../assets/sfx/jump.wav"),
+    hit : new Audio("../../assets/sfx/click_001.ogg"),
+    getHit : new Audio("../../assets/sfx/getHit1.mp3"),
+    dash : new Audio("../../assets/sfx/dash.mp3"),
+    shoot : new Audio("../../assets/sfx/shoot.ogg"),
+    bossDie : new Audio("../../assets/sfx/bossDie.ogg"),
+    enemyDie : new Audio("../../assets/sfx/enemyDie1.wav"),
+    button : new Audio("../../assets/sfx/button.wav"),
 };
 
 const music = {

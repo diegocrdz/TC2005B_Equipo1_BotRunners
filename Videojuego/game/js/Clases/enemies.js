@@ -154,6 +154,7 @@ class Enemy extends AnimatedObject {
     
         this.health -= amount; // Reduce health by the damage amount
         this.hit(); // Play the hit animation
+        sfx.hit.play(); // Play the hit sound effect
     
         if (this.health <= 0) {
             this.die(); // Kill the enemy if health is 0 or less
@@ -170,6 +171,9 @@ class Enemy extends AnimatedObject {
         let x = this.position.x + 1;
         let y = this.position.y;
         
+        // Play the enemy die sound effect
+        this.playDieSound();
+
         // Create a coin with the experience value of the enemy
         let expCoin = new Coin("yellow", 1, 1, x, y, "$");
         expCoin.xp_value = this.xp_reward; // Asigna el valor de experiencia del enemigo
@@ -189,6 +193,10 @@ class Enemy extends AnimatedObject {
         } else if (this.type === "boss") {
             GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('X', '.');
         }
+    }
+
+    playDieSound(){
+        sfx.enemyDie.play(); // Play the enemy die sound effect
     }
 
     hit() {
@@ -305,4 +313,9 @@ class BossEnemy extends Enemy {
 
         this.updateFrame(deltaTime);
     }
+
+    playDieSound(){
+        sfx.bossDie.play(); // Play the boss die sound effect
+    }
+
 }

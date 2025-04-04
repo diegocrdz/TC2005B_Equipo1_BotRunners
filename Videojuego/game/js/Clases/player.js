@@ -24,7 +24,7 @@ class Player extends AnimatedObject {
         this.firstTimePlaying = true;
 
         // Double jump
-        this.canDoubleJump = false;
+        this.canDoubleJump = true;
         this.isDoubleJumping = false;
 
         // Dash
@@ -227,6 +227,7 @@ class Player extends AnimatedObject {
             this.velocity.y = initialJumpSpeed;
             this.isJumping = true;
             const jumpData = this.movement.jump;
+            sfx.jump.play(); // Play the jump sound
             if (this.isFacingRight) {
                 this.setAnimation(...jumpData.right, jumpData.repeat, jumpData.duration);
             } else {
@@ -306,6 +307,7 @@ class Player extends AnimatedObject {
             };
     
             dashMove(); //initiates animated dash
+            sfx.dash.play(); // Play the dash sound
             
             // Set a timeout to reset the dash state
             setTimeout(() => {
@@ -365,6 +367,7 @@ class Player extends AnimatedObject {
 
         this.isShooting = true;
         let attackData = this.movement.attack;
+        sfx.shoot.play(); // Play the shoot sound
 
         // Adjust the attack animation data for the projectile
         attackData.right = [8, 9];
@@ -421,6 +424,7 @@ class Player extends AnimatedObject {
         }
 
         this.health -= amount + this.resistance; // Reduce health by the damage amount
+        sfx.getHit.play(); // Play the hit sound
         this.hit();
 
         if (this.health <= 0) {
