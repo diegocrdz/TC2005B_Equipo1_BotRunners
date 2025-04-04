@@ -93,10 +93,10 @@ Las habilidades se desbloquean al subir de nivel. Cada vez que subas de nivel, p
 - Pantalla de Game Over
 - Pantalla de victoria
 - Pantalla de inicio
-
-### Funcionalidades en desarrollo
 - Sonidos de los personajes (jugador y enemigos)
 - Música de los niveles y menús
+
+### Funcionalidades en desarrollo
 - Menú de estadísticas. Para esto debemos hacer la conexión con la API y definir los endpoints que se utilizarán. Las estadísticas que se mostrarán son las siguientes:
     - Estadísticas personales
     - Estadísticas globales

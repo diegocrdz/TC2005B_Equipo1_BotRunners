@@ -237,6 +237,7 @@ class Game {
 
     startCinematic() {
         this.state = 'cinematic';
+        selectMusicMenus('cinematic');
         // Start the cinematic timer
         this.cinematicTimer = setTimeout(() => {
             this.startGame();
@@ -302,10 +303,12 @@ class Game {
             if (level !== 2) {
                 this.levelNumber = 0;
                 restartRooms(false, ++level, 6);
+                selectMusic(level, this.levelNumber, 'playing');
                 return;
             } else {
                 console.log("You win");
                 this.state = 'win';
+                selectMusicMenus('win');
                 // Update the player state
                 this.player.firstTimePlaying = false;
                 this.levelNumber = 0;
@@ -317,6 +320,11 @@ class Game {
         this.levelNumber = levelNumber;
         this.level.player = this.player; // Assign the new player instance
         this.actors = this.level.actors;
+
+        // If the player is in the boss room, update the music
+        if (this.levelNumber === 5) {
+            selectMusic(level, this.levelNumber, 'playing');
+        }
 
         // Restore the state of the doors of the new level
         this.level.doors.forEach(door => {
@@ -925,6 +933,7 @@ function setEventListeners() {
     window.addEventListener("keydown", event => {
         // Skip the cinematic and prevent player actions
         if (game.state === 'cinematic') {
+            // Play the pause music
             if (event.key == ' ') {
                 game.skipCinematic();
             }
@@ -933,6 +942,7 @@ function setEventListeners() {
             if (event.key == ' ') {
                 // Restart the game but keep the player
                 restartRooms(false, 0, 6);
+                selectMusic(level, 0, 'playing');
             }
             return;
         } else if (game.state === 'mainMenu') {
