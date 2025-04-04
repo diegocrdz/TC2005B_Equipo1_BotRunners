@@ -33,6 +33,8 @@ class Game {
         this.level = level;
         this.levelNumber = 0;
         this.player = level.player;
+        // Initialize the player sprite
+        this.player.updateSprites();
         this.actors = level.actors;
         // Menu for displaying abilities
         this.abilities = new popUpAbility();
@@ -55,6 +57,8 @@ class Game {
         this.looseMenu = new LooseMenu(null, canvasWidth, canvasHeight, 0, 0, 'loosemenu');
         // Main menu
         this.mainMenu = new MainMenu(null, canvasWidth, canvasHeight, 0, 0, 'mainmenu');
+        // Options menu
+        this.optionsMenu = new OptionsMenu(null, canvasWidth, canvasHeight, 0, 0, 'optionsmenu');
 
         // List of projectiles
         this.projectiles = [];
@@ -298,6 +302,8 @@ class Game {
             } else {
                 console.log("You win");
                 this.state = 'win';
+                // Update the player state
+                this.player.firstTimePlaying = false;
                 this.levelNumber = 0;
                 return;
             }
@@ -715,9 +721,6 @@ class Game {
         } else if (this.state === 'mainMenu') { 
             // Draw the main menu
             this.mainMenu.draw(ctx);
-            // Hide the login container
-            const loginContainer = document.querySelector('.login-container');
-            loginContainer.style.display = 'none'; // Show the login container
         } else if (this.state === 'login') {
             // Draw the login menu over the game
             const loginContainer = document.querySelector('.login-container');
@@ -746,14 +749,22 @@ class Game {
     adjustDificulty() {
 
         // Vairable to increase the stats of the enemies
-        let increase = 0;
+        let increase;
 
-        // Increase the stats of the enemies depending on the level of the game
-        if (level == 1) {
-            increase = 20;
-        }
-        else if (level == 2) {
-            increase = 30;
+        // If the player is playing for the first time
+        // increase the enemy stats depending on the level
+        if (this.player.firstTimePlaying) {
+            if (level === 0) {
+                increase = 0;
+            } else if (level === 1) {
+                increase = 20;
+            } else if (level === 2) {
+                increase = 40;
+            }
+        } else {
+            // The difficulty keeps increasing
+            // depending on the level of the player
+            increase = this.player.level * 6;
         }
 
         // Increase the stats of the enemies
@@ -1112,9 +1123,13 @@ function setEventListeners() {
 
     // Login button click event
     // Quit login button
-    document.getElementById('backButton').addEventListener('click', function(event) {
+    document.getElementById('backButtonLogin').addEventListener('click', function(event) {
+        sfx.click.play(); // Play the click sound
         // Hide the login container after login
         game.state = 'mainMenu';
+        // Hide the login container
+        const loginContainer = document.querySelector('.login-container');
+        loginContainer.style.display = 'none'; // Show the login container
     });
     // Login button
     document.getElementById("loginForm").addEventListener("submit", function(event) {
@@ -1127,7 +1142,7 @@ function setEventListeners() {
     
         // Check if the username and password are not empty
         if (username && password) {
-            game.state = "mainMenu"; // o "playing" si no quieres menú
+            game.state = "mainMenu";
             console.log(username, password);
         } else {
             alert("Completa todos los campos");
@@ -1136,6 +1151,45 @@ function setEventListeners() {
         // Clear the input fields
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
+    });
+
+    // Options button click event
+    // Quit options button
+    document.getElementById('backButtonOptions').addEventListener('click', function(event) {
+        sfx.click.play(); // Play the click sound
+        // Hide the options container
+        game.optionsMenu.hide(); // Hide the options menu
+    });
+
+    // Apply button for the options menu
+    document.getElementById('applyButton').addEventListener('click', function(event) {
+        // Prevent the page from refreshing
+        event.preventDefault();
+
+        // Get the values of the options fields
+        const musicSlider = document.getElementById('musicSlider').value;
+        const sfxSlider = document.getElementById('sfxSlider').value;
+
+        // Set the new values
+        updateVolume(musicSlider, sfxSlider);
+
+        sfx.click.play(); // Play the click sound
+    });
+
+    // Update the label for the music slider
+    // The input event is triggered when the slider value changes
+    musicSlider.addEventListener('input', function () {
+        const label = document.querySelector('label[for="musicSlider"]');
+        // Update the label and multiply by 100 to get the percentage
+        label.textContent = `Volumen Música: ${Math.round(musicSlider.value * 100)}`;
+    });
+
+    // Update the label for the SFX slider
+    // The input event is triggered when the slider value changes
+    sfxSlider.addEventListener('input', function () {
+        const label = document.querySelector('label[for="sfxSlider"]');
+        // Update the label and multiply by 100 to get the percentage
+        label.textContent = `Volumen Efectos: ${Math.round(sfxSlider.value * 100)}`;
     });
 }
 

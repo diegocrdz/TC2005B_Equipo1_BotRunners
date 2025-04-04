@@ -20,6 +20,7 @@
         <script src="../js/Clases/door.js"></script>
         <script src="../js/Clases/level.js"></script>
         <script src="../js/Clases/minimap.js"></script>
+        <script src="../js/Clases/optionsMenu.js"></script>
         <script src="../js/Clases/pauseMenu.js"></script>
         <script src="../js/Clases/looseMenu.js"></script>
         <script src="../js/Clases/mainMenu.js"></script>
@@ -32,7 +33,7 @@
 
     <body>
         <header>
-            <img src="../../img/logo_overclocked.png" alt="overclocked-logo">
+            <img src="../../docs/img/logo_overclocked.png" alt="overclocked-logo">
             <nav>
                 <a href="../../../Web/HTML/inicio.html">Inicio</a>
                 <a href = "game.html">Jugar</a>
@@ -43,13 +44,28 @@
         <canvas id="canvas"></canvas>
 
         <div class="login-container">
-            <button id="backButton">X</button>
+            <button id="backButtonLogin">X</button>
             <h2>Iniciar sesión</h2>
             <form id="loginForm">
                 <input type="text" id="username" placeholder="Usuario" required>
                 <input type="password" id="password" placeholder="Contraseña" required>
                 <button id="loginButton" type="submit">Iniciar sesión</button>
                 <button id="registerButton" type="submit">Registrarse</button>
+            </form>
+        </div>
+
+        <div class="options-container">
+            <button id="backButtonOptions">X</button>
+            <h2>Opciones</h2>
+            <form id="optionsForm">
+                <!-- Ref de sliders: https://eclixxo.com/crear-slider-control-volumen-html-5/ -->
+                <label for="musicSlider">Volumen Música: 50</label>
+                <input type="range" id="musicSlider" min="0" max="1" value="0.5" step="0.1">
+
+                <label for="sfxSlider">Volumen Efectos: 50</label>
+                <input type="range" id="sfxSlider" min="0" max="1" value="0.5" step="0.1">
+
+                <button id="applyButton">Aplicar</button>
             </form>
         </div>
 

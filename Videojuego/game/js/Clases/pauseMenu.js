@@ -108,7 +108,7 @@ class PauseMenu extends GameObject {
                 restartRooms(true, 0, 6);
                 break;
             case "options":
-                // game.state = "options";
+                game.optionsMenu.show();
                 break;
             case "menu":
                 restartRooms(true, 0, 6);
