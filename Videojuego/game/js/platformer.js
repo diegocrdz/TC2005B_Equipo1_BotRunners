@@ -56,7 +56,6 @@ class Game {
         // Main menu
         this.mainMenu = new MainMenu(null, canvasWidth, canvasHeight, 0, 0, 'mainmenu');
         // Sign up menu
-        this.signUpMenu = new SignUpMenu(null, canvasWidth, canvasHeight, 0, 0, 'signupmenu');
 
         // List of projectiles
         this.projectiles = [];

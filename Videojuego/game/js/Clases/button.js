@@ -13,6 +13,7 @@ class Button extends GameObject {
 
     press() {
         this.isPressed = true;
+        sfx.button.play(); // Play the button sound effect
         this.setSprite('../../assets/interactable/button_on.png',
                         new Rect(0, 0, 18, 18));
         // Update the game state to reflect the button being pressed
