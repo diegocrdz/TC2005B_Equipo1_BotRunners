@@ -56,6 +56,7 @@ class PauseMenu extends GameObject {
             else {
                 button.color = "lightgrey"; // Reset button color
             }
+            selectMusic(this.level, this.levelNumber, 'paused')
 
             // Draw the button
             button.draw(ctx);
@@ -103,9 +104,11 @@ class PauseMenu extends GameObject {
             case "continue":
                 game.state = "playing";
                 game.chronometer.start(); // Start the chronometer
+                selectMusicMenus('playing')
                 break;
             case "restart":
                 restartRooms(true, 0, 6);
+                selectMusicMenus('playing')
                 break;
             case "options":
                 game.optionsMenu.show();
@@ -113,6 +116,8 @@ class PauseMenu extends GameObject {
             case "menu":
                 restartRooms(true, 0, 6);
                 game.state = "mainMenu";
+                selectMusicMenus("mainMenu")
+                selectMusic(this.level, this.levelNumber, 'mainMenu')
                 break;
             default:
                 break;

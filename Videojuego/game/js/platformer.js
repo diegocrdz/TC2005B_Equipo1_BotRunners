@@ -249,6 +249,8 @@ class Game {
             this.cinematicSkipped = true;
             clearTimeout(this.cinematicTimer);
             this.startGame();
+            // start music
+            selectMusic(level, this.levelNumber, 'playing');
         }
     }
 
@@ -269,6 +271,8 @@ class Game {
         console.log("Game started");
         this.chronometer.reset();
         this.chronometer.start();
+        // Start music
+        selectMusic(level, this.levelNumber, 'playing');
     }
 
     addProjectile(projectile) {
@@ -374,50 +378,13 @@ class Game {
             return;
         }
 
+        
+
         this.player.update(this.level, deltaTime);
 
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
-        }
-
-        //music
-        if (this.state = 'playing'){
-            switch(level){
-                case 0:
-                    music.level1.play();
-                    if (this.levelNumber === 5 && level === 0){
-                        music.level1.pause();
-                        music.musicBoss1.play();
-                    }
-                    else{
-                        music.musicBoss1.pause();
-                    }
-                    break;
-                case 1:
-                    music.level2.play();
-                    music.level1.pause();
-                    if (this.levelNumber === 5 && level === 1){
-                        music.level2.pause();
-                        music.musicBoss2.play();
-                    }
-                    break;
-                case 2:
-                    music.level3.play();
-                    music.level2.pause();
-                    music.musicBoss2.pause();
-                    if (this.levelNumber === 5 && level === 2){
-                        music.level3.pause();
-                        music.musicFinalBoss.play();
-                    }
-                    if (this.levelNumber !==5){
-                        music.musicFinalBoss.pause();
-                    }
-                    break;                
-            }
-        }
-        
-        
-        
+        }        
         // Update projectiles
         this.projectiles.forEach(projectile => projectile.update(this.level, deltaTime));
 
@@ -889,7 +856,7 @@ function init() {
 
 function gameStart() {
     // Set the global variable of level to 0
-    level = 1;
+    level = 0;
 
     // List of generated levels
     generateLevel(6) // Generate level with 6 rooms
@@ -900,6 +867,7 @@ function gameStart() {
     game.chronometer = new Chronometer(); //initiates chronometer
     game.chronometer.start(); //starts chronometer
 
+    
     setEventListeners();
 
     // Call the first frame with the current time
@@ -1015,8 +983,10 @@ function setEventListeners() {
         if (event.code == 'KeyP' || event.code == 'Escape') {
             game.state = 'paused';
             sfx.pause.play(); // Play the pause sound
+            selectMusicMenus('paused')
+    
         }
-
+        
         // Restart the game
         if (event.code == 'KeyR') {
             restartRooms(true, 0, 6);
@@ -1160,6 +1130,7 @@ function setEventListeners() {
         // Hide the options container
         game.optionsMenu.hide(); // Hide the options menu
     });
+
 
     // Apply button for the options menu
     document.getElementById('applyButton').addEventListener('click', function(event) {
