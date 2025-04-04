@@ -134,23 +134,25 @@ canvas {
   padding: 5px 20px;
 }
 
-/* Login */
-.login-container {
+/* Menú de inicio de sesión/registro */
+/* Menú de opciones */
+
+.login-container, .options-container {
   display: none; /* Oculta el contenedor por defecto */
   color: white;
   position: absolute; /* Posición absoluta en la pantalla */
   top: 50%; /* Centrado vertical */
   left: 50%; /* Centrado horizontal */
   transform: translate(-50%, -50%); /* Centra el objeto por su mitad */
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.98);
   padding: 50px;
   border: 2px solid white;
   font-family: 'Press Start 2P';
 }
-.login-container h2 {
+.login-container h2, .options-container h2 {
   margin-bottom: 50px;
 }
-.login-container form {
+.login-container form, .options-container form {
   display: flex;
   flex-direction: column; /* Alinea los elementos en columna */
   gap: 20px;
@@ -165,8 +167,28 @@ canvas {
   font-family: 'Press Start 2P';
   font-size: 16px;
 }
-/* Estilo e botones */
-.login-container button {
+/* Estilo para los inputs slider */
+/* Ref: https://eclixxo.com/crear-slider-control-volumen-html-5/ */
+.options-container input[type="range"] {
+  /* Elimina el estilo por defecto */
+  -webkit-appearance: none;
+  background: #434A5F;
+  border: 2px solid #6C6EA0;
+  outline: none;
+  height: 10px;
+}
+/* Estilo para el nodo del slider */
+.options-container input[type="range"]::-webkit-slider-thumb {
+  /* Elimina el estilo por defecto */
+  -webkit-appearance: none;
+  background: #ffcd81;
+  border: 2px solid #434A5F;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+/* Estilo de botones */
+.login-container button, .options-container button {
   padding: 10px;
   border: 2px solid #434A5F;
   background-color: #6C6EA0;
@@ -175,7 +197,7 @@ canvas {
   font-size: 16px;
   cursor: pointer;
 }
-.login-container button:hover {
+.login-container button:hover, .options-container button:hover {
   background-color: #ffcd81;
   color: black;
   transform: scale(1.05); /* Efecto de zoom */

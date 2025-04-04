@@ -166,7 +166,6 @@ class Player extends AnimatedObject {
             this.meleeWeapon = this.weapons.arm;
             this.gunWeapon = this.weapons.slow_gun;
         } else {
-            this.firstTimePlaying = false;
             this.meleeWeapon = this.weapons.romoticArm;
             this.gunWeapon = this.weapons.fast_gun;
         }
@@ -475,6 +474,9 @@ class Player extends AnimatedObject {
 
     updateSprites() {
         if (!this.firstTimePlaying) {
+            this.meleeSprite = '../../assets/characters/skippy/skippy_2.png';
+            this.gunSprite = '../../assets/characters/skippy/skippy_4.png';
+            this.attackSprite = '../../assets/characters/skippy/skippy_attack_2.png';
             return;
         }
         // Update the sprites based on the level

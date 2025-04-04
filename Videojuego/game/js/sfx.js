@@ -2,8 +2,8 @@
  * Sound effects for the game
 */
 
-const sfxVolume = 0.5; // Volume for sound effects
-const musicVolume = 0.5; // Volume for music
+let sfxVolume = 0.5; // Volume for sound effects
+let musicVolume = 0.5; // Volume for music
 
 const sfx = {
     // Sound effects
@@ -14,7 +14,20 @@ const sfx = {
     levelUp: new Audio("../../assets/sfx/levelup.ogg"),
 };
 
-// Set volume for sound effects
-for (const key in sfx) {
-    sfx[key].volume = sfxVolume;
+const music = {
+    // Background music
+};
+
+// Initialize volume
+updateVolume(musicVolume, sfxVolume);
+
+function updateVolume(musicVolume, sfxVolume) {
+    // Update the volume for sfx
+    for (const key in sfx) {
+        sfx[key].volume = sfxVolume;
+    }
+    // Update the volume for music
+    for (const key in music) {
+        music[key].volume = musicVolume;
+    }
 }

@@ -76,6 +76,9 @@ Las habilidades se desbloquean al subir de nivel. Cada vez que subas de nivel, p
 - Generación aleatoria de obstáculos en salas
 - Animaciones de los personajes (jugador y enemigos)
 - Menú de interfaz de usuario (UI) dentro del juego
+- Menú de opciones (para ajustar volumen de música y sonidos)
+- Menú de pausa
+- Menú principal (falta la sección de estadísticas)
 - Combate cuerpo a cuerpo y a distancia
 - Sistema de armas cuerpo a cuerpo y a distancia
 - Desbloqueo de armas permanentes
@@ -94,7 +97,6 @@ Las habilidades se desbloquean al subir de nivel. Cada vez que subas de nivel, p
 ### Funcionalidades en desarrollo
 - Sonidos de los personajes (jugador y enemigos)
 - Música de los niveles y menús
-- Menú de opciones (para ajustar volumen de música y sonidos)
 - Menú de estadísticas. Para esto debemos hacer la conexión con la API y definir los endpoints que se utilizarán. Las estadísticas que se mostrarán son las siguientes:
     - Estadísticas personales
     - Estadísticas globales

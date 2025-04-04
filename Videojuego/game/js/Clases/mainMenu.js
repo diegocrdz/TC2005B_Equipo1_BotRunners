@@ -104,15 +104,8 @@ class MainMenu extends GameObject {
             case "play":
                 game.startCinematic();
                 break;
-            case "restart":
-                game.togglePause();
-                restartRooms(true, 0, 6);
-                break;
             case "options":
-                // game.state = "options";
-                break;
-            case "menu":
-                // game.state = "menu";
+                game.optionsMenu.show();
                 break;
             case "statistics":
                 // game.state = "statistics";
