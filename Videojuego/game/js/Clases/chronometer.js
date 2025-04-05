@@ -1,18 +1,27 @@
 /*
  * Chronometer to measure the time elapsed in the game
  * Reference: https://youtu.be/nO53--j1bDM?feature=shared
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
+// Measure the time elapsed in the game
 class Chronometer {
     constructor() {
-        this.$elapsedTime = document.querySelector("#elapsedTime"); //reference to the element in the html
-        this.idInterval = null; //id of the interval
-        this.initialTime = null; //initial time
-        this.temporaryDifference = 0; //temporary difference
-        this.isRunning = false; //boolean to check if the chronometer is running
-        this.init(); //initiates the chronometer
+        this.$elapsedTime = document.querySelector("#elapsedTime"); // Reference to the element in the html
+        this.idInterval = null; // Id of the interval
+        this.initialTime = null; // Initial time
+        this.temporaryDifference = 0; // Temporary difference
+        this.isRunning = false; // Boolean to check if the chronometer is running
+        this.init(); // Initiates the chronometer
     }
-        
+    
+    // Function to add a 0 before the value if it is less than 10
     addZeros(value) {
         // If the value is less than 10, add a 0 before the value
         if (value < 10){ 
@@ -22,6 +31,7 @@ class Chronometer {
         }
     }
 
+    // Function to convert seconds to minutes and seconds
     secondsToMinutes(seconds) {
         const minutes = Math.floor(seconds / 60); // Calculates the minutes
         seconds = seconds % 60; // Calculates the seconds
@@ -45,7 +55,8 @@ class Chronometer {
         this.$elapsedTime.textContent = this.secondsToMinutes(Math.floor(difference / 1000));
     }
 
-    start(){
+    // Start the chronometer
+    start() {
         // Check if the chronometer is already running
         if (this.isRunning) {
             return; // If it's running, do nothing
@@ -57,7 +68,8 @@ class Chronometer {
         this.isRunning = true; // Set the chronometer as running
     }
 
-    pause(){
+    // Pause the chronometer
+    pause() {
         // Check if the chronometer is not running
         if (!this.isRunning) {
             return; // If it's not running, do nothing
@@ -71,6 +83,7 @@ class Chronometer {
         this.isRunning = false; // Set the chronometer as not running
     }
     
+    // Reset the chronometer
     reset(){
         // Clear the interval to stop refreshing the time
         clearInterval(this.idInterval);
@@ -80,6 +93,7 @@ class Chronometer {
         this.init(); // Reset the displayed time
     }
 
+    // Initialize the chronometer
     init(){
         // Initiates the time
         this.$elapsedTime.textContent = "00:00";

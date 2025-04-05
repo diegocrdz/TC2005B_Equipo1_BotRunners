@@ -1,9 +1,17 @@
 /*
  * General classes for the game
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
 "use strict";
 
+// Class for vectors
 class Vec {
     constructor(x, y) {
         this.x = x;
@@ -27,6 +35,7 @@ class Vec {
     }
 }
 
+// Class for rectangles
 class Rect {
     constructor(x, y, width, height) {
         this.x = x;
@@ -36,6 +45,7 @@ class Rect {
     }
 }
 
+// Class for general game objects
 class GameObject {
     constructor(color, width, height, x, y, type) {
         this.position = new Vec(x, y);
@@ -112,10 +122,11 @@ class GameObject {
     }
 
     update() {
-
+        // Method to be overridden by subclasses
     }
 }
 
+// Class for animated objects
 class AnimatedObject extends GameObject {
     constructor(color, width, height, x, y, type) {
         super(color, width, height, x, y, type);
@@ -155,6 +166,7 @@ class AnimatedObject extends GameObject {
     }
 }
 
+// Text labels witthout wrapping
 class TextLabel {
     constructor(x, y, font, color) {
         this.x = x;
@@ -298,6 +310,8 @@ class Bar {
 }
 
 /*
+// NOTE: This was the original collision detection function
+// Dont delete it in case we need it in the future
 // Simple collision detection between rectangles
 function overlapRectangles(actor1, actor2) {
     return actor1.position.x + actor1.size.x > actor2.position.x &&

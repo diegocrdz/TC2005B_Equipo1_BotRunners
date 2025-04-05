@@ -1,7 +1,15 @@
 /*
  * Actors of each level of the game
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
+// Class to initialize all the actors in the game
 class Level {
     constructor(plan) {
         // Split the plan string into a matrix of strings
@@ -159,6 +167,8 @@ class Level {
         }
     }
 
+    // Define the colors and sprites for each level
+
     getBackgroundForLevel() {
         const backgrounds = {
             0: "#d9b399", // yellow
@@ -209,6 +219,7 @@ class Level {
         return platforms[level] || platforms[0];
     }
 
+    // Add a floor tile to the background of the level
     addBackgroundFloor(x, y) {
         let floor = levelChars['.'];
         let floorActor = new GameObject(this.getBackgroundForLevel(level), 1, 1, x, y, floor.label);
@@ -222,6 +233,8 @@ class Level {
         return new Rect(tile, y, 32, 32);
     }
 
+    // Randomize the environment for each level
+    // This function is currently not used, but it is here for future use
     randomEvironment(rnd) {
         let rect;
         if (rnd < 0.33) {

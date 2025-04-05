@@ -1,29 +1,39 @@
 /*
  * Sound effects for the game
+ * This file contains the sound effects and music for the game,
+ * including global variables for volume and functions to play sounds.
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
-let sfxVolume = 0.5; // Volume for sound effects
-let musicVolume = 0.1; // Volume for music
-
+// Global variables for volume
+let sfxVolume = 0.5;
+let musicVolume = 0.1;
+// Sound effects
 const sfx = {
-    // Sound effects
-    collect: new Audio("../../assets/sfx/collect.ogg"),
-    click: new Audio("../../assets/sfx/menu/click.ogg"),
-    pause: new Audio("../../assets/sfx/pause.ogg"),
-    gameOver: new Audio("../../assets/sfx/loose.ogg"),
-    levelUp: new Audio("../../assets/sfx/levelup.ogg"),
-    jump : new Audio("../../assets/sfx/jump.wav"),
-    hit : new Audio("../../assets/sfx/click_001.ogg"),
-    getHit : new Audio("../../assets/sfx/getHit1.mp3"),
-    dash : new Audio("../../assets/sfx/dash.mp3"),
-    shoot : new Audio("../../assets/sfx/shoot.ogg"),
-    bossDie : new Audio("../../assets/sfx/bossDie.ogg"),
-    enemyDie : new Audio("../../assets/sfx/enemyDie3.ogg"),
-    button : new Audio("../../assets/sfx/button.wav"),
+    collect: new Audio("../../assets/Sounds/sfx/collect.ogg"),
+    click: new Audio("../../assets/Sounds/sfx/click.ogg"),
+    pause: new Audio("../../assets/Sounds/sfx/pause.ogg"),
+    gameOver: new Audio("../../assets/Sounds/sfx/loose.ogg"),
+    levelUp: new Audio("../../assets/Sounds/sfx/levelup.ogg"),
+    jump : new Audio("../../assets/Sounds/sfx/jump.wav"),
+    hit : new Audio("../../assets/Sounds/sfx/hit.ogg"),
+    getHit : new Audio("../../assets/Sounds/sfx/getHit.mp3"),
+    dash : new Audio("../../assets/Sounds/sfx/dash.mp3"),
+    shoot : new Audio("../../assets/Sounds/sfx/shoot.ogg"),
+    bossDie : new Audio("../../assets/Sounds/sfx/bossDie.ogg"),
+    enemyDie : new Audio("../../assets/Sounds/sfx/enemyDie.ogg"),
+    button : new Audio("../../assets/Sounds/sfx/button.wav"),
 };
 
+// Background music
 const music = {
-    // Background music
+    // Level music
     level1: new Audio("../../assets/Sounds/music/level_1.mp3"),
     level2: new Audio("../../assets/Sounds/music/level_2.ogg"),
     level3: new Audio("../../assets/Sounds/music/level_3.ogg"),
@@ -33,6 +43,7 @@ const music = {
     musicFinalBoss: new Audio ("../../assets/Sounds/music/final_boss.mp3"),
 };
 
+// Music for the menus
 const musicMenus ={
     // Menu music
     musicPause: new Audio ("../../assets/Sounds/music/pause.ogg"),
@@ -44,6 +55,14 @@ const musicMenus ={
 
 // Initialize volume
 updateVolume(musicVolume, sfxVolume);
+
+// Initialize loop for music
+for (const key in music) {
+    music[key].loop = true;
+}
+for (const key in musicMenus) {
+    musicMenus[key].loop = true;
+}
 
 // Function to update the volume of sound effects and music
 function updateVolume(musicVolume, sfxVolume) {
@@ -59,15 +78,6 @@ function updateVolume(musicVolume, sfxVolume) {
     for (const key in musicMenus) {
         musicMenus[key].volume = musicVolume;
     }
-}
-
-// Set loop for music
-for (const key in music) {
-    music[key].loop = true;
-}
-// Set loop for menu music
-for (const key in musicMenus) {
-    musicMenus[key].loop = true;
 }
 
 // Function to update the music based on the level and game state

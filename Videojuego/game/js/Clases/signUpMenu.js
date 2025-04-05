@@ -1,7 +1,18 @@
 /*
  * Implementation of the menu that appears when the game is paused.
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
+// Class that represents the sign in and sign up menu
+// This menu was implemented to allow the player to sign in
+// but later translated to a HTML element
+// It is still here in case we need it for future reference
 class SignUpMenu extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super(_color, width, height, x, y, "minimap");

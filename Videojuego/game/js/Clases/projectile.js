@@ -1,7 +1,15 @@
 /*
  * Projectiles shot by the player when using the gun
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
+// Class that defines projectiles shot by the player when using the gun
 class Projectile extends GameObject {
     constructor(_color, width, height, x, y, _type, direction) {
         super("blue", width, height, x, y, "projectile");
@@ -32,6 +40,7 @@ class Projectile extends GameObject {
         }
     }
 
+    // Draw the projectile and its hitbox
     draw(ctx, scale) {
         super.draw(ctx, scale);
         this.drawHitbox(ctx, scale);

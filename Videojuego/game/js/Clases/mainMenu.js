@@ -1,7 +1,15 @@
 /*
- * Implementation of the menu that appears when the game is paused.
+ * Implementation of the main menu of the game
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
+// Define the main menu for the game
 class MainMenu extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super(_color, width, height, x, y, "minimap");

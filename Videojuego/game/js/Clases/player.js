@@ -1,12 +1,21 @@
 /*
  * Implementation of the player of the game
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
+// Global variables that affect the player movement
 // The project works only with very small values for velocities and acceleration
 const walkSpeed = 0.01;
 const initialJumpSpeed = -0.03;
 const gravity = 0.0000981;
 
+// Class that defines the player of the game
 class Player extends AnimatedObject {
     constructor(_color, width, height, x, y, _type) {
         super("green", width, height, x, y, "player");
@@ -161,10 +170,15 @@ class Player extends AnimatedObject {
         this.drawHitbox(ctx, scale);
     }
 
+    // Update the weapons based on the level
     updateWeapons() {
+        // If the player is not playing for the first time,
+        // he already has weapons defined
         if (!this.firstTimePlaying) {
             return;
         }
+        // If the player is playing for the first time,
+        // set the weapons to the basic ones
         if (level === 0) {
             this.meleeWeapon = this.weapons.arm;
             this.gunWeapon = this.weapons.slow_gun;
@@ -175,6 +189,7 @@ class Player extends AnimatedObject {
             this.meleeWeapon = this.weapons.romoticArm;
             this.gunWeapon = this.weapons.fast_gun;
         }
+        // Set the cooldowns for the weapons
         this.attackCooldown = this.meleeWeapon.cooldown;
         this.shootCooldown = this.gunWeapon.cooldown;
     }
@@ -207,6 +222,7 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Stop moving the player
     stopMovement(direction) {
         const dirData = this.movement[direction];
         dirData.status = false;
@@ -219,6 +235,7 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Make the player crouch
     crouch() {
         this.isCrouching = true;
         const crouchData = this.movement.crouch;
@@ -232,6 +249,7 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Make the player stand up after crouching
     standUp () {
         this.isCrouching = false;
         const crouchData = this.movement.crouch;
@@ -242,6 +260,7 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Make the player jump one time
     jump() {
         if (!this.isJumping) {
             // Give a velocity so that the player starts moving up
@@ -259,6 +278,7 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Make the player jump a second time
     doubleJump(){
         if(this.njumps < 1 && this.canDoubleJump){ //Lets the player only jump two times
             this.isJumping = false;
@@ -267,6 +287,7 @@ class Player extends AnimatedObject {
         }    
     }
 
+    // Make the player land on the ground after jumping
     land() {
         // If the character is touching the ground,
         // there is no vertical velocity
@@ -295,20 +316,28 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Make the player dash in a certain direction
     dash(level, deltaTime) {
         if(this.canDash && !this.isDashing){
             // The player cant dash while already dashing
             this.isDashing = true;
             this.canDash = false;
             
-            let dashDistance = 5; // Total dash distance
-            let direction = this.isFacingRight ? 1 : -1; //Defines the direction of the dash
-            let dashSpeed = 0.05; // Speed of the dash
-            let moved = 0; // Tracks how many pixels the player has moved
-            let step = dashSpeed * deltaTime; // Calculates the step size based on the speed and delta time
+            // Total dash distance
+            let dashDistance = 5
+            // Define the direction of the dash
+            let direction = this.isFacingRight ? 1 : -1;
+            // Speed of the dash
+            let dashSpeed = 0.05;
+            // Tracks how much the player has moved
+            let moved = 0;
+            // Calculates the step size based on the speed and delta time
+            let step = dashSpeed * deltaTime;
 
+            // Function to move the player during the dash
             let dashMove = () => {
                 
+                // If the player has moved less than the dash distance
                 if (moved < dashDistance) {
                     //Calculates new position
                     let newXPosition = this.position.plus(new Vec(direction * step, 0));
@@ -329,17 +358,18 @@ class Player extends AnimatedObject {
                 }
             };
     
-            dashMove(); //initiates animated dash
+            dashMove(); // Initiates animated dash
             sfx.dash.play(); // Play the dash sound
             
             // Set a timeout to reset the dash state
             setTimeout(() => {
                 this.isDashing = false;
                 this.canDash = true;
-            }, 2000); // 2 second cooldown
+            }, 2000);
         }
     }
-
+    
+    // Make the player attack with the melee weapon
     attack() {
         if (this.isAttacking) return;
 
@@ -385,6 +415,7 @@ class Player extends AnimatedObject {
         }, this.attackCooldown);
     }
 
+    // Make the player shoot with the gun
     shoot() {
         if (this.selectedWeapon !== 2 || this.isShooting) return;
 
@@ -433,6 +464,7 @@ class Player extends AnimatedObject {
         }, this.shootCooldown);
     }
 
+    // Make the player take damage from enemies or spikes
     takeDamage(amount) {
         if (this.isInvulnerable) return; // Dashing makes you invulnerable
 
@@ -460,6 +492,7 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Make the player gain experience points
     gainXp(amount) {
         this.xp += amount;
         sfx.collect.play(); // Play the collect sound
@@ -475,6 +508,7 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Make the player die and reset the game
     die() {
         sfx.gameOver.play(); // Play the game over sound
         // Make the player disappear
@@ -482,6 +516,7 @@ class Player extends AnimatedObject {
         game.state = "gameover";
     }
 
+    // Make the player play the hit animation
     hit() {
         if (this.isHit) return; // Prevent re-triggering the hit animation if already playing
     
@@ -500,6 +535,7 @@ class Player extends AnimatedObject {
         }, hitData.duration);
     }
 
+    // Update the sprites based on the level and first time playing
     updateSprites() {
         if (!this.firstTimePlaying) {
             this.meleeSprite = '../../assets/characters/skippy/skippy_2.png';
@@ -519,6 +555,7 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Select the weapon to use
     selectWeapon(number) {
         let lastWeapon = this.selectedWeapon;
 
@@ -540,6 +577,7 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Use the health potion to heal the player
     useHealthPotion() {
         if (!this.hasUsedPotion && this.health < 100) {
 

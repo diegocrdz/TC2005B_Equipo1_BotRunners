@@ -1,7 +1,15 @@
 /*
  * Implementation of the menu that appears when the player dies
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
+// Define the menu that appears when the player dies
 class LooseMenu extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super(_color, width, height, x, y, "loosemenu");

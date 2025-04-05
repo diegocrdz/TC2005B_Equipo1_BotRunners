@@ -1,8 +1,16 @@
 /*
  * Minimap to help the player navigate through the game
  * The top right menu contains the minimap and the chronometer
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
+// Define the minimap that shows the rooms and the player position
 class MiniMap extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super(_color, width, height, x, y, "minimap");

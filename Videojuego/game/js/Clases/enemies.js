@@ -1,13 +1,22 @@
 /*
  * Enemies in the game
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
+// Generic enemy class
 class Enemy extends AnimatedObject {
     constructor(_color, width, height, x, y, _type) {
         super("red", width, height, x, y, _type);
         this.isFacingRight = false; // Default direction is left
         this.isHit = false;
 
+        // Properties
         this.health = 0;
         this.maxHealth = 0;
         this.damage = 0;
@@ -69,6 +78,7 @@ class Enemy extends AnimatedObject {
         this.updateFrame(deltaTime);
     }
 
+    // Make the enemy move horizontally
     moveHorizontally(level, deltaTime) {
         const newXPosition = this.position.plus(new Vec(this.velocity.x * deltaTime, 0));
         if (!level.contact(newXPosition, this.size, 'wall')
@@ -77,6 +87,7 @@ class Enemy extends AnimatedObject {
         }
     }
 
+    // Make the enemy change direction when it hits a wall
     bounceOffWalls(level, deltaTime) {
         const newXPosition = this.position.plus(new Vec(this.velocity.x * deltaTime, 0));
         if (level.contact(newXPosition, this.size, 'wall')) {
@@ -86,6 +97,7 @@ class Enemy extends AnimatedObject {
         }
     }
 
+    // Make the enemy change direction to follow the player
     followPlayer(level, deltaTime) {
         const playerToRight = level.player.position.x > this.position.x;
 
@@ -104,6 +116,7 @@ class Enemy extends AnimatedObject {
         }
     }
 
+    // Make the enemy move vertically
     moveVertically(level, deltaTime) {
         const newYPosition = this.position.plus(new Vec(0, this.velocity.y * deltaTime));
         if (!level.contact(newYPosition, this.size, 'wall')
@@ -114,6 +127,7 @@ class Enemy extends AnimatedObject {
         }
     }
 
+    // Draw the enemy and hitbox
     draw(ctx, scale) {
         super.draw(ctx, scale);
         this.drawHitbox(ctx, scale);
@@ -135,6 +149,7 @@ class Enemy extends AnimatedObject {
         healthBar.draw(ctx);
     }
 
+    // Start the movement in a specific direction
     startMovement(direction) {
         const dirData = this.movement[direction];
         dirData.status = true;
@@ -142,6 +157,7 @@ class Enemy extends AnimatedObject {
         this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
     }
 
+    // Stop the movement
     stopMovement(direction) {
         const dirData = this.movement[direction];
         dirData.status = false;
@@ -149,6 +165,7 @@ class Enemy extends AnimatedObject {
         this.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
     }
 
+    // Take damage from the player
     takeDamage(amount, cooldown) {
         if (this.isInvulnerable) return;
     
@@ -166,6 +183,7 @@ class Enemy extends AnimatedObject {
         }
     }
 
+    // Kill the enemy and drop a coin with experience value
     die() {
         // Get the position of the enemy
         let x = this.position.x + 1;
@@ -195,10 +213,13 @@ class Enemy extends AnimatedObject {
         }
     }
 
+    // Play the sound effect when the enemy dies
+    // This function can be overridden to play a different sound
     playDieSound(){
         sfx.enemyDie.play(); // Play the enemy die sound effect
     }
 
+    // Play the hit animation when the enemy is hit
     hit() {
         if (this.isHit) return; // Prevent re-triggering the hit animation if already playing
     
@@ -220,10 +241,12 @@ class Enemy extends AnimatedObject {
     }
 }
 
+// Normal enemy that follows the player
 class NormalEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
         super("red", width, height, x, y, "enemy");
 
+        // Properties
         this.health = 50;
         this.maxHealth = 50;
         this.damage = 20;
@@ -234,10 +257,12 @@ class NormalEnemy extends Enemy {
     }
 }
 
+// Heavy enemy that follows the player
 class HeavyEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
         super("red", width, height, x, y, "enemy");
 
+        // Properties
         this.health = 75;
         this.maxHealth = 75;
         this.damage = 40;
@@ -248,11 +273,13 @@ class HeavyEnemy extends Enemy {
     }
 }
 
+// Flying enemy that moves from side to side
 class FlyingEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
         super("red", width, height, x, y, "enemy");
         this.isFacingRight = true; // Default direction is right
 
+        // Properties
         this.health = 25;
         this.maxHealth = 25;
         this.damage = 10;
@@ -270,10 +297,12 @@ class FlyingEnemy extends Enemy {
     }
 }
 
+// Boss enemy that follows the player and jumps when health is low
 class BossEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
         super("red", width, height, x, y, "boss");
 
+        // Properties
         this.health = 300;
         this.maxHealth = 300;
         this.damage = 40;
@@ -314,8 +343,8 @@ class BossEnemy extends Enemy {
         this.updateFrame(deltaTime);
     }
 
+    // Play the boss die sound effect
     playDieSound(){
-        sfx.bossDie.play(); // Play the boss die sound effect
+        sfx.bossDie.play();
     }
-
 }

@@ -1,8 +1,25 @@
 /*
  * Level generation script for the game
+ * Used to generate all the rooms and levels of the game
+ * Including the content of the rooms
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
 "use strict";
+
+// Global variables for level generation
+// List of generated levels
+let GAME_LEVELS = [];
+// Rooms to be generated
+let rooms;
+// Level of rooms in all levels
+let numRooms = 6;
 
 // Room class to generate a graph of rooms with connections
 class Room {
@@ -19,7 +36,9 @@ class Room {
         this.isExplored = false;
     }
 
+    // Connect this room to another room
     connect(room) {
+        // Check if the room is already connected to this room
         if (!this.connections.has(room.id)) {
             this.connections.add(room.id);
             room.connections.add(this.id);
@@ -34,6 +53,7 @@ class LevelGenerator {
         this.rooms = new Map();
     }
 
+    // Generate a graph of rooms with connections
     generate() {
         // Create rooms
         for (let i = 0; i < this.numRooms; i++) {
@@ -59,6 +79,7 @@ class LevelGenerator {
         return this.rooms;
     }
 
+    // Add branching paths to the graph of rooms
     addBranchingPaths() {
         let buttonRoom = null;
 
@@ -77,7 +98,9 @@ class LevelGenerator {
                 this.rooms.get(i).connect(branchRoom);
                 buttonRoom = branchRoom;
             }
-            if (Math.random() < 0.3) { // 30% of probability to create a branch
+
+            // 30% of probability to create a branch
+            if (Math.random() < 0.3) {
 
                 // If the room already has a button branch, create a normal branch
                 if (i == random) {
@@ -108,19 +131,23 @@ class LevelGenerator {
         }
     }
 
+    // Check if the number of connection of the rooms to assign the type of ladder
     checkLadder() {
 
         // If the room has a connection to a bifurcation, change the type to "ladder1" or "ladder2"
         for (let room of this.rooms.values()) {
-            if (room.connections.size === 3) { // If the room has a connection to one bifurcation
+            // If the room has a connection to one bifurcation
+            if (room.connections.size === 3) {
                 room.type = "ladder1";
-            }
-            else if (room.connections.size === 4) { // If the room has a connection to two bifurcations
+            // If the room has a connection to two bifurcations
+            } else if (room.connections.size === 4) {
                 room.type = "ladder2";
             }
         }
     }
 
+    // Print the graph of rooms with connections
+    // Used for debugging purposes
     printGraph() {
         for (let room of this.rooms.values()) {
             console.log(`${room.id} (${room.type}): ${Array.from(room.connections).join(', ')}`);
@@ -174,7 +201,6 @@ E - Pipe end
 S - Pipe start
 L - Ladder
 0 - Button
-T - Tutorial sign (no interactuable)
 X - Boss
 */
 
@@ -199,7 +225,8 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
 
     // Side walls
     for (let y = 0; y < height; y++) {
-        if (y < height - 4 || y === height - 1) { // Fill the first and last columns with walls
+        // Fill the first and last columns with walls
+        if (y < height - 4 || y === height - 1) {
             level[y][0] = '#'; 
             level[y][width - 1] = '#';
             // Place a big door at the right side of the level
@@ -207,21 +234,25 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
                 level[y][width - 1] = 'D'; 
             }
         }
-        else if (roomType == "start") { // Fill the last blocks of the first column with doors
+        // Fill the last blocks of the first column with doors
+        else if (roomType == "start") {
             level[y][0] = '#'; 
             level[y][width - 1] = 'D'; 
         }
-        else if (roomType == "boss") { // Fill the last blocks of the last column with doors
+        // Fill the last blocks of the last column with doors
+        else if (roomType == "boss") {
             level[y][0] = 'D'; 
             level[y][width - 1] = 'D'; 
         }
+        // Fill the last blocks of the first and last columns with walls
         else if (roomType == "button"
                 || roomType == "branch1"
-                || roomType == "branch2") { // Fill the last blocks of the first and last columns with walls
+                || roomType == "branch2") {
             level[y][0] = '#';
             level[y][width - 1] = '#';
         }
-        else { // Fill the last blocks of the first and last columns with doors
+        // Fill the last blocks of the first and last columns with doors
+        else {
             level[y][0] = 'D'; 
             level[y][width - 1] = 'D'; 
         }
@@ -234,7 +265,8 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     function placeRandomly(char, count, minY=1, maxY=height-2, minX=1, maxX=width-2) {
         let placed = 0;
         let attempts = 0;
-        const maxAttempts = 1000; // Limit the number of attempts to prevent infinite loops
+        // Limit the number of attempts to prevent infinite loops
+        const maxAttempts = 1000;
         while (placed < count && attempts < maxAttempts) {
             let x = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
             let y = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
@@ -251,23 +283,28 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     }
 
     function placePipes() {
-        let numPipes = Math.floor(Math.random() * 2) + 1; // 1 o 2 tuberías
+        let numPipes = Math.floor(Math.random() * 2) + 1; // 1 or 2 pipes
         let minX = Math.floor(width / 3);
         let maxX = Math.floor(2 * width / 3);
-        let usedPositions = new Set(); // Guardará las posiciones de tuberías ya usadas
-    
+        // Save the posititons of the pipes that are already placed
+        let usedPositions = new Set();
+        
+        // Dont place pipes in the ladder rooms
         if (roomType === "ladder1"
             || roomType === "ladder2") {
-            return; // No colocar tuberías en habitaciones con escaleras.
+            return;
         }
     
         for (let i = 0; i < numPipes; i++) {
-            let attempts = 10; // Intentos para encontrar una posición válida
-            let pipeX;
-    
+            // Define attempts to find a valid position for the pipe
+            let attempts = 10;
+            let pipeX; // Position of the pipe
+            
+            // Do-while to find a valid position for the pipe
             do {
                 pipeX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
                 attempts--;
+            // While the position is already used or the pipe is too close to another pipe
             } while (
                 (usedPositions.has(pipeX)
                 || usedPositions.has(pipeX - 1) || usedPositions.has(pipeX + 1) 
@@ -275,29 +312,34 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
                 || usedPositions.has(pipeX - 3) || usedPositions.has(pipeX + 3)) 
                 && attempts > 0
             );
-    
+            
+            // If the attempts are 0, continue to the next pipe
+            // This means that there is no valid position for the pipe
             if (attempts === 0) {
-                continue; // Si después de varios intentos no se encuentra una posición válida, saltar esta tubería.
-            }
-    
-            let pipeLength = Math.floor(Math.random() * 5) + 3; // Longitud entre 3 y 7
-    
-            // **Asegurar que la posición inicial esté vacía**
-            if (level[1][pipeX] !== '.') {
                 continue;
             }
     
-            level[1][pipeX] = 'S'; // **Colocar la cabeza de la tubería en el techo**
-            usedPositions.add(pipeX); // **Guardar la posición de la tubería**
+            let pipeLength = Math.floor(Math.random() * 5) + 3; // 3 to 7 blocks long
     
-            // **Dibujar el cuerpo de la tubería**
+            // Check if the pipe will be placed in a valid position
+            if (level[1][pipeX] !== '.') {
+                continue;
+            }
+            
+            // Place the head of the pipe in the ceiling
+            level[1][pipeX] = 'S';
+            // Save the position of the pipe
+            usedPositions.add(pipeX);
+    
+            // Draw the rest of the pipe
             for (let j = 2; j < Math.min(1 + pipeLength, height - 1); j++) {
+                // If the pipe encounters anything, break the loop
                 if (level[j][pipeX] !== '.') {
-                    break; // **Si choca con algo, detener la tubería**
+                    break;
                 }
                 level[j][pipeX] = 'S'; 
             }
-    
+            // Place the end of the pipe
             level[Math.min(1 + pipeLength, height - 2)][pipeX] = 'E'; 
         }
     }
@@ -461,13 +503,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     return level.map(row => row.join('')).join('\n');
 }
 
-// List of generated levels
-let GAME_LEVELS = [];
-// Rooms to be generates
-let rooms;
-// Level of rooms in all levels
-let numRooms = 6;
-
+// Function to generate the levels and fill the GAME_LEVELS array
 function generateLevel(numRooms) {
     GAME_LEVELS = []; // Reset the levels array
     let levelGenerator = new LevelGenerator(numRooms);

@@ -1,5 +1,14 @@
 /*
  * Implementation of the game
+ * This file contains the main game loop and the game logic,
+ * including global variables used in the game.
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
 "use strict";
@@ -27,6 +36,7 @@ const scale = 32;
 const levelWidth = Math.floor(canvasWidth / scale);
 const levelHeight = Math.floor(canvasHeight / scale);
 
+// Main class for the game
 class Game {
     constructor(state, level) {
         this.state = state;
@@ -63,6 +73,7 @@ class Game {
         // List of projectiles
         this.projectiles = [];
 
+        // Labels
         this.labelMoney = new TextLabel(20, canvasHeight - 50,
                                         "30px Ubuntu Mono", "white");
 
@@ -115,7 +126,7 @@ class Game {
             "black", // Background color
             "black" // Border color
         );
-
+        // XP bar for the player
         this.playerXpBar = new Bar(
             canvasWidth / 2 + 33, // X position
             canvasHeight - 30, // Y position
@@ -157,7 +168,7 @@ class Game {
         this.fastPistolImage = new GameObject(null, 65, 65, (canvasWidth / 2) - 303, canvasHeight - 80, 'weapon');
         this.fastPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
 
-        //Habilities
+        // Abilities images for the UI
         this.damageImage = new Image();
         this.damageImage.src = '../../../Videojuego/assets/objects/ui_damage.png';
 
@@ -186,7 +197,6 @@ class Game {
             });
 
             this.weaponBackgroundImage.draw(ctx,1);
-            //ctx.drawImage(this.weaponBackgroundImage, statisticsBackgroundX, statisticsBackgroundY, statisticsBackgroundWidth, statisticsBackgroundHeight);
 
             // Draw weapon selection highlight
             if (game.player.selectedWeapon === 1) {
@@ -202,12 +212,13 @@ class Game {
             }
         }
         
+        // Method to draw the weapons
         this.drawWeapons = (ctx) => {
             this.armImage.draw(ctx, 1);
             this.slowPistolImage.draw(ctx, 1);
         };
         
-        //Method to draw the abilities signs
+        // Method to draw the abilities signs
         this.drawAbilities = (ctx) => {
             const damageX = (canvasWidth / 2) - 125;
             const habilitiesWidth = 25;
@@ -235,6 +246,7 @@ class Game {
         console.log(`############ LEVEL ${level} START ###################`);
     }
 
+    // Start the cinematic sequence
     startCinematic() {
         this.state = 'cinematic';
         selectMusicMenus('cinematic');
@@ -244,6 +256,7 @@ class Game {
         }, 30000); // 30 seconds
     }
 
+    // Skip the cinematic sequence
     skipCinematic() {
         if (this.state === 'cinematic') {
             // Skip the cinematic and start the game
@@ -255,18 +268,21 @@ class Game {
         }
     }
 
+    // Pause the game
     pauseGame() {
         this.state = 'paused';
         console.log("Game paused");
         this.chronometer.pause();
     }
 
+    // Resume the game
     resumeGame() {
         this.state = 'playing';
         console.log("Game resumed");
         this.chronometer.start();
     }
 
+    // Start the game for the first time
     startGame() {
         this.state = 'playing';
         console.log("Game started");
@@ -276,10 +292,12 @@ class Game {
         selectMusic(level, this.levelNumber, 'playing');
     }
 
+    // Add projectiles to the game
     addProjectile(projectile) {
         this.projectiles.push(projectile);
     }
 
+    // Remove projectiles from the game
     removeProjectile(projectile) {
         const index = this.projectiles.indexOf(projectile);
         if (index > -1) {
@@ -316,9 +334,10 @@ class Game {
             }
         }
 
-        this.level = new Level(GAME_LEVELS[levelNumber]); // Create a new level
+        // Create the new level
+        this.level = new Level(GAME_LEVELS[levelNumber]);
         this.levelNumber = levelNumber;
-        this.level.player = this.player; // Assign the new player instance
+        this.level.player = this.player;
         this.actors = this.level.actors;
 
         // If the player is in the boss room, update the music
@@ -356,6 +375,7 @@ class Game {
         console.log("Moved to level " + levelNumber);
     }
 
+    // Get a branch room from from the specified type
     getBranch(type) {
         // Check if the current room has a connection to a branch
         const currentRoom = rooms.get(this.levelNumber); // Get the current room
@@ -371,10 +391,10 @@ class Game {
         return targetRoomId; // Return the found room ID
     }
 
-    // Function to 
-
+    // Update the game state
     update(deltaTime) {
 
+        // If the state is any of the following, do not update anything
         if (this.state === 'paused'
             || this.state === 'abilities'
             || this.state === 'gameover'
@@ -386,13 +406,14 @@ class Game {
             return;
         }
 
-        
-
+        // Update the player
         this.player.update(this.level, deltaTime);
 
+        // Update the actors of the level
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
-        }        
+        }
+
         // Update projectiles
         this.projectiles.forEach(projectile => projectile.update(this.level, deltaTime));
 
@@ -566,7 +587,10 @@ class Game {
         }
     }
 
+    // Draw the game on the canvas
     draw(ctx, scale) {
+        // If the game is in cinematic or win state, draw the respective images
+        // Ignore the rest of the game
         if (this.state === 'cinematic') {
             this.labelSkip.draw(ctx, "Presiona ESPACIO para omitir");
             this.cinematicImage.draw(ctx, 1);
@@ -649,7 +673,7 @@ class Game {
         // Draw the health potion
         this.potionImage.draw(ctx, 1);
         
-        //Draw the weapons
+        // Draw the weapons of the UI
         if (this.player.firstTimePlaying) {
             if (level === 0) {
                 this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1_locked.png');
@@ -665,15 +689,12 @@ class Game {
             this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
             this.armImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
         }
-        
         this.drawWeapons(ctx);
 
         // Draw the abilities
         this.drawAbilities(ctx);
 
         // Draw the labels
-        //this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
-        //this.labelDebug.draw(ctx, `Velocity: ( ${this.player.velocity.x.toFixed(3)}, ${this.player.velocity.y.toFixed(3)} )`);
         this.labelHP.draw(ctx, `${this.player.health} / ${this.player.maxHealth}`);
         this.labelXP.draw(ctx, `${this.player.xp} / ${this.player.xpToNextLevel}`);
         this.labelLife.draw(ctx, `HP: ${this.player.health}`);
@@ -684,6 +705,7 @@ class Game {
         // Draw the minimap and chronometer
         this.topRightMenu.draw(ctx);
 
+        // Draw menus and popups
         if (this.state === 'paused') {
             // Pause the game and do not update anything
             this.pauseMenu.draw(ctx);
@@ -709,12 +731,14 @@ class Game {
     togglePause() {
         this.paused = !this.paused;
 
-        this.state = this.paused ? 'paused' : 'playing'; // Update the game state
+        // Update the game state
+        this.state = this.paused ? 'paused' : 'playing';
 
+        // Pause or resume game
         if(this.paused){
-            this.chronometer.pause(); //pauses chronometer
+            this.chronometer.pause();
         } else{
-            this.chronometer.start(); //resumes chronometer
+            this.chronometer.start();
         }
 
         console.log(this.paused ? "Game paused" : "Game resumed");
@@ -770,7 +794,7 @@ const levelChars = {
     "@": {objClass: Player,
           label: "player",
           sprite: '../../assets/characters/skippy/skippy_1.png',
-          rect: new Rect(0, 0, 24, 24), // Size of each frame
+          rect: new Rect(0, 0, 24, 24), // 24 x 24 Size of each frame
           sheetCols: 22,
           startFrame: [0, 0]},
     "N": {objClass: NormalEnemy,
@@ -852,16 +876,17 @@ function main() {
     window.onload = init;
 }
 
+// Get canvas and start the game
 function init() {
     const canvas = document.getElementById('canvas');
-    //const canvas = document.querySelector('canvas');
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
     ctx = canvas.getContext('2d');
-
+    // Start the game
     gameStart();
 }
 
+// Start the game for the first time
 function gameStart() {
     // Set the global variable of level to 0
     level = 0;
@@ -875,13 +900,15 @@ function gameStart() {
     game.chronometer = new Chronometer(); //initiates chronometer
     game.chronometer.start(); //starts chronometer
 
-    
     setEventListeners();
 
     // Call the first frame with the current time
     updateCanvas(document.timeline.currentTime);
 }
 
+// Generate a new level with new rooms
+// Also specify if the player should be restarted or not
+// and the number of rooms to generate
 function restartRooms(restartPlayer, levelNumer, numRooms) {
 
     // Update the global variable of level
@@ -929,7 +956,9 @@ function restartRooms(restartPlayer, levelNumer, numRooms) {
     }
 }
 
+// Event listeners
 function setEventListeners() {
+    // Keyboard down event
     window.addEventListener("keydown", event => {
         // Skip the cinematic and prevent player actions
         if (game.state === 'cinematic') {
@@ -949,6 +978,7 @@ function setEventListeners() {
             return; // Block all actions
         }
 
+        // Movement
         if (event.code == "KeyW" || event.code == "Space") {
             game.player.jump();
             if (game.player.isJumping) {
@@ -965,6 +995,7 @@ function setEventListeners() {
             game.player.crouch();
         }
 
+        // Dash
         if(event.shiftKey){
             game.player.dash(game.level, deltaTime);
         }
@@ -1002,7 +1033,7 @@ function setEventListeners() {
             restartRooms(true, 0, 6);
         }
 
-        // Use first weapom
+        // Select weapons or use health potion
         if (event.key == '1') {
             game.player.selectWeapon(1);
 
@@ -1029,6 +1060,7 @@ function setEventListeners() {
             return; // Block all actions
         }
         
+        // Movement
         if (event.code == 'KeyA') {
             game.player.stopMovement("left");
         }
@@ -1048,7 +1080,6 @@ function setEventListeners() {
         }
     });
 
-    // Add event listeners for mouse events
     // Mouse click event
     canvas.addEventListener("click", event => {
         if (game.state === 'mainMenu') {

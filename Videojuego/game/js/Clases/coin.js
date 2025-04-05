@@ -1,8 +1,16 @@
 /*
  * Coins that the player can collect to gain experience points
  * Coins are also dropped by enemies when they die
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 04/04/2025
 */
 
+// Coin collectible by the player
 class Coin extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super("yellow", width, height, x, y, "coin");
