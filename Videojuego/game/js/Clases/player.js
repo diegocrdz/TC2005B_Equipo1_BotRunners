@@ -514,6 +514,8 @@ class Player extends AnimatedObject {
         // Make the player disappear
         console.log("Player died");
         game.state = "gameover";
+        // Play the game over music
+        selectMusicMenus('gameover');
     }
 
     // Make the player play the hit animation

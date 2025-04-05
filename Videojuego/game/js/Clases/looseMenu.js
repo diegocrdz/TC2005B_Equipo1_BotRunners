@@ -105,12 +105,12 @@ class LooseMenu extends GameObject {
         switch (buttonType) {
             case "retry":
                 restartRooms(true, 0, 6);
+                selectMusicMenus('playing')
                 break;
             case "menu":
                 restartRooms(true, 0, 6);
                 game.state = "mainMenu";
                 selectMusicMenus('mainMenu');
-                selectMusic(this.level, this.levelNumber, 'mainMenu');
                 break;
             default:
                 break;
