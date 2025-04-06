@@ -1031,6 +1031,7 @@ function setEventListeners() {
         // Restart the game
         if (event.code == 'KeyR') {
             restartRooms(true, 0, 6);
+            selectMusicMenus('playing');
         }
 
         // Select weapons or use health potion

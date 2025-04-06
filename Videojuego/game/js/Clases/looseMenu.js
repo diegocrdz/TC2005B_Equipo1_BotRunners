@@ -9,6 +9,8 @@
  * Date: 04/04/2025
 */
 
+"use strict";
+
 // Define the menu that appears when the player dies
 class LooseMenu extends GameObject {
     constructor(_color, width, height, x, y, _type) {
@@ -105,7 +107,7 @@ class LooseMenu extends GameObject {
         switch (buttonType) {
             case "retry":
                 restartRooms(true, 0, 6);
-                selectMusicMenus('playing')
+                selectMusicMenus('playing');
                 break;
             case "menu":
                 restartRooms(true, 0, 6);

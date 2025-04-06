@@ -481,7 +481,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
         else {
             placeRandomly('F', 1,
                             Math.floor(height / 3) * 2, Math.floor(height / 3) * 2,
-                            Math.floor(2 * width / 3), width - 4);
+                            Math.floor(2 * width / 3 + 1), width - 4);
         }
     }
 

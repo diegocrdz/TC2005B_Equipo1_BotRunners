@@ -175,6 +175,9 @@ class Player extends AnimatedObject {
         // If the player is not playing for the first time,
         // he already has weapons defined
         if (!this.firstTimePlaying) {
+            // Set the weapons to the better ones
+            this.meleeWeapon = this.weapons.romoticArm;
+            this.gunWeapon = this.weapons.fast_gun;
             return;
         }
         // If the player is playing for the first time,
