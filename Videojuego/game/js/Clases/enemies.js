@@ -265,7 +265,7 @@ class HeavyEnemy extends Enemy {
         // Properties
         this.health = 75;
         this.maxHealth = 75;
-        this.damage = 40;
+        this.damage = 25;
         this.xp_reward = 20;
 
         this.speed = 0.0005;
@@ -305,7 +305,7 @@ class BossEnemy extends Enemy {
         // Properties
         this.health = 300;
         this.maxHealth = 300;
-        this.damage = 40;
+        this.damage = 30;
         this.xp_reward = 500;
 
         this.speed = 0.003;
