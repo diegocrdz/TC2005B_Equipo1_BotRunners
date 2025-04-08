@@ -284,7 +284,7 @@ app.get('/api/stats', async (request, response) => {
 })
 
 // Get the top 5 players from the db
-app.get('/api/stats/top', async (request, response) => {
+app.get('/api/top', async (request, response) => {
     let connection = null
 
     try {

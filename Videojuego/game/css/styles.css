@@ -148,7 +148,7 @@ canvas {
 /* Login/Registration Menu */
 /* Options Menu */
 
-.login-container, .options-container {
+.login-container, .options-container, .stats-container {
   display: none; /* Hides the container by default */
   color: white;
   position: absolute; /* Absolute positioning on the screen */
@@ -160,10 +160,10 @@ canvas {
   border: 2px solid white;
   font-family: 'Press Start 2P';
 }
-.login-container h2, .options-container h2 {
+.login-container h2, .options-container h2, .stats-container h2 {
   margin-bottom: 50px;
 }
-.login-container form, .options-container form {
+.login-container form, .options-container form{
   display: flex;
   flex-direction: column; /* Align elements in a column */
   gap: 20px;
@@ -199,7 +199,7 @@ canvas {
   cursor: pointer;
 }
 /* Button styles */
-.login-container button, .options-container button {
+.login-container button, .options-container button, .stats-container button {
   padding: 10px;
   border: 2px solid #434A5F;
   background-color: #6C6EA0;
@@ -208,7 +208,7 @@ canvas {
   font-size: 16px;
   cursor: pointer;
 }
-.login-container button:hover, .options-container button:hover {
+.login-container button:hover, .options-container button:hover, .stats-container button:hover {
   background-color: #ffcd81;
   color: black;
   transform: scale(1.05); /* Zoom effect */

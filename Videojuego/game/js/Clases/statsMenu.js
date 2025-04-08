@@ -8,23 +8,23 @@
  *
  * Date: 04/04/2025
 */
-"use strict";
+
 // Define the menu that appears when the player presses the options button
-class OptionsMenu extends GameObject {
+class StatsMenu extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super(_color, width, height, x, y, "options");
 
         // Get the canvas element
-        this.optionsContainer = document.querySelector('.options-container');
+        this.statsContainer = document.querySelector('.stats-container');
     }
 
     show() {
         // Show the options menu
-        this.optionsContainer.style.display = 'block';
+        this.statsContainer.style.display = 'block';
     }
 
     hide() {
         // Hide the options menu
-        this.optionsContainer.style.display = 'none';
+        this.statsContainer.style.display = 'none';
     }
 }

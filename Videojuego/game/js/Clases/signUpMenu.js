@@ -13,6 +13,7 @@
 // This menu was implemented to allow the player to sign in
 // but later translated to a HTML element
 // It is still here in case we need it for future reference
+"use strict";
 class SignUpMenu extends GameObject {
     constructor(_color, width, height, x, y, _type) {
         super(_color, width, height, x, y, "minimap");
