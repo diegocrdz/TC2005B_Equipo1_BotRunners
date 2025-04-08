@@ -398,3 +398,16 @@ JOIN overclocked.niveles AS n -- Asigna la tabla niveles como n
 USING (id_partida)
 JOIN overclocked.salas AS s -- Asigna la salas niveles como s
 USING (id_nivel);
+
+--
+-- Estructura para la vista de mejores 5 jugadores con menor tiempo en las partidas
+--
+
+CREATE VIEW top_5_jugadores AS
+SELECT
+    overclocked.jugadores.nombre_usuario AS Usuario,
+    overclocked.estadisticas.tiempo_mejor_partida AS Tiempo
+FROM overclocked.jugadores
+JOIN overclocked.estadisticas
+USING (id_jugador)
+ORDER BY tiempo_mejor_partida LIMIT 5;
