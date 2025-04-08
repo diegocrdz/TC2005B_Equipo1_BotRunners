@@ -48,6 +48,7 @@ class Game {
         this.actors = level.actors;
         // Menu for displaying abilities
         this.abilities = new popUpAbility();
+        this.xpMultiplier = 1;
         // Button state for the boss room
         this.isButtonPressed = false;
         // Cinematic properties
@@ -469,7 +470,7 @@ class Game {
 
                 } else if (actor.type == 'coin' && actor.isCollectible) {
                     // Collect the coin
-                    this.player.gainXp(actor.xp_value);
+                    this.player.gainXp(Math.floor(actor.xp_value * this.xpMultiplier)); // Gain XP
                     // Remove the coin from the level string
                     GAME_LEVELS[this.levelNumber] = GAME_LEVELS[this.levelNumber].replace('$', '.');
                     // Remove the coin from the actors list

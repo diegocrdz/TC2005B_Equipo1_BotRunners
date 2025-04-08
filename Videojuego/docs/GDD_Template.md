@@ -972,4 +972,4 @@ Para el control de tareas y seguimiento del desarrollo del videojuego, se utiliz
 
 Overclocked es un videojuego roguelite 2D con elementos retro, de acción y exploración en el que el jugador encarna un robot llamado Skippy en una competencia de robótica. El jugador debe completar 3 niveles generados de forma aleatoria para ganar la competencia, desbloqueando nuevas armas y habilidades en el camino.
 
-El videojuego cuenta con un sistema de niveles, enemigos, jefes finales, armas y habilidades que buscan ofrecer una experiencia de juego desafiante. Además, el videojuego almacena en la base de datos las estadísticas de cada jugador y los mejores 5 tiempos registrados en completar el juego, permitiendo al jugador competir con otros jugadores y mejorar su tiempo récord.
+El videojuego cuenta con un sistema de niveles, enemigos, jefes finales, armas y habilidades que buscan ofrecer una experiencia de juego desafiante. Además, el videojuego almacena en la base de datos las estadísticas de cada jugador y los mejores 5 tiempos registrados en completar el juego, permitiendo al jugador competir con otros jugadores y mejorar su tiempo récord. ,m 

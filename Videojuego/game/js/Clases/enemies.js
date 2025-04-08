@@ -194,7 +194,7 @@ class Enemy extends AnimatedObject {
 
         // Create a coin with the experience value of the enemy
         let expCoin = new Coin("yellow", 1, 1, x, y, "$");
-        expCoin.xp_value = this.xp_reward; // Asigna el valor de experiencia del enemigo
+        expCoin.xp_value = Math.floor(this.xp_reward * game.xpMultiplier); // Asigna el valor de experiencia del enemigo
         expCoin.hasGravity = true; // Make the coin fall
     
         // Add the coin to the actors list of the game

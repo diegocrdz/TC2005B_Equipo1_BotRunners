@@ -33,6 +33,13 @@ class Ability{
             game.player.resistance += 10;
             console.log("Resistance increased to " + game.player.resistance);
         }
+        else if (this.name == "xp") {
+            game.xpMultiplier += 0.5;
+        }
+        else if (this.name == "cooldown") {
+            game.player.attackCooldown -= 0.2;
+            game.player.shootCooldown -= 0.2;
+        }
         else if (this.name == "doubleJump" && !this.isUnlocked) {
             game.player.canDoubleJump = true;
             this.isUnlocked = true;
@@ -70,6 +77,16 @@ let abilitiesList = [
                 'Resistencia',
                 'Aumenta tu resistencia en 10 puntos',
                 '../../../Videojuego/assets/objects/ui_resistance.png'),
+    
+    new Ability('xp',
+                'Experiencia+',
+                'Los orbes dan más experiencia',
+                '../../../Videojuego/assets/objects/xp_orb.png'),
+
+    new Ability('cooldown',
+                'Recarga',
+                'Aumenta la velocidad de ataque de tus armas',
+                '../../../Videojuego/assets/objects/melee_1.png'),
 
     new Ability('doubleJump',
                 'Doble Salto',
@@ -79,7 +96,10 @@ let abilitiesList = [
     new Ability('dash',
                 'Dash',
                 'Al presionar shift, podrás desplazarte rápidamente',
-                '../../../Videojuego/assets/objects/ui_dash.png')
+                '../../../Videojuego/assets/objects/ui_dash.png'),
+    
+
+                
 ]
 
 // Global list of colors
