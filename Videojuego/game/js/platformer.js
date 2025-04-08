@@ -1153,8 +1153,8 @@ function setEventListeners() {
         const loginContainer = document.querySelector('.login-container');
         loginContainer.style.display = 'none'; // Show the login container
     });
-    // Login button
-    document.getElementById("loginForm").addEventListener("submit", function(event) {
+    // Register button
+    document.getElementById("registerButton").addEventListener("click", async (event) => {
         // Prevent the page from refreshing
         event.preventDefault();
         
@@ -1164,6 +1164,39 @@ function setEventListeners() {
     
         // Check if the username and password are not empty
         if (username && password) {
+            const result = await addPlayer(username, password);
+            if (result) {
+                alert("Jugador registrado con éxito.");
+            } else {
+                alert("Error al registrar el jugador.");
+            }
+            game.state = "mainMenu";
+            console.log(username, password);
+        } else {
+            alert("Completa todos los campos");
+        }
+
+        // Clear the input fields
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+    });
+    // Login button
+    document.getElementById("loginButton").addEventListener("click", async (event) => {
+        // Prevent the page from refreshing
+        event.preventDefault();
+        
+        // Get the values of the username and password fields
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+    
+        // Check if the username and password are not empty
+        if (username && password) {
+            const result = await getPlayer(username, password);
+            if (result) {
+                alert("Sesión iniciada con éxito.");
+            } else {
+                alert("Error al buscar el jugador.");
+            }
             game.state = "mainMenu";
             console.log(username, password);
         } else {

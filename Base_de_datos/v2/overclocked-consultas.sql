@@ -36,6 +36,7 @@ SELECT * FROM objetos_salas;
 
 SELECT * FROM estadisticas_globales;
 SELECT * FROM historial_partidas;
+SELECT * FROM top_5_jugadores;
 
 --
 -- Consultas de prueba
