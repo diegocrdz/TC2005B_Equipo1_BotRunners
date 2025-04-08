@@ -79,7 +79,7 @@ let abilitiesList = [
                 '../../../Videojuego/assets/objects/ui_resistance.png'),
     
     new Ability('xp',
-                'Experiencia+',
+                'XP+',
                 'Los orbes dan más experiencia',
                 '../../../Videojuego/assets/objects/xp_orb.png'),
 
