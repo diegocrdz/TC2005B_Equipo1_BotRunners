@@ -21,6 +21,15 @@ class Player extends AnimatedObject {
         super("green", width, height, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
 
+        //Database elements
+        this.id = null;
+        this.bestTime = 0;
+        this.deaths = 0;
+        this.enemiesKilled = 0;
+        this.incomingDamage = 0;
+        this.receivedDamage = 0;
+        this.completedGames = 0;
+        
         this.njumps = 0; //counter for double jumping
 
         // Player state variables

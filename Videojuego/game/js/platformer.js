@@ -70,6 +70,8 @@ class Game {
         this.mainMenu = new MainMenu(null, canvasWidth, canvasHeight, 0, 0, 'mainmenu');
         // Options menu
         this.optionsMenu = new OptionsMenu(null, canvasWidth, canvasHeight, 0, 0, 'optionsmenu');
+        // Stats menu
+        this.statsMenu = new StatsMenu(null, canvasWidth, canvasHeight, 0, 0, 'statsmenu');
 
         // List of projectiles
         this.projectiles = [];
@@ -1215,6 +1217,36 @@ function setEventListeners() {
         sfx.click.play(); // Play the click sound
         // Hide the options container
         game.optionsMenu.hide(); // Hide the options menu
+    });
+
+    document.getElementById('backButtonStats').addEventListener('click', function(event) {
+        sfx.click.play(); // Play the click sound
+        // Hide the options container
+        game.statsMenu.hide(); // Hide the options menu
+    });
+
+
+    // Stats button click event
+
+    document.getElementById('statsPlayer').addEventListener('click', function(event) {
+        sfx.click.play(); // Play the click sound
+ 
+        if(game.player.id != null){
+            getStatistics(game.player.id); 
+        } 
+    });
+
+    document.getElementById('statsGlobal').addEventListener('click', function(event) {
+        sfx.click.play(); // Play the click sound
+        
+        getGlobalStatistics();
+    });
+
+    document.getElementById('statsTop').addEventListener('click', function(event) {
+        sfx.click.play(); // Play the click sound
+
+        getTopStatistics();
+  
     });
 
 

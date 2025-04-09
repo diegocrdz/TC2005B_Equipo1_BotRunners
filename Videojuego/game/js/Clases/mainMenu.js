@@ -116,7 +116,10 @@ class MainMenu extends GameObject {
                 game.optionsMenu.show();
                 break;
             case "statistics":
-                // game.state = "statistics";
+                game.statsMenu.show();
+                if(game.player.id!=null){
+                    getStatistics(game.player.id); 
+                } 
                 break;
             case "login":
                 game.state = "login";

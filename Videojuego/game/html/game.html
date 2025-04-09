@@ -27,6 +27,7 @@
         <script src="../js/Clases/pauseMenu.js"></script>
         <script src="../js/Clases/looseMenu.js"></script>
         <script src="../js/Clases/mainMenu.js"></script>
+        <script src="../js/Clases/statsMenu.js"></script>
         <script src="../js/sfx.js"></script>
 
         <!-- Main scripts of the game -->
@@ -72,9 +73,22 @@
             </form>
         </div>
 
+        <div class = "stats-container">
+            <button id="backButtonStats">X</button>
+            <h2>Estadísticas</h2>
+            <button id="statsPlayer">Mías</button>
+            <button id="statsGlobal">Global</button>
+            <button id="statsTop">Top 5</button>
+
+            <div id = "statsResults">
+
+            </div>
+        </div>
+
         <div id="timerContainer">
             <h2 id = "elapsedTime"></h2>
         </div>
+        
 
         <script> main(); </script>
         
