@@ -110,16 +110,16 @@ class MainMenu extends GameObject {
         // Decide what to do based on the button type
         switch (buttonType) {
             case "play":
+                restartRooms(true, 0, 6);
                 game.startCinematic();
+                console.log(game.player);
                 break;
             case "options":
                 game.optionsMenu.show();
                 break;
             case "statistics":
                 game.statsMenu.show();
-                if (game.player.id!=null) {
-                    getStatistics(game.player.id); 
-                } 
+                getStatistics(game.player.id); 
                 break;
             case "login":
                 game.state = "login";

@@ -930,6 +930,21 @@ function restartRooms(restartPlayer, levelNumer, numRooms) {
         // Save the current chronometer
         savedChronometer = game.chronometer;
     }
+
+    // Check if the player has an id (is logged in)
+    let savedId = null;
+    if (game.player.id !== null) {
+        // Save the current id
+        savedId = game.player.id;
+    }
+
+    // Check if the player is playing for the first time
+    let savedFirstTimePlaying = true;
+    // Check if the player has completed the game
+    if (!game.player.firstTimePlaying) {
+        // Save the current first time playing
+        savedFirstTimePlaying = game.player.firstTimePlaying;
+    }
     
     // Generate a new set of rooms
     generateLevel(numRooms);
@@ -958,6 +973,17 @@ function restartRooms(restartPlayer, levelNumer, numRooms) {
         // Reset and start the chronometer
         game.chronometer.reset();
         game.chronometer.start();
+
+        // If the player was logged in, restore his stats
+        if (savedId !== null) {
+            game.player.id = savedId;
+            setPlayerStats(savedId);
+        }
+
+        // If the player has completed the game
+        if (!savedFirstTimePlaying) {
+            game.player.firstTimePlaying = savedFirstTimePlaying;
+        }
     }
 }
 
@@ -974,7 +1000,22 @@ function setEventListeners() {
             return;
         } else if (game.state === 'win') {
             if (event.key == ' ') {
-                game.chronometer.checkTime();
+                // Get the time from the chronometer
+                const newTime = game.chronometer.checkTime(game.player.bestTime);
+
+                // If the player got a new best time, update it
+                if (newTime) {
+                    game.player.bestTime = newTime;
+                }
+
+                // Update the player stats
+                game.player.completedGames++;
+
+                // Update the database if the player is logged in
+                if (game.player.id !== null) {
+                    updatePlayerStats(game.player.id);
+                }
+
                 // Restart the game but keep the player
                 restartRooms(false, 0, 6);
                 // Restart the chronometer
@@ -1034,7 +1075,10 @@ function setEventListeners() {
             game.state = 'paused';
             sfx.pause.play(); // Play the pause sound
             selectMusicMenus('paused')
-    
+            // Update the player stats in the database
+            if (game.player.id !== null) {
+                updatePlayerStats(game.player.id);
+            }
         }
         
         // Restart the game
@@ -1236,23 +1280,17 @@ function setEventListeners() {
 
     document.getElementById('statsPlayer').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
- 
-        if(game.player.id !== null){
-            getStatistics(game.player.id); 
-        }
+        getStatistics(game.player.id); 
     });
 
     document.getElementById('statsGlobal').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
-        
         getGlobalStatistics();
     });
 
     document.getElementById('statsTop').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
-
         getTopStatistics();
-  
     });
 
 

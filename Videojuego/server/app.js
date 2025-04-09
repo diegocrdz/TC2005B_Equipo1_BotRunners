@@ -306,19 +306,20 @@ app.get('/api/top', async (request, response) => {
     }
 })
 
-app.post('/api/stats', async (request, response) => {
+// Update the statistics of a specific user in the db
+app.put('/api/stats/:id', async (request, response) => {
     let connection = null
 
     try {
         connection = await connectToDB()
 
         const [results, fields] = await connection.query(
-            'INSERT INTO estadisticas SET ?',
-            request.body
+            'UPDATE estadisticas SET ? WHERE id_jugador= ?',
+            [request.body, request.params.id]
         )
         
-        console.log(`${results.affectedRows} row inserted`)
-        response.status(201).json({'message': "Data inserted correctly.", "id": results.insertId})
+        console.log(`${results.affectedRows} rows updated`)
+        response.json({'message': `Data updated correctly: ${results.affectedRows} rows updated.`})
     }
     catch(error) {
         response.status(500)

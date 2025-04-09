@@ -23,10 +23,10 @@ class Player extends AnimatedObject {
 
         // Database elements
         this.id = null;
-        this.bestTime = 0;
+        this.bestTime = "00:00:00"; // HH:MM:SS SQL TIME format
         this.deaths = 0;
         this.enemiesKilled = 0;
-        this.incomingDamage = 0;
+        this.outgoingDamage = 0;
         this.receivedDamage = 0;
         this.completedGames = 0;
         
@@ -502,6 +502,9 @@ class Player extends AnimatedObject {
                 this.isInvulnerable = false;
             }, 1000); // Cooldown period of 1 second
         }
+
+        // Update the player statistics
+        this.receivedDamage += amount;
     }
 
     // Make the player gain experience points
@@ -523,8 +526,12 @@ class Player extends AnimatedObject {
     // Make the player die and reset the game
     die() {
         sfx.gameOver.play(); // Play the game over sound
-        // Make the player disappear
-        console.log("Player died");
+        // Update the player statistics
+        this.deaths++;
+        // Update the database
+        if (this.id) {
+            updatePlayerStats(this.id);
+        }
         game.state = "gameover";
         // Play the game over music
         selectMusicMenus('gameover');

@@ -99,22 +99,42 @@ class Chronometer {
         this.$elapsedTime.textContent = "00:00";
     }
 
+    // Convert milliseconds to SQL time format (HH:MM:SS)
+    // This is used to store the time in the database
+    millisecondsToSQLTime(ms) {
+        // Convert milliseconds to seconds
+        const totalSeconds = Math.floor(ms / 1000);
+        // Calculate hours, minutes, and seconds
+        // Use Math.floor to round down the values
+        const hours = Math.floor(totalSeconds / 3600);
+        // Calculate the remaining seconds after calculating hours
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        // Calculate the remaining seconds after calculating minutes
+        const seconds = totalSeconds % 60;
+        // Format the time as HH:MM:SS
+        return `${this.addZeros(hours)}:${this.addZeros(minutes)}:${this.addZeros(seconds)}`;
+    }
+
     // Check if the elapsed time is greater than the best player's time
-    checkTime() {
+    checkTime(bestTimeStr) {
         const now = new Date();
         const difference = now.getTime() - this.initialTime.getTime() + this.temporaryDifference;
-
-        // Debug message
-        console.log("Tiempo total: " + this.secondsToMinutes(Math.floor(difference / 1000)));
-        console.log("Mejor tiempo: " + this.secondsToMinutes(Math.floor(game.player.bestTime / 1000)));
-
-        // Check if the elapsed time is less than the best player's time
-        // If the best time is 0, set the current time as the best time
-        // If the difference is less than the best time, set the current time as the best time
-        if (game.player.bestTime === 0 || difference < game.player.bestTime) {
-            game.player.bestTime = difference;
-            // Debug message
-            console.log("Nuevo mejor tiempo: " + this.secondsToMinutes(Math.floor(game.player.bestTime / 1000)));
+        const currentTimeStr = this.millisecondsToSQLTime(difference);
+    
+        // Debug
+        console.log("Tiempo actual: " + currentTimeStr);
+        console.log("Mejor tiempo registrado: " + bestTimeStr);
+    
+        // If the best time is not set or the current time is better, return the current time
+        // since the best time is in SQL format (HH:MM:SS), we can compare it directly
+        if (!bestTimeStr || currentTimeStr < bestTimeStr) {
+            console.log("Nuevo mejor tiempo: " + currentTimeStr);
+            // Return the current time in SQL format
+            return currentTimeStr;
         }
-    }
+        
+        // If the current time is not better, return null
+        console.log("No se supera el mejor tiempo.");
+        return null;
+    }    
 }

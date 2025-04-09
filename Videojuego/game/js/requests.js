@@ -21,10 +21,14 @@ async function getPlayer(username, password) {
 
     if (response.ok) {
         let results = await response.json();
-        let id  = results.id_jugador;
-        game.player.id = id; // Set the player ID in the game object
+
+        // Get the player elements from the response
+        game.player.id = results.id_jugador;
+
         console.log(results);
-        updateStatistics();
+
+        // Get the statistics for the player to update his data
+        setPlayerStats(game.player.id);
 
         return results;
 
@@ -45,7 +49,8 @@ async function addPlayer(username, password) {
     if (response.ok) {
         let results = await response.json();
         console.log(results);
-        addStatistics();
+        // Get the player stats from the response
+        setPlayerStats(game.player.id);
         return results;
 
     } else {
@@ -56,38 +61,95 @@ async function addPlayer(username, password) {
 
 // Statistics
 
-// Get statistics for a specific player
-async function getStatistics(id) {
+// Set the statistics of a player after logging in
+async function setPlayerStats(id) {
     let response = await fetch(`/api/stats/${id}`, {
         method: 'GET',
     });
     
     if (response.ok) {
-        
         let results = await response.json();
-        const container = document.getElementById("statsResults");
-        container.innerHTML = ""; // Clear previous results
+        console.log("Se recuperaron los datos", results);
 
-        if (results.length > 0) {
-            const table = document.createElement("table");
-
-            for (const [key, value] of Object.entries(results)) {
-                const row = table.insertRow(-1);
-
-                const cellKey = row.insertCell(0);
-                cellKey.innerText = key
-                
-                const cellValue = row.insertCell(1);
-                cellValue.innerText = value
-
-            }
-            container.appendChild(table);
+        // Check if the results are not empty
+        if (results) { 
+            // Set the player statistics
+            game.player.bestTime = results.tiempo_mejor_partida || 0;
+            game.player.deaths = results.numero_muertes || 0;
+            game.player.enemiesKilled = results.enemigos_derrotados || 0;
+            game.player.outgoingDamage = results.dano_infligido || 0;
+            game.player.receivedDamage = results.dano_recibido || 0;
+            game.player.completedGames = results.partidas_completadas || 0;
         } else {
-            const message = document.createElement("p");
-            message.innerText = "No statistics available for this player.";
-            container.appendChild(message);
+            console.warn("No statistics found for the player.");
         }
     } else {
+        console.error("Error fetching statistics:", response.status);
+        return null;
+    }
+}
+
+// Update the statistics of a player
+// This function is called when:
+// - The player wins the game
+// - The player pauses the game
+// - The player dies
+// - The player completes a level
+async function updatePlayerStats(id) {
+    let response = await fetch(`/api/stats/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            tiempo_mejor_partida: game.player.bestTime,
+            numero_muertes: game.player.deaths,
+            enemigos_derrotados: game.player.enemiesKilled,
+            dano_infligido: game.player.outgoingDamage,
+            dano_recibido: game.player.receivedDamage,
+            partidas_completadas: game.player.completedGames
+        })
+    });
+    if (response.ok) {
+        let results = await response.json();
+        console.log("Statistics updated successfully:", results);
+        return results;
+    } else {
+        console.error("Error updating statistics:", response.status);
+        return null;
+    }
+}
+
+// Get statistics for a specific player
+async function getStatistics(id) {
+    let response = await fetch(`/api/stats/${id}`, {
+        method: 'GET',
+    });
+
+    const container = document.getElementById("statsResults");
+    container.innerHTML = ""; // Clear previous results
+    
+    if (response.ok && id !== null) {
+        
+        let results = await response.json();
+
+        // Create a table to display the statistics
+        const table = document.createElement("table");
+
+        for (const [key, value] of Object.entries(results)) {
+            const row = table.insertRow(-1);
+
+            const cellKey = row.insertCell(0);
+            cellKey.innerText = key
+            
+            const cellValue = row.insertCell(1);
+            cellValue.innerText = value
+
+        }
+        container.appendChild(table);
+        
+    } else {
+        let errorMessage = document.createElement("p");
+        errorMessage.innerText = "Inicia sesión para ver tus estadísticas";
+        container.appendChild(errorMessage);
         console.error("Error fetching statistics:", response.status);
         return null;
     }
@@ -175,7 +237,7 @@ async function addStatistics() {
             tiempo_mejor_partida: game.player.bestTime,
             numero_muertes: game.player.deaths,
             enemigos_derrotados: game.player.enemiesKilled,
-            dano_infligido: game.player.incomingDamage,
+            dano_infligido: game.player.outgoingDamage,
             dano_recibido: game.player.receivedDamage,
             partidas_completadas: game.player.completedGames
         })
@@ -199,7 +261,7 @@ async function updateStatistics() {
             tiempo_mejor_partida: game.player.bestTime,
             numero_muertes: game.player.deaths,
             enemigos_derrotados: game.player.enemiesKilled,
-            dano_infligido: game.player.incomingDamage,
+            dano_infligido: game.player.outgoingDamage,
             dano_recibido: game.player.receivedDamage,
             partidas_completadas: game.player.completedGames
         })

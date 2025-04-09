@@ -122,7 +122,6 @@ class PauseMenu extends GameObject {
                 game.optionsMenu.show();
                 break;
             case "menu":
-                restartRooms(true, 0, 6);
                 game.state = "mainMenu";
                 selectMusicMenus("mainMenu")
                 selectMusic(this.level, this.levelNumber, 'mainMenu')

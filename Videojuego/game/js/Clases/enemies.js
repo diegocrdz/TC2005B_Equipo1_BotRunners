@@ -211,6 +211,10 @@ class Enemy extends AnimatedObject {
         } else if (this.type === "boss") {
             GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('X', '.');
         }
+
+        // Update the player statistics
+        game.player.enemiesKilled++;
+        game.player.outgoingDamage += this.maxHealth;
     }
 
     // Play the sound effect when the enemy dies
