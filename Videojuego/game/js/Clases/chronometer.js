@@ -98,4 +98,23 @@ class Chronometer {
         // Initiates the time
         this.$elapsedTime.textContent = "00:00";
     }
+
+    // Check if the elapsed time is greater than the best player's time
+    checkTime() {
+        const now = new Date();
+        const difference = now.getTime() - this.initialTime.getTime() + this.temporaryDifference;
+
+        // Debug message
+        console.log("Tiempo total: " + this.secondsToMinutes(Math.floor(difference / 1000)));
+        console.log("Mejor tiempo: " + this.secondsToMinutes(Math.floor(game.player.bestTime / 1000)));
+
+        // Check if the elapsed time is less than the best player's time
+        // If the best time is 0, set the current time as the best time
+        // If the difference is less than the best time, set the current time as the best time
+        if (game.player.bestTime === 0 || difference < game.player.bestTime) {
+            game.player.bestTime = difference;
+            // Debug message
+            console.log("Nuevo mejor tiempo: " + this.secondsToMinutes(Math.floor(game.player.bestTime / 1000)));
+        }
+    }
 }

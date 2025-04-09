@@ -306,6 +306,33 @@ app.get('/api/top', async (request, response) => {
     }
 })
 
+app.post('/api/stats', async (request, response) => {
+    let connection = null
+
+    try {
+        connection = await connectToDB()
+
+        const [results, fields] = await connection.query(
+            'INSERT INTO estadisticas SET ?',
+            request.body
+        )
+        
+        console.log(`${results.affectedRows} row inserted`)
+        response.status(201).json({'message': "Data inserted correctly.", "id": results.insertId})
+    }
+    catch(error) {
+        response.status(500)
+        response.json(error)
+        console.log(error)
+    }
+    finally {
+        if(connection!==null) {
+            connection.end()
+            console.log("Connection closed succesfully!")
+        }
+    }
+})
+
 // Print the port where the server is listening
 app.listen(port, ()=> {
     console.log(`App listening at http://localhost:${port}`)

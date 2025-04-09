@@ -21,7 +21,7 @@ class Player extends AnimatedObject {
         super("green", width, height, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
 
-        //Database elements
+        // Database elements
         this.id = null;
         this.bestTime = 0;
         this.deaths = 0;

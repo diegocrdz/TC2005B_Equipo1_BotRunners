@@ -329,6 +329,8 @@ class Game {
             } else {
                 console.log("You win");
                 this.state = 'win';
+                // Pause the chronometer
+                this.chronometer.pause();
                 selectMusicMenus('win');
                 // Update the player state
                 this.player.firstTimePlaying = false;
@@ -972,8 +974,12 @@ function setEventListeners() {
             return;
         } else if (game.state === 'win') {
             if (event.key == ' ') {
+                game.chronometer.checkTime();
                 // Restart the game but keep the player
                 restartRooms(false, 0, 6);
+                // Restart the chronometer
+                game.chronometer.reset();
+                game.chronometer.start();
                 selectMusic(level, 0, 'playing');
             }
             return;
@@ -1032,7 +1038,7 @@ function setEventListeners() {
         }
         
         // Restart the game
-        if (event.code == 'KeyR') {
+        if (event.code == 'KeyR' && game.state === 'playing') {
             restartRooms(true, 0, 6);
             selectMusicMenus('playing');
         }
@@ -1231,9 +1237,9 @@ function setEventListeners() {
     document.getElementById('statsPlayer').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
  
-        if(game.player.id != null){
+        if(game.player.id !== null){
             getStatistics(game.player.id); 
-        } 
+        }
     });
 
     document.getElementById('statsGlobal').addEventListener('click', function(event) {
