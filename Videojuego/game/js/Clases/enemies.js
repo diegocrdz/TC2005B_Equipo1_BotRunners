@@ -301,6 +301,265 @@ class FlyingEnemy extends Enemy {
     }
 }
 
+class TurtleEnemy extends Enemy {
+    constructor(_color, width, height, x, y, _type) {
+        super("red", width, height, x, y, "boss");
+        this.isFacingRight = true; // Default direction is right
+
+
+        // Properties
+        this.health = 300;
+        this.maxHealth = 300;
+        this.damage = 30;
+        this.xp_reward = 100;
+
+        this.speed = 0.002;
+        this.velocity = new Vec(this.speed, 0);
+
+        this.state = "open"; // State of the turtle (open or closed)
+        this.isShooting = false; // Flag to check if the turtle is shooting
+        this.isImmortal = false; // Flag to check if the turtle is invulnerable
+
+        this.hasClosedAnimationPlayed = false;
+        this.hasOpenAnimationPlayed = false;
+
+        // Hitbox properties
+        this.offsetX = 1;
+        this.offsetY = 1;
+        this.hWidth = this.size.x + 2;
+        this.hHeight = this.size.y + 3;
+
+        this.movement = {
+            right: { 
+                status: false,
+                axis: "x",
+                sign: 1,
+                repeat: true,
+                duration: 100,
+                moveFrames: [3, 4],
+                idleFrames: [3, 4]
+            },
+            left: {
+                status: false,
+                axis: "x",
+                sign: -1,
+                repeat: true,
+                duration: 100,
+                moveFrames: [0, 1],
+                idleFrames: [0, 1]
+            },
+            hit: { 
+                status: false,
+                repeat: true,
+                duration: 200,
+                right: [5, 5],
+                left: [2, 2]
+            },
+            closed: {
+                status : false,
+                repeat: true,
+                duration : 200,
+                left: [6, 6],
+                right: [7, 7]
+            }
+        };
+    }
+
+    update(level, deltaTime) {
+        this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
+        this.velocity.y += gravity * deltaTime;
+        
+        if(this.state === "open") {
+           this.open(level, deltaTime);
+        } else if(this.state === "closed") {
+            this.close();
+        }
+        
+
+        this.updateFrame(deltaTime);
+    }
+
+    close(){
+        this.isImmortal = true;
+
+        if(!this.hasClosedAnimationPlayed){
+            const closeData = this.movement.closed;
+        
+            if (this.isFacingRight) {
+                this.setAnimation(...closeData.right, closeData.repeat, closeData.duration);
+            } else {
+                this.setAnimation(...closeData.left, closeData.repeat, closeData.duration);
+            }
+
+            this.hasClosedAnimationPlayed = true;
+            this.hasOpenAnimationPlayed = false;
+        }
+        
+
+        if(!this.isShooting){
+            this.isShooting = true;
+            let projectileRight = new Projectile("blue", 1.5, 1.5,
+                this.position.x + this.size.x + 0.5, 
+                this.position.y + this.size.y / 2,
+                "projectile",
+                "right");
+    
+            let projectileLeft = new Projectile("blue", 1.5, 1.5,
+                this.position.x - this.size.x + 0.5, 
+                this.position.y + this.size.y / 2,
+                "projectile",
+                "left");
+            
+            projectileRight.type = "enemy"; // Set the type of the projectile
+            projectileRight.setSprite('../../assets/objects/lapiz2.png', new Rect(0, 0, 28, 28));
+            projectileRight.speed = 0.005;
+            projectileRight.velocity = new Vec(projectileRight.speed, 0);
+    
+            projectileLeft.type = "enemy";
+            projectileLeft.setSprite('../../assets/objects/lapiz2.png', new Rect(0, 0, 28, 28));
+            projectileLeft.speed = 0.005;
+            projectileLeft.velocity = new Vec(-projectileLeft.speed, 0);
+    
+            game.addProjectile(projectileRight);
+            game.addProjectile(projectileLeft);
+    
+            // Cooldown for shooting
+            setTimeout(() => {
+                this.isShooting = false;
+            }, 1000);
+        }
+
+        setTimeout(() => {
+            this.state = "open"; // Change state to open
+        }
+        , 5000); // Change state every 5 seconds
+    }
+
+    open(level, deltaTime){
+        this.isImmortal = false; // Make the turtle vulnerable again
+        if(!this.hasOpenAnimationPlayed){
+            this.hasOpenAnimationPlayed = true;
+            this.hasClosedAnimationPlayed = false;
+        }
+
+        this.moveHorizontally(level, deltaTime);
+        this.followPlayer(level, deltaTime);
+        this.moveVertically(level, deltaTime);
+
+        setTimeout(() => {
+            this.state = "closed"; // Change state to open
+        }
+        , 5000); // Change state every 5 seconds
+    }
+
+    hit() {
+        if (this.isHit) return; // Prevent re-triggering the hit animation if already playing
+    
+        this.isHit = true;
+        const hitData = this.movement.hit;
+        
+        if (this.isFacingRight) {
+            this.setAnimation(...hitData.right, hitData.repeat, hitData.duration);
+        } else {
+            this.setAnimation(...hitData.left, hitData.repeat, hitData.duration);
+        }
+
+        // Reset the isHit flag after the animation duration
+        setTimeout(() => {
+            this.isHit = false;
+            // Continue moving in the same direction after being hit
+            if(this.state === "open"){        
+                this.startMovement(this.isFacingRight ? "right" : "left");
+            }
+        }, hitData.duration * 2); // 2 times the duration of the hit animation
+    }
+    
+    takeDamage(amount, cooldown) {
+        if (this.isInvulnerable || this.isImmortal) return;
+        
+        this.health -= amount; // Reduce health by the damage amount
+        this.hit();
+        sfx.hit.play(); // Play the hit sound effect
+    
+        if (this.health <= 0) {
+            this.die(); // Kill the enemy if health is 0 or less
+        } else {
+            this.isInvulnerable = true; // Make the enemy invulnerable for a short time
+            setTimeout(() => {
+                this.isInvulnerable = false;
+            }, cooldown); // Cooldown period
+        }
+    }
+
+    playDieSound(){
+        sfx.bossDie.play();
+    }
+}
+
+// Sword tron 
+class SwordEnemy extends Enemy {
+    constructor(_color, width, height, x, y, _type) {
+        super("red", width, height, x, y, "boss");
+
+        // Properties
+        this.health = 300;
+        this.maxHealth = 300;
+        this.damage = 30;
+        this.xp_reward = 500;
+
+        this.speed = 0.003;
+        this.velocity = new Vec(this.speed, 0);
+
+        // Jumping flag for special attack
+        this.isDashing = false;
+
+        // Hitbox properties
+        this.offsetX = 1;
+        this.offsetY = 1;
+        this.hWidth = this.size.x + 2;
+        this.hHeight = this.size.y + 3;
+
+    }
+
+    update(level, deltaTime) {
+        this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
+        this.velocity.y += gravity * deltaTime;
+        this.moveHorizontally(level, deltaTime);
+        this.followPlayer(level, deltaTime);
+        this.moveVertically(level, deltaTime);
+
+        if(this.canDash &&!this.isDashing) {
+            this.isDashing = true; // Set the dashing flag
+            this.canDash = false;
+
+            let dashDistance = 15;
+            let direction  = this.isFacingRight ? 1 : -1
+            let dashSpeed = 0.05;
+
+
+        // Make the boss jump if health is below 50%
+        if (this.health < this.maxHealth / 2
+            && this.velocity.y === 0
+            && !this.isJumping) {
+            this.velocity.y = -0.039; // Make the boss jump if on the ground
+            this.isJumping = true; // Set the jumping flag
+            setTimeout(() => {
+                this.velocity.y = 0; // Stop the boss from jumping
+                this.isJumping = false; // Reset the jumping flag
+            }, 1000); // 1 second
+        } 
+        
+
+        this.updateFrame(deltaTime);
+        }
+    
+    }
+    playDieSound(){
+        sfx.bossDie.play();
+    }
+}
+
+
 // Boss enemy that follows the player and jumps when health is low
 class BossEnemy extends Enemy {
     constructor(_color, width, height, x, y, _type) {
@@ -323,6 +582,7 @@ class BossEnemy extends Enemy {
         this.offsetY = 1;
         this.hWidth = this.size.x + 2;
         this.hHeight = this.size.y + 3;
+
     }
 
     update(level, deltaTime) {
@@ -342,7 +602,8 @@ class BossEnemy extends Enemy {
                 this.velocity.y = 0; // Stop the boss from jumping
                 this.isJumping = false; // Reset the jumping flag
             }, 1000); // 1 second
-        }
+        } 
+        
 
         this.updateFrame(deltaTime);
     }

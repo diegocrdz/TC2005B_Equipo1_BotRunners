@@ -73,8 +73,11 @@ class Game {
         // Stats menu
         this.statsMenu = new StatsMenu(null, canvasWidth, canvasHeight, 0, 0, 'statsmenu');
 
-        // List of projectiles
+        // List of the player's projectiles
         this.projectiles = [];
+
+        // List of the enemies' projectiles
+        this.enemiesProjectiles = [];
 
         // Labels
         this.labelMoney = new TextLabel(20, canvasHeight - 50,
@@ -297,16 +300,30 @@ class Game {
 
     // Add projectiles to the game
     addProjectile(projectile) {
-        this.projectiles.push(projectile);
+        if(projectile.type === 'enemy') {
+            this.enemiesProjectiles.push(projectile);
+        } else {
+            this.projectiles.push(projectile);
+        }
     }
 
     // Remove projectiles from the game
     removeProjectile(projectile) {
-        const index = this.projectiles.indexOf(projectile);
-        if (index > -1) {
-            this.projectiles.splice(index, 1);
+        if(projectile.type === 'enemy') {
+            const index = this.enemiesProjectiles.indexOf(projectile);
+            if (index > -1) {
+                this.enemiesProjectiles.splice(index, 1);
+            }
+        } else {
+            const index = this.projectiles.indexOf(projectile);
+            if (index > -1) {
+                this.projectiles.splice(index, 1);
+            }
         }
+        
     }
+
+
 
     // Function to load a specific level
     moveToLevel(levelNumber, playerPositionX, playerPositionY) {
@@ -421,6 +438,7 @@ class Game {
 
         // Update projectiles
         this.projectiles.forEach(projectile => projectile.update(this.level, deltaTime));
+        this.enemiesProjectiles.forEach(projectile => projectile.update(this.level, deltaTime));
 
         // Update player bars
         this.playerHealthBar.update(this.player.health, this.player.maxHealth);
@@ -461,6 +479,17 @@ class Game {
                 for (let projectile of this.projectiles) {
                     if (overlapRectangles(projectile, actor)) {
                         actor.takeDamage(game.player.damage); // Deal damage to the enemy
+                        this.removeProjectile(projectile); // Remove the projectile
+                        break; // Stop checking other projectiles for this actor
+                    }
+                }
+            }
+
+            // Detect collisions with projectiles
+            if (this.enemiesProjectiles.length > 0) {   
+                for (let projectile of this.enemiesProjectiles) {
+                    if (overlapRectangles(projectile, game.player)) {
+                        game.player.takeDamage(10); // Deal damage to the enemy
                         this.removeProjectile(projectile); // Remove the projectile
                         break; // Stop checking other projectiles for this actor
                     }
@@ -667,6 +696,7 @@ class Game {
 
         // Draw the projectiles
         this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
+        this.enemiesProjectiles.forEach(projectile => projectile.draw(ctx, scale));
 
         // Draw the player bars
         this.playerHealthBar.draw(ctx);
@@ -826,6 +856,12 @@ const levelChars = {
           rect: new Rect(0, 0, 28, 28),
           sheetCols: 8,
           startFrame: [0, 0]},
+    "O": {objClass: TurtleEnemy,
+          label: "turtle",
+          sprite: '../../assets/characters/enemies/tortutron.png',
+          rect: new Rect(0, 0, 28, 28),
+          sheetCols: 8,
+          startFrame : [0, 0]},
     "$": {objClass: Coin,
           label: "collectible",
           sprite: '../../assets/objects/xp_orb.png',

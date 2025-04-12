@@ -18,6 +18,7 @@ class Projectile extends GameObject {
     
         this.speed = 0.04 // Speed of the projectile
         this.duration = 1000; // Duration of the projectile in milliseconds
+        this.type = "";
 
         // Set velocity based on direction
         this.velocity = new Vec(direction === "right" ? this.speed : -this.speed, 0);

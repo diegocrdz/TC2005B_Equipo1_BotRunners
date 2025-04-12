@@ -446,6 +446,8 @@ class Player extends AnimatedObject {
                                         "projectile",
                                         this.isFacingRight ? "right" : "left");
 
+        projectile.type = "player"; // Set the type of the projectile
+
         game.addProjectile(projectile);
 
         if (this.isFacingRight) {
