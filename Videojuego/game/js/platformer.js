@@ -8,7 +8,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 11/04/2025
 */
 
 "use strict";
@@ -44,7 +44,6 @@ class Game {
         this.levelNumber = 0;
         this.player = level.player;
         // Initialize the player sprite
-        this.player.updateSprites();
         this.actors = level.actors;
         // Menu for displaying abilities
         this.abilities = new popUpAbility();
@@ -709,20 +708,44 @@ class Game {
         this.potionImage.draw(ctx, 1);
         
         // Draw the weapons of the UI
-        if (this.player.firstTimePlaying) {
+        if (this.player.id === null && this.player.firstTimePlaying) {
             if (level === 0) {
-                this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1_locked.png');
-            }
-            else if (level === 1) {
+                if (this.player.gunWeapon === null) {
+                    this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1_locked.png');
+                } else {
+                    this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
+                }
+            } else if (level === 1) {
                 this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
-            }
-            else {
+            } else {
                 this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
                 this.armImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
             }
         } else {
             this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
             this.armImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
+        }
+        // Check if the player is logged in
+        if (this.player.id !== null) {
+            if (this.player.firstTimePlaying) {
+                if (level === 0) {
+                    this.armImage.setSprite('../../../Videojuego/assets/objects/melee_1.png');
+                    if (this.player.gunWeapon === null) {
+                        this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1_locked.png');
+                    } else {
+                        this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
+                    }
+                } else if (level === 1) {
+                    this.armImage.setSprite('../../../Videojuego/assets/objects/melee_1.png');
+                    this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
+                } else {
+                    this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
+                    this.armImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
+                }
+            } else {
+                this.armImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
+                this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
+            }
         }
         this.drawWeapons(ctx);
 
@@ -940,7 +963,7 @@ function gameStart() {
 
     game.chronometer = new Chronometer(); //initiates chronometer
     game.chronometer.start(); //starts chronometer
-
+    
     setEventListeners();
 
     // Call the first frame with the current time
@@ -950,10 +973,10 @@ function gameStart() {
 // Generate a new level with new rooms
 // Also specify if the player should be restarted or not
 // and the number of rooms to generate
-function restartRooms(restartPlayer, levelNumer, numRooms) {
+function restartRooms(restartPlayer, levelNumber, numRooms) {
 
     // Update the global variable of level
-    level = levelNumer;
+    level = levelNumber;
 
     console.log("New rooms for level " + level);
 
@@ -970,16 +993,9 @@ function restartRooms(restartPlayer, levelNumer, numRooms) {
     // Check if the player has an id (is logged in)
     let savedId = null;
     if (game.player.id !== null) {
-        // Save the current id
+        // Save the player
         savedId = game.player.id;
-    }
-
-    // Check if the player is playing for the first time
-    let savedFirstTimePlaying = true;
-    // Check if the player has completed the game
-    if (!game.player.firstTimePlaying) {
-        // Save the current first time playing
-        savedFirstTimePlaying = game.player.firstTimePlaying;
+        savedPlayer = game.player;
     }
     
     // Generate a new set of rooms
@@ -993,34 +1009,71 @@ function restartRooms(restartPlayer, levelNumer, numRooms) {
     // Create a new game object with the new level
     game = new Game('playing', new Level(GAME_LEVELS[0]));
 
+    // If the player is not restarted
     if (!restartPlayer) {
+        // Restore the player
         game.player = savedPlayer;
-        game.player.hasUsedPotion = false; // Reset the potion usage
+        // Reset the potion usage
+        game.player.hasUsedPotion = false;
         // Update the player sprites
         game.player.updateSprites();
-        // Set the chronometer to the saved one
+        // Update the player weapons
+        game.player.updateWeapons();
+        game.player.selectWeapon(game.player.selectedWeapon);
+        // Set and start the saved chronometer
         game.chronometer = savedChronometer;
-        game.chronometer.start(); // Start the saved chronometer
-    } else {
+        game.chronometer.start();
+        // If the player is back to the first level (he won)
+        // reset the player stats
+        if (levelNumber === 0) {
+            // Reset the player stats
+            game.player.health = 100;
+            game.player.maxHealth = 100;
+            game.player.resistance = 0;
+            game.player.xp = 0;
+            game.player.xpToNextLevel = 100;
+            game.player.level = 0;
+            game.player.canDoubleJump = false;
+            game.player.canDash = false;
+            game.player.damage = 20;
+        }
+        // Update the player stats
+        updatePlayerStats(game.player.id);
+    // If the player is restarted
+    } else if (restartPlayer) {
         // If the chronometer doesnt exist, create a new one
         if (!game.chronometer) {
-            game.chronometer = new Chronometer(); // if the chronometer doesnt exists, it creates a new one
+            game.chronometer = new Chronometer();
         }
         // Reset and start the chronometer
         game.chronometer.reset();
         game.chronometer.start();
 
-        // If the player was logged in, restore his stats
+        // If the player was logged in, restore his info
+        // This is necesary to keep the player as logged in
         if (savedId !== null) {
+            // Restore the id of the player
             game.player.id = savedId;
-            setPlayerStats(savedId);
-        }
-
-        // If the player has completed the game
-        if (!savedFirstTimePlaying) {
-            game.player.firstTimePlaying = savedFirstTimePlaying;
+            // Call an async function to restore
+            // the player stats and inventory
+            restorePlayerData(savedId);
         }
     }
+}
+
+// Async function to call the database and
+// restore the player stats and inventory
+async function restorePlayerData(savedId) {
+    await setPlayerStats(savedId);
+    await setPlayerInventory(savedId);
+    // Update the player sprites
+    game.player.updateSprites();
+    // Update the player weapons
+    game.player.updateWeapons();
+    // Make the player select the weapon he had
+    // This is necessary to avoid the player
+    // having the default weapon
+    game.player.selectWeapon(game.player.selectedWeapon);
 }
 
 // Event listeners
@@ -1250,19 +1303,22 @@ function setEventListeners() {
         // Get the values of the username and password fields
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
+
+        // Get the login message element
+        const loginMessage = document.getElementById("loginMessage");
     
         // Check if the username and password are not empty
         if (username && password) {
-            const result = await addPlayer(username, password);
+            const result = await registerPlayer(username, password);
             if (result) {
-                alert("Jugador registrado con éxito.");
+                // Change the loginMessage from the container
+                loginMessage.textContent = "Sesión iniciada como: " + username;
             } else {
-                alert("Error al registrar el jugador.");
+                loginMessage.textContent = "El usuario " + username + " ya existe";
             }
             game.state = "mainMenu";
-            console.log(username, password);
         } else {
-            alert("Completa todos los campos");
+            loginMessage.textContent = "Error al registrarse. Completa todos los campos";
         }
 
         // Clear the input fields
@@ -1277,19 +1333,22 @@ function setEventListeners() {
         // Get the values of the username and password fields
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
+
+        // Get the login message element
+        const loginMessage = document.getElementById("loginMessage");
     
         // Check if the username and password are not empty
         if (username && password) {
             const result = await getPlayer(username, password);
             if (result) {
-                alert("Sesión iniciada con éxito.");
+                // Change the loginMessage from the container
+                loginMessage.textContent = "Sesión iniciada como: " + username;
             } else {
-                alert("Error al buscar el jugador.");
+                loginMessage.textContent = "Usuario o contraseña incorrectos";
             }
             game.state = "mainMenu";
-            console.log(username, password);
         } else {
-            alert("Completa todos los campos");
+            loginMessage.textContent = "Error al iniciar sesión. Completa todos los campos";
         }
 
         // Clear the input fields
@@ -1311,7 +1370,6 @@ function setEventListeners() {
         game.statsMenu.hide(); // Hide the options menu
     });
 
-
     // Stats button click event
 
     document.getElementById('statsPlayer').addEventListener('click', function(event) {
@@ -1328,7 +1386,6 @@ function setEventListeners() {
         sfx.click.play(); // Play the click sound
         getTopStatistics();
     });
-
 
     // Apply button for the options menu
     document.getElementById('applyButton').addEventListener('click', function(event) {

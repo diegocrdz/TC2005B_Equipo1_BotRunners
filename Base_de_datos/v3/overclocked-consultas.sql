@@ -1,6 +1,6 @@
 -- Consltas de Base de Datos Overclocked
--- Version 2.0
--- Fecha: 2 de abril de 2025
+-- Version 3.0
+-- Fecha: 11 de abril de 2025
 -- Desarrollado por: Equipo BotRunners
 -- Desripción: Consultas de prueba para la base de datos de Overclocked
 -- Desarrollado como parte del bloque TC2005B - Tecnológico de Monterrey, Campus Santa Fe
@@ -12,6 +12,7 @@ USE overclocked;
 --
 
 SELECT * FROM jugadores;
+SELECT * FROM cuentas;
 SELECT * FROM estadisticas;
 SELECT * FROM habilidades;
 SELECT * FROM armas;
@@ -37,6 +38,7 @@ SELECT * FROM objetos_salas;
 SELECT * FROM estadisticas_globales;
 SELECT * FROM historial_partidas;
 SELECT * FROM top_5_jugadores;
+SELECT * FROM estadisticas_jugadores;
 
 --
 -- Consultas de prueba
@@ -54,12 +56,3 @@ USING (id_jugador)
 JOIN overclocked.habilidades
 USING (id_habilidad)
 ORDER BY id_jugador;
-
-# Mostrar los jugadores con los mejores 5 tiempos de partida
-SELECT
-    overclocked.jugadores.nombre_usuario,
-    overclocked.estadisticas.tiempo_mejor_partida
-FROM overclocked.jugadores
-JOIN overclocked.estadisticas
-USING (id_jugador)
-ORDER BY tiempo_mejor_partida LIMIT 5;

@@ -6,7 +6,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 11/04/2025
 */
 
 /* Google Fonts */
@@ -17,6 +17,9 @@
 body {
   font-family: 'Roboto', sans-serif;
   background-color: #272b36;
+  background-image: url('../../../Web/img/bkg_titulo.png');
+  background-size: cover;
+  background-attachment: fixed;
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
@@ -24,10 +27,10 @@ body {
   overflow: hidden;
   display:grid;
   grid-template-rows: 10vh 1fr;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
   grid-template-areas:
-    "header"
-    "main";
+    "header header header"
+    "left main .";
   justify-content: center;
   align-items: center;
   justify-items: center;
@@ -43,8 +46,7 @@ header {
   justify-content: space-between;
   align-items: center;
   background-color: #272b36;/* Dark gray */
-  color: #FFFFFF;
-
+  color: white;
   border-bottom: 4px solid #434A5F; /* Dark border */
 }
 header img {
@@ -52,6 +54,7 @@ header img {
   max-width: 300px;
   height: auto;
   transition: 0.2s; /* Transition to hover */
+  margin-left: 2.5vw;
 }
 header img:hover {
   cursor: pointer;
@@ -61,6 +64,7 @@ header nav {
   display: flex;
   flex-direction: row;
   gap: 20px;
+  margin-right: 2.5vw;
 }
 /* Botones */
 header nav a {
@@ -89,7 +93,7 @@ canvas {
     /* height: 75vh; */
     height: 80vh;
     width: auto;
-    border: 4px solid black;
+    border: 5px solid #1c1e25;
     background-color: #87ceeb;
     /* width: 600px; */
     /* height: 600px; */
@@ -129,33 +133,22 @@ canvas {
 }
 
 /* Timer */
-/* Location of the timer */
 #timerContainer{
-  position: absolute;
-  top: 10px;
-  right: auto;
-}
-/* Timer style */
-#elapsedTime{
-  background-color: #1c1e25;
-  border: 2px solid #434A5F;
-  color:white;
-  font-size: 20px;
-  font-family: monospace;
-  padding: 5px 20px;
+  display: none;
 }
 
 /* Login/Registration Menu */
 /* Options Menu */
 
 .login-container, .options-container, .stats-container {
+  grid-area: main;
+  height: 70vh;
+  width: 80%;
+  box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+  overflow-y: auto; /* Allows scrolling if content overflows */
   display: none; /* Hides the container by default */
   color: white;
-  position: absolute; /* Absolute positioning on the screen */
-  top: 50%; /* Vertical centering */
-  left: 50%; /* Horizontal centering */
-  transform: translate(-50%, -50%); /* Centers the object by its midpoint */
-  background-color: rgba(0, 0, 0, 0.98);
+  background-color: rgba(0, 0, 0, 0.95);
   padding: 50px;
   border: 2px solid white;
   font-family: 'Press Start 2P';
@@ -212,4 +205,47 @@ canvas {
   background-color: #ffcd81;
   color: black;
   transform: scale(1.05); /* Zoom effect */
+}
+
+/* Stats Menu */
+.stats-container {
+  position: absolute; /* Ignore the grid layout */
+  top: 10vh; /* Place the container below the header */
+  width: 100%; /* Full width */
+  height: 90vh; /* Ignore the header */
+  box-sizing: border-box;
+  color: white;
+  background: linear-gradient(to bottom, #272b36, #434A5F);
+  border: 20px solid #1c1e25;
+  padding: 50px;
+}
+#buttonsStats {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  align-items: center;
+  margin-bottom: 50px;
+}
+#buttonsStats button {
+  width: 100%;
+}
+#statsResults {
+  /* Allows scrolling if content overflows */
+  overflow-x: auto; 
+}
+.stats-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.stats-container th, .stats-container td {
+  border: 2px solid #6C6EA0;
+  padding: 10px;
+  text-align: center;
+  color: white;
+}
+.stats-container th {
+  background-color: #434A5F;
+}
+.stats-container td {
+  background-color: #272b36;
 }

@@ -6,7 +6,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 11/04/2025
 */
 
 // Class that defines a general weapon for the game
@@ -19,4 +19,14 @@ class Weapon {
 
         this.isUnlocked = false;
     }
+}
+
+// Define weapons for the game
+const weapons = {
+    // Basic weapons
+    arm: new Weapon("arm", 0, 500),
+    slow_gun: new Weapon("slowGun", 0, 800),
+    // Better wapons
+    roboticArm: new Weapon("romoticArm", 4, 250),
+    fast_gun: new Weapon("fastGun", 2, 400),
 }

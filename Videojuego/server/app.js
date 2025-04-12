@@ -6,7 +6,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 07/04/2025
+ * Date: 11/04/2025
 */
 
 "use strict"
@@ -24,11 +24,12 @@ const app = express()
 const port = 3000
 
 app.use(express.json())
-// Add the direcories where the static files of the game are located
+// Add the directories where the static files of the game are located
 app.use(express.static('../game'))
 app.use('/Videojuego', express.static('../../Videojuego'))
 app.use('/assets', express.static('../assets'))
 app.use('/docs', express.static('../docs'))
+app.use('/Web', express.static('../../Web'))
 
 // Function to connect to the MySQL database
 async function connectToDB()
@@ -106,43 +107,6 @@ app.get('/api/jugadores/:id', async (request, response) => {
     }
 })
 
-// Authenticate a user by checking if the username and password match in the database
-// Return the user object if the credentials are valid
-app.post('/api/jugadores/auth', async (request, response) => {
-    let connection = null;
-
-    try {
-        const { nombre_usuario, contrasena } = request.body;
-
-        if (!nombre_usuario || !contrasena) {
-            return response.status(400).json({ error: "Missing username or password" });
-        }
-
-        connection = await connectToDB();
-
-        // Query to find the player by username and password
-        const [results_user] = await connection.query(
-            'SELECT * FROM jugadores WHERE nombre_usuario = ? AND contrasena = ?',
-            [nombre_usuario, contrasena]
-        );
-
-        if (results_user.length === 0) {
-            return response.status(401).json({ error: "Invalid credentials" });
-        }
-
-        console.log(`${results_user.length} rows returned`);
-        response.json(results_user[0]); // Return the authenticated user
-    } catch (error) {
-        response.status(500).json({ error: "Internal server error" });
-        console.log(error);
-    } finally {
-        if (connection !== null) {
-            connection.end();
-            console.log("Connection closed successfully!");
-        }
-    }
-});
-
 // Insert a new user into the database and return a JSON object with the id of the new user
 app.post('/api/jugadores', async (request, response)=>{
 
@@ -153,8 +117,7 @@ app.post('/api/jugadores', async (request, response)=>{
         connection = await connectToDB()
 
         const [results, fields] = await connection.query(
-            'INSERT INTO jugadores SET ?',
-            request.body
+            'INSERT INTO jugadores VALUES ()',
         )
         
         console.log(`${results.affectedRows} row inserted`)
@@ -233,16 +196,123 @@ app.delete('/api/jugadores/:id', async (request, response)=>{
     }
 })
 
+// ############# accounts #############
+
+// Authenticate a user by checking if the username and password match in the database
+// Return the user object if the credentials are valid
+app.post('/api/jugadores/auth', async (request, response) => {
+    let connection = null;
+
+    try {
+        const { nombre_usuario, contrasena } = request.body;
+
+        if (!nombre_usuario || !contrasena) {
+            return response.status(400).json({ error: "Missing username or password" });
+        }
+
+        connection = await connectToDB();
+
+        // Query to find the player by username and password
+        const [results_user] = await connection.query(
+            'SELECT * FROM cuentas WHERE nombre_usuario = ? AND contrasena = ?',
+            [nombre_usuario, contrasena]
+        );
+
+        if (results_user.length === 0) {
+            return response.status(401).json({ error: "Invalid credentials" });
+        }
+
+        console.log(`${results_user.length} rows returned`);
+        response.json(results_user[0]); // Return the authenticated user
+    } catch (error) {
+        response.status(500).json({ error: "Internal server error" });
+        console.log(error);
+    } finally {
+        if (connection !== null) {
+            connection.end();
+            console.log("Connection closed successfully!");
+        }
+    }
+});
+
+// Create a new account for a user
+app.post('/api/cuentas', async (request, response) => {
+    let connection = null
+
+    try {
+        const { nombre_usuario, contrasena } = request.body;
+
+        if (!nombre_usuario || !contrasena) {
+            return response.status(400).json({ error: "Missing username or password" });
+        }
+
+        connection = await connectToDB();
+
+        // Insert the new account into the database
+        const [results] = await connection.query(
+            'INSERT INTO cuentas (id_jugador, nombre_usuario, contrasena) VALUES (?, ?, ?)',
+            [
+                request.body.id_jugador,
+                request.body.nombre_usuario,
+                request.body.contrasena
+            ]
+        );
+
+        console.log(`${results.affectedRows} row inserted`);
+        response.status(201).json({ message: "Account created successfully", id: results.insertId });
+    } catch (error) {
+        response.status(500).json({ error: "Internal server error" });
+        console.log(error);
+    } finally {
+        if (connection !== null) {
+            connection.end();
+            console.log("Connection closed successfully!");
+        }
+    }
+});
+
+// Verify if the username of a player exists in the cuentas table
+app.get('/api/cuentas/:nombre_usuario', async (request, response) => {
+    let connection = null
+
+    try {
+        connection = await connectToDB()
+
+        const [results] = await connection.query(
+            'SELECT * FROM cuentas WHERE nombre_usuario = ?',
+            [request.params.nombre_usuario]
+        )
+
+        console.log(`${results.length} rows returned`)
+
+        if (results.length > 0) {
+            response.json(results[0])
+        } else {
+            response.status(404).json({ message: "Username not found" })
+        }
+    }
+    catch (error) {
+        response.status(500).json(error)
+        console.log(error)
+    }
+    finally {
+        if (connection!==null) {
+            connection.end()
+            console.log("Connection closed succesfully!")
+        }
+    }
+});
+
 // ############# stats #############
 
 // Get the statistics of a specific user from the db
-app.get('/api/stats/:id', async (request, response) => {
+app.get('/api/stats/view/:id', async (request, response) => {
     let connection = null
 
     try {
         connection = await connectToDB()
         const [results] = await connection.query(
-            'SELECT * FROM estadisticas where id_jugador= ?',
+            'SELECT * FROM estadisticas_jugadores WHERE id_jugador = ?',
             [request.params.id])
         
         console.log(`${results.affectedRows} rows returned`)
@@ -268,6 +338,29 @@ app.get('/api/stats', async (request, response) => {
         connection = await connectToDB()
         const [results] = await connection.query('SELECT * FROM estadisticas_globales')
         
+        console.log(`${results.affectedRows} rows returned`)
+        response.json(results[0])
+    }
+    catch (error) {
+        response.status(500).json(error)
+        console.log(error)
+    }
+    finally {
+        if(connection!==null) {
+            connection.end()
+            console.log("Connection closed succesfully!")
+        }
+    }
+})
+
+// Get the statistics of a specific user from the db
+app.get('/api/stats/:id', async (request, response) => {
+    let connection = null
+    try {
+        connection = await connectToDB()
+        const [results] = await connection.query(
+            'SELECT * FROM estadisticas WHERE id_jugador = ?',
+            [request.params.id])
         console.log(`${results.affectedRows} rows returned`)
         response.json(results[0])
     }
@@ -315,6 +408,64 @@ app.put('/api/stats/:id', async (request, response) => {
 
         const [results, fields] = await connection.query(
             'UPDATE estadisticas SET ? WHERE id_jugador= ?',
+            [request.body, request.params.id]
+        )
+        
+        console.log(`${results.affectedRows} rows updated`)
+        response.json({'message': `Data updated correctly: ${results.affectedRows} rows updated.`})
+    }
+    catch(error) {
+        response.status(500)
+        response.json(error)
+        console.log(error)
+    }
+    finally {
+        if(connection!==null) {
+            connection.end()
+            console.log("Connection closed succesfully!")
+        }
+    }
+})
+
+// ############# inventory #############
+
+// Get a specific user from the database and return it as a JSON object
+app.get('/api/inventory/:id', async (request, response) => {
+    let connection = null
+
+    try {
+        connection = await connectToDB()
+
+        const [results_user, _] = await connection.query(
+            'SELECT * FROM inventarios WHERE id_jugador= ?',
+            [request.params.id]
+        )
+        
+        console.log(`${results_user.length} rows returned`)
+        response.json(results_user)
+    }
+    catch(error) {
+        response.status(500)
+        response.json(error)
+        console.log(error)
+    }
+    finally {
+        if(connection!==null) {
+            connection.end()
+            console.log("Connection closed succesfully!")
+        }
+    }
+})
+
+// Update the inventory of a specific user in the db
+app.put('/api/inventory/:id', async (request, response) => {
+    let connection = null
+
+    try {
+        connection = await connectToDB()
+
+        const [results, fields] = await connection.query(
+            'UPDATE inventarios SET ? WHERE id_jugador= ?',
             [request.body, request.params.id]
         )
         

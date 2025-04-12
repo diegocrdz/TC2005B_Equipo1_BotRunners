@@ -6,7 +6,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 11/04/2025
 */
 
 // Global variables that affect the player movement
@@ -40,13 +40,7 @@ class Player extends AnimatedObject {
         this.isShooting = false;
         this.isHit = false;
         this.firstTimePlaying = true;
-
-        // Double jump
-        this.canDoubleJump = false;
         this.isDoubleJumping = false;
-
-        // Dash
-        this.canDash = false;
         this.isDashing =  false;
 
         // Player selection
@@ -57,20 +51,17 @@ class Player extends AnimatedObject {
         this.isPressingDown = false;
 
         // Weapon properties
-        this.weapons = {
-            // Basic weapons
-            arm: new Weapon("arm", 20, 500),
-            slow_gun: new Weapon("slowGun", 10, 800),
-            // Better wapons
-            romoticArm: new Weapon("romoticArm", 25, 250),
-            fast_gun: new Weapon("fastGun", 15, 400),
-        }
-        // Equip initial weapons
+        this.meleeWeapon = weapons.arm,
+        this.gunWeapon = null,
+        // Check if the weapons should be updated
         this.updateWeapons();
 
-        this.damage = 20;
-        this.attackCooldown = this.meleeWeapon.cooldown;
-        this.shootCooldown = this.gunWeapon.cooldown;
+        // Sprite images for the player
+        this.meleeSprite = null;
+        this.gunSprite = null;
+        this.attackSprite = null;
+        // Set the sprite for the player
+        this.updateSprites();
 
         // Player properties
         this.health = 100;
@@ -79,12 +70,10 @@ class Player extends AnimatedObject {
         this.xp = 0;
         this.xpToNextLevel = 100;
         this.level = 0;
-
-        // Sprite images to update depending on the level
-        this.meleeSprite = null;
-        this.gunSprite = null;
-        this.attackSprite = null;
-        this.updateSprites(); // Update the sprites based on the level
+        this.canDoubleJump = false;
+        this.canDash = false;
+        this.damage = 20;
+        this.baseDamage = 20;
 
         // Movement variables to define directions and animations
         this.movement = {
@@ -167,43 +156,12 @@ class Player extends AnimatedObject {
                 this.velocity.y = 0;
             }
         }
-
-        // Update the weapons
-        this.updateWeapons();
-
         this.updateFrame(deltaTime);
     }
 
     draw(ctx, scale) {
         super.draw(ctx, scale);
         this.drawHitbox(ctx, scale);
-    }
-
-    // Update the weapons based on the level
-    updateWeapons() {
-        // If the player is not playing for the first time,
-        // he already has weapons defined
-        if (!this.firstTimePlaying) {
-            // Set the weapons to the better ones
-            this.meleeWeapon = this.weapons.romoticArm;
-            this.gunWeapon = this.weapons.fast_gun;
-            return;
-        }
-        // If the player is playing for the first time,
-        // set the weapons to the basic ones
-        if (level === 0) {
-            this.meleeWeapon = this.weapons.arm;
-            this.gunWeapon = this.weapons.slow_gun;
-        } else if (level === 1) {
-            this.meleeWeapon = this.weapons.arm;
-            this.gunWeapon = this.weapons.slow_gun;
-        } else {
-            this.meleeWeapon = this.weapons.romoticArm;
-            this.gunWeapon = this.weapons.fast_gun;
-        }
-        // Set the cooldowns for the weapons
-        this.attackCooldown = this.meleeWeapon.cooldown;
-        this.shootCooldown = this.gunWeapon.cooldown;
     }
 
     // Start moving the player in a certain direction
@@ -511,15 +469,19 @@ class Player extends AnimatedObject {
 
     // Make the player gain experience points
     gainXp(amount) {
+        // Increase the xp
         this.xp += amount;
-        sfx.collect.play(); // Play the collect sound
-        if (this.xp >= this.xpToNextLevel) {
+        sfx.collect.play();
+    
+        // While the player has enough xp to level up
+        while (this.xp >= this.xpToNextLevel) {
+            // Reduce the xp by the amount needed to level up
+            this.xp -= this.xpToNextLevel;
             this.level++;
-            this.xp = 0;
             this.xpToNextLevel += 15;
+    
+            sfx.levelUp.play();
 
-            sfx.levelUp.play(); // Play the level up sound
-            
             game.abilities.activate();
             game.state = "abilities";
         }
@@ -558,40 +520,140 @@ class Player extends AnimatedObject {
         }, hitData.duration);
     }
 
+    // Update the weapons based on the level
+    updateWeapons() {
+        // If the player is not logged in
+        if (this.id === null) {
+            // If the player is not playing for the first time
+            // Set the weapons to the better ones
+            if (!this.firstTimePlaying) {
+                this.meleeWeapon = weapons.roboticArm;
+                this.gunWeapon = weapons.fast_gun;
+            // If the player is playing for the first time,
+            // Set the weapons based on the level
+            } else if (this.firstTimePlaying) {
+                if (level === 0) {
+                    this.meleeWeapon = weapons.arm;
+                    this.gunWeapon = null;
+                } else if (level === 1) {
+                    this.meleeWeapon = weapons.arm;
+                    this.gunWeapon = weapons.slow_gun;
+                } else {
+                    this.meleeWeapon = weapons.roboticArm;
+                    this.gunWeapon = weapons.fast_gun;
+                }
+            }
+        }
+        
+        // If the player is logged in
+        if (this.id !== null) {
+            // If the player is not playing for the first time
+            // Set his weapons from the database
+            if (!this.firstTimePlaying) {
+                this.attackCooldown = this.meleeWeapon.cooldown;
+                this.shootCooldown = this.gunWeapon.cooldown;
+                return;
+            // If the player is playing for the first time
+            // Set the weapons based on the level
+            } else if (this.firstTimePlaying) {
+                if (level === 0) {
+                    this.meleeWeapon = weapons.arm;
+                    this.gunWeapon = null;
+                } else if (level === 1) {
+                    this.meleeWeapon = weapons.arm;
+                    this.gunWeapon = weapons.slow_gun;
+                } else {
+                    this.meleeWeapon = weapons.roboticArm;
+                    this.gunWeapon = weapons.fast_gun;
+                }
+            }
+        }
+        // Set the cooldowns for the weapons
+        this.attackCooldown = this.meleeWeapon.cooldown;
+        this.shootCooldown = this.gunWeapon ? this.gunWeapon.cooldown : weapons.slow_gun.cooldown;
+    }
+
     // Update the sprites based on the level and first time playing
     updateSprites() {
-        if (!this.firstTimePlaying) {
-            this.meleeSprite = '../../assets/characters/skippy/skippy_2.png';
-            this.gunSprite = '../../assets/characters/skippy/skippy_4.png';
-            this.attackSprite = '../../assets/characters/skippy/skippy_attack_2.png';
-            return;
+        // If the player is not logged in
+        if (this.id === null) {
+            // If the player is not playing for the first time
+            // Set the sprites to the better ones
+            if (!this.firstTimePlaying) {
+                this.meleeSprite = '../../assets/characters/skippy/skippy_2.png';
+                this.gunSprite = '../../assets/characters/skippy/skippy_4.png';
+                this.attackSprite = '../../assets/characters/skippy/skippy_attack_2.png';
+            // If the player is playing for the first time,
+            // Update the sprites based on the level
+            } else {
+                if (level === 0 || level === 1) {
+                    this.meleeSprite = '../../assets/characters/skippy/skippy_1.png';
+                    this.gunSprite = '../../assets/characters/skippy/skippy_3.png';
+                    this.attackSprite = '../../assets/characters/skippy/skippy_attack_1.png';
+                } else {
+                    this.meleeSprite = '../../assets/characters/skippy/skippy_2.png';
+                    this.gunSprite = '../../assets/characters/skippy/skippy_4.png';
+                    this.attackSprite = '../../assets/characters/skippy/skippy_attack_2.png';
+                }
+            }
         }
-        // Update the sprites based on the level
-        if (level === 0 || level === 1) {
-            this.meleeSprite = '../../assets/characters/skippy/skippy_1.png';
-            this.gunSprite = '../../assets/characters/skippy/skippy_3.png';
-            this.attackSprite = '../../assets/characters/skippy/skippy_attack_1.png';
-        } else {
-            this.meleeSprite = '../../assets/characters/skippy/skippy_2.png';
-            this.gunSprite = '../../assets/characters/skippy/skippy_4.png';
-            this.attackSprite = '../../assets/characters/skippy/skippy_attack_2.png';
+        
+        // If the player is logged in
+        if (this.id !== null) {
+            // If the player is not playing for the first time
+            // Set the sprites to the weapons he has from the database
+            if (!this.firstTimePlaying) {
+                // Melee weapon
+                if (this.meleeWeapon === weapons.arm) {
+                    this.meleeSprite = '../../assets/characters/skippy/skippy_1.png';
+                    this.attackSprite = '../../assets/characters/skippy/skippy_attack_1.png';
+                } else {
+                    this.meleeSprite = '../../assets/characters/skippy/skippy_2.png';
+                    this.attackSprite = '../../assets/characters/skippy/skippy_attack_2.png';
+                }
+                // Gun weapon
+                if (this.gunWeapon === weapons.slow_gun || this.gunWeapon === null) {
+                    this.gunSprite = '../../assets/characters/skippy/skippy_3.png';
+                } else {
+                    this.gunSprite = '../../assets/characters/skippy/skippy_4.png';
+                }
+            // If the player is playing for the first time
+            // Set the based on the level
+            } else {
+                if (level === 0 || level === 1) {
+                    this.meleeSprite = '../../assets/characters/skippy/skippy_1.png';
+                    this.gunSprite = '../../assets/characters/skippy/skippy_3.png';
+                    this.attackSprite = '../../assets/characters/skippy/skippy_attack_1.png';
+                } else {
+                    this.meleeSprite = '../../assets/characters/skippy/skippy_2.png';
+                    this.gunSprite = '../../assets/characters/skippy/skippy_4.png';
+                    this.attackSprite = '../../assets/characters/skippy/skippy_attack_2.png';
+                }
+            }
         }
     }
 
     // Select the weapon to use
     selectWeapon(number) {
         let lastWeapon = this.selectedWeapon;
+        // Set the damage to the original value
+        let initDamage = 20;
 
         if (number === 1) {
             this.selectedWeapon = 1;
             this.setSprite(this.meleeSprite, new Rect(0, 0, 24, 24));
+            // Set damage
+            this.damage = this.baseDamage + this.meleeWeapon.damage;
         } else if (number === 2) {
             // The player cant select the gun in the first level
+            // if the player is not playing for the first time
             if (level === 0 && this.firstTimePlaying) {
                 return;
             }
             this.selectedWeapon = 2;
             this.setSprite(this.gunSprite, new Rect(0, 0, 24, 24));
+            // Set damage
+            this.damage = this.baseDamage + this.gunWeapon.damage;
         } else if (number === 3) {
             this.selectedWeapon = 3;
             setTimeout(() => {

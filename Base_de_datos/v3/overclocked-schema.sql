@@ -1,6 +1,6 @@
 -- Esquema de Base de Datos Overclocked
--- Version 2.0
--- Fecha: 2 de abril de 2025
+-- Version 3.0
+-- Fecha: 11 de abril de 2025
 -- Desarrollado por: Equipo BotRunners
 -- Desripción: Creación de tablas para el videojuego Overclocked
 -- Desarrollado como parte del bloque TC2005B - Tecnológico de Monterrey, Campus Santa Fe
@@ -21,20 +21,44 @@ USE overclocked;
 CREATE TABLE jugadores (
   id_jugador INT UNSIGNED NOT NULL AUTO_INCREMENT,
   
-  nombre_usuario VARCHAR(15) NOT NULL,
-  contrasena VARCHAR(45) DEFAULT NULL,
-  -- Por defecto el tipo de cuenta es invitado
-  tipo_cuenta ENUM("registrado", "invitado") NOT NULL DEFAULT "invitado",
+  -- Atributos
   nivel_xp INT UNSIGNED NOT NULL DEFAULT 0,
   cantidad_xp INT UNSIGNED NOT NULL DEFAULT 0,
   salud INT UNSIGNED NOT NULL DEFAULT 100,
   dano INT UNSIGNED NOT NULL DEFAULT 10,
   resistencia INT UNSIGNED NOT NULL DEFAULT 0,
   
+  -- Llave primaria
+  PRIMARY KEY (id_jugador),
+  
+  -- Índice único sobre la columna id_jugador
+  -- Evita que haya jugadores con el mismo id
+  UNIQUE KEY idx_id_jugador (id_jugador)
+  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Estructura para la tabla cuentas
+-- 
+
+CREATE TABLE cuentas (
+  id_jugador INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  
+  nombre_usuario VARCHAR(15) NOT NULL,
+  contrasena VARCHAR(45) NOT NULL,
+  
+  -- Llave primaria
   PRIMARY KEY (id_jugador),
   -- Índice único sobre la columna nombre_usuario
   -- Evita que haya jugadores con el mismo nombre
-  UNIQUE KEY idx_nombre_usuario (nombre_usuario)
+  UNIQUE KEY idx_nombre_usuario (nombre_usuario),
+  
+  -- Índices y llaves foránea
+  KEY idx_fk_cuenta_jugador (id_jugador),
+  CONSTRAINT fk_cuenta_jugador
+  FOREIGN KEY (id_jugador) REFERENCES jugadores(id_jugador)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
   
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -90,14 +114,12 @@ CREATE TABLE habilidades (
 --
 
 CREATE TABLE armas (
-  id_arma INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id_arma VARCHAR(30) NOT NULL,
   
   -- Atributos
-  nombre ENUM("brazo robotico", "llave de acero", "pistola laser lenta", "pistola laser rapida") NOT NULL,
   tipo ENUM("cuerpo a cuerpo", "distancia") NOT NULL,
   dano INT UNSIGNED NOT NULL DEFAULT 0,
   velocidad_ataque FLOAT UNSIGNED NOT NULL DEFAULT 0,
-  desbloqueo_nivel INT UNSIGNED NOT NULL DEFAULT 0,
   
   -- Llave primaria
   PRIMARY KEY (id_arma)
@@ -265,12 +287,11 @@ CREATE TABLE jugadores_habilidades (
 
 CREATE TABLE inventarios (
   id_jugador INT UNSIGNED NOT NULL,
-  id_arma_cuerpo INT UNSIGNED NOT NULL,
-  id_arma_distancia INT UNSIGNED NOT NULL,
+  id_arma_cuerpo VARCHAR(30) DEFAULT "brazo robotico",
+  id_arma_distancia VARCHAR(30) DEFAULT NULL,
   
   -- Atributos
   estado_pocion BOOL NOT NULL DEFAULT FALSE,
-  curacion_pocion INT UNSIGNED NOT NULL DEFAULT 0,
   
   -- Llave primaria
   PRIMARY KEY (id_jugador),
@@ -364,31 +385,34 @@ CREATE TABLE objetos_salas (
 -- Estructura para la vista estadisticas_globales
 --
 
-CREATE VIEW estadisticas_globales AS
+
+CREATE OR REPLACE VIEW estadisticas_globales AS
 SELECT
-  -- Total de juagdores
-  COUNT(*) AS num_jugadores_total,
-  -- Total de jugadores por tipo de cunta
-  SUM(tipo_cuenta = "registrado") AS num_jugadores_registrados,
-  SUM(tipo_cuenta = "invitado") AS num_jugadores_invitados,
+  -- Total de jugadores
+  COUNT(A.id_jugador) AS "Jugadores",
+  -- Total de jugadores registrados
+  COUNT(B.id_jugador) AS "Registrados",
+  -- Total de jugadores no registrados
+  (COUNT(A.id_jugador) - COUNT(B.id_jugador)) AS "Invitados",
   -- Promedio de los mejores tiempos
-  -- 1. Selecciona tiempo_mejor_partida de la tabla estadísticas en segundos (Ej: 00:01:20 -> 80)
-  -- 2. Obtiene el promedio de los tiempos (100 + 120 + 130 / 3 = 116)
-  -- 3. Convierte los segundos a tiempo (116 -> (00:01:56)
-  (SELECT SEC_TO_TIME(ROUND(AVG(TIME_TO_SEC(tiempo_mejor_partida)))) FROM estadisticas) AS tiempo_mejor_partida_promedio,
+  (SELECT SEC_TO_TIME(ROUND(AVG(TIME_TO_SEC(C.tiempo_mejor_partida)))) FROM overclocked.estadisticas AS C) AS "Tiempo Promedio",
   -- Sumatorias
-  (SELECT SUM(enemigos_derrotados) FROM overclocked.estadisticas) AS enemigos_derrotados,
-  (SELECT SUM(numero_muertes) FROM overclocked.estadisticas) AS muertes_jugador,
-  (SELECT SUM(dano_recibido) FROM overclocked.estadisticas) AS dano_total_recibido,
-  (SELECT SUM(dano_infligido) FROM overclocked.estadisticas) AS dano_total_infligido,
-  (SELECT SUM(partidas_completadas) FROM overclocked.estadisticas) AS num_partidas_completadas
-FROM jugadores;
+  SUM(C.enemigos_derrotados) AS "Enemigos Derrotados",
+  SUM(C.numero_muertes) AS "Muertes",
+  SUM(C.dano_recibido) AS "Daño Recibido",
+  SUM(C.dano_infligido) AS "Daño Infligido",
+  SUM(C.partidas_completadas) AS "Partidas Completadas"
+FROM overclocked.jugadores AS A
+LEFT JOIN overclocked.cuentas AS B
+USING (id_jugador)
+JOIN overclocked.estadisticas AS C
+USING (id_jugador);
 
 --
 -- Estructura para la vista historial_partidas
 --
 
-CREATE VIEW historial_partidas AS
+CREATE OR REPLACE VIEW historial_partidas AS
 SELECT
   p.id_partida,
   n.id_nivel,
@@ -403,11 +427,30 @@ USING (id_nivel);
 -- Estructura para la vista de mejores 5 jugadores con menor tiempo en las partidas
 --
 
-CREATE VIEW top_5_jugadores AS
+CREATE OR REPLACE VIEW top_5_jugadores AS
 SELECT
-    overclocked.jugadores.nombre_usuario AS Usuario,
-    overclocked.estadisticas.tiempo_mejor_partida AS Tiempo
-FROM overclocked.jugadores
-JOIN overclocked.estadisticas
+    A.nombre_usuario AS "Usuario", -- El nombre de usuario proviene de la tabla cuentas
+    B.tiempo_mejor_partida AS "Tiempo" -- El tiempo de la mejor partida proviene de la tabla estadisticas
+FROM overclocked.cuentas AS A
+JOIN overclocked.estadisticas AS B
 USING (id_jugador)
-ORDER BY tiempo_mejor_partida LIMIT 5;
+WHERE B.tiempo_mejor_partida <> "00:00:00" -- Filtra los jugadores que no han jugado
+ORDER BY B.tiempo_mejor_partida -- Ordena por el tiempo de la mejor partida
+LIMIT 5; -- Muestra los 5 primeros jugadores
+
+--
+-- Estructura para la vista de las estadístcas de los usuarios
+--
+
+CREATE OR REPLACE VIEW estadisticas_jugadores AS
+SELECT
+	A.id_jugador,
+	B.tiempo_mejor_partida AS "Mejor Tiempo",
+    B.numero_muertes AS "Muertes",
+    B.enemigos_derrotados AS "Enemigos Derrotados",
+    B.dano_infligido AS "Daño Infligido",
+    B.dano_recibido AS "Daño Recibido",
+    B.partidas_completadas AS "Victorias"
+FROM overclocked.jugadores AS A
+JOIN overclocked.estadisticas AS B
+USING (id_jugador);
