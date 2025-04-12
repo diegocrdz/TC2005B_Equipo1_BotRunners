@@ -6,7 +6,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 11/04/2025
 */
 
 // Abilities that can be used by the player
@@ -23,6 +23,7 @@ class Ability{
     // Effect of the ability
     effect() {
         if (this.name == "damage") {
+            game.player.baseDamage += 10;
             game.player.damage += 10;
             console.log("Damage increased to " + game.player.damage);
         } else if (this.name == "health") {

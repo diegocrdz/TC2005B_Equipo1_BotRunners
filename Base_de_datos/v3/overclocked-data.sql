@@ -1,6 +1,6 @@
 -- Datos de Base de Datos Overclocked
--- Version 2.0
--- Fecha: 2 de abril de 2025
+-- Version 3.0
+-- Fecha: 11 de abril de 2025
 -- Desarrollado por: Equipo BotRunners
 -- Desripción: Inserción de datos a la base de datos Overclocked
 -- Desarrollado como parte del bloque TC2005B - Tecnológico de Monterrey, Campus Santa Fe
@@ -17,38 +17,75 @@ USE overclocked;
 -- Datos para la tabla jugadores
 --
 
-INSERT INTO jugadores (nombre_usuario, contrasena, tipo_cuenta, nivel_xp, cantidad_xp, salud, dano, resistencia)  
+INSERT INTO jugadores (nivel_xp, cantidad_xp, salud, dano, resistencia)  
 VALUES  
-('Lorechewtat', 'Lore123', 'registrado', 10, 3500, 120, 20, 3),  
-('Diegocrdz', 'Diegooo1', 'registrado', 12, 4200, 130, 22, 4),  
-('EderJez', 'Kenzo21', 'registrado', 8, 2800, 110, 18, 2),  
-('AnaKnight', 'ana321', 'registrado', 14, 5000, 140, 25, 5),  
-('LuisMaster', 'luis654', 'registrado', 9, 3100, 115, 19, 3),  
-('MariaNinja', 'maria987', 'registrado', 11, 3900, 125, 21, 4),  
-('PedroShadow', 'pedro123', 'registrado', 7, 2500, 105, 17, 2),  
-('ElenaStorm', 'elena456', 'registrado', 13, 4700, 135, 24, 5),  
-('JavierBlaze', 'javier789', 'registrado', 6, 2000, 95, 15, 1),  
-('CarmenDragon', 'carmen321', 'registrado', 15, 5300, 150, 27, 6),  
-('InvitadoA', 'guest001', 'invitado', 2, 500, 80, 10, 1),  
-('InvitadoB', 'guest002', 'invitado', 3, 700, 85, 12, 2),  
-('InvitadoC', 'guest003', 'invitado', 1, 300, 75, 8, 1),  
-('InvitadoD', 'guest004', 'invitado', 4, 1000, 90, 14, 3),  
-('HugoFury', 'hugo567', 'registrado', 10, 3500, 120, 20, 3),  
-('ValeriaStar', 'valeria890', 'registrado', 12, 4200, 130, 22, 4),  
-('RodrigoXtreme', 'rodrigo234', 'registrado', 8, 2800, 110, 18, 2),  
-('FernandaAce', 'fernanda678', 'registrado', 14, 5000, 140, 25, 5),  
-('PabloTitan', 'pablo910', 'registrado', 9, 3100, 115, 19, 3),  
-('AndreaCyber', 'andrea112', 'registrado', 11, 3900, 125, 21, 4),  
-('SergioVortex', 'sergio314', 'registrado', 7, 2500, 105, 17, 2),  
-('MonicaPhantom', 'monica516', 'registrado', 13, 4700, 135, 24, 5),  
-('DiegoSpecter', 'diego718', 'registrado', 6, 2000, 95, 15, 1),  
-('IsabelStorm', 'isabel920', 'registrado', 15, 5300, 150, 27, 6),  
-('JorgeBlitz', 'jorge123', 'registrado', 5, 1500, 90, 13, 2),  
-('NataliaSolar', 'natalia456', 'registrado', 16, 5500, 155, 28, 7),  
-('RicardoPyro', 'ricardo789', 'registrado', 4, 1300, 85, 12, 2),  
-('VictoriaFalcon', 'victoria321', 'registrado', 17, 5800, 160, 30, 8),  
-('EmilioDash', 'emilio654', 'registrado', 3, 1000, 80, 11, 1),  
-('DianaNova', 'diana987', 'registrado', 18, 6000, 165, 32, 9);  
+(10, 3500, 120, 20, 3),  
+(12, 4200, 130, 22, 4),  
+(8, 2800, 110, 18, 2),  
+(14, 5000, 140, 25, 5),  
+(9, 3100, 115, 19, 3),  
+(11, 3900, 125, 21, 4),  
+(7, 2500, 105, 17, 2),  
+(13, 4700, 135, 24, 5),  
+(6, 2000, 95, 15, 1),  
+(15, 5300, 150, 27, 6),  
+(2, 500, 80, 10, 1),  
+(3, 700, 85, 12, 2),  
+(1, 300, 75, 8, 1),  
+(4, 1000, 90, 14, 3),  
+(10, 3500, 120, 20, 3),  
+(12, 4200, 130, 22, 4),  
+(8, 2800, 110, 18, 2),  
+(14, 5000, 140, 25, 5),  
+(9, 3100, 115, 19, 3),  
+(11, 3900, 125, 21, 4),  
+(7, 2500, 105, 17, 2),  
+(13, 4700, 135, 24, 5),  
+(6, 2000, 95, 15, 1),  
+(15, 5300, 150, 27, 6),  
+(5, 1500, 90, 13, 2),  
+(16, 5500, 155, 28, 7),  
+(4, 1300, 85, 12, 2),  
+(17, 5800, 160, 30, 8),  
+(3, 1000, 80, 11, 1),  
+(18, 6000, 165, 32, 9); 
+
+--
+-- Datos para la tabla cuentas
+--
+
+INSERT INTO cuentas (id_jugador, nombre_usuario, contrasena)  
+VALUES  
+(1, 'Lorechewtat', 'Lore123'),  
+(2, 'Diegocrdz', 'Diegooo1'),  
+(3, 'EderJez', 'Kenzo21'),  
+(4, 'AnaKnight', 'ana321'),  
+(5, 'LuisMaster', 'luis654'),  
+(6, 'MariaNinja', 'maria987'),  
+(7, 'PedroShadow', 'pedro123'),  
+(8, 'ElenaStorm', 'elena456'),  
+(9, 'JavierBlaze', 'javier789'),  
+(10, 'CarmenDragon', 'carmen321'),  
+(11, 'InvitadoA', 'guest001'),  
+(12, 'InvitadoB', 'guest002'),  
+(13, 'InvitadoC', 'guest003'),  
+(14, 'InvitadoD', 'guest004'),  
+(15, 'HugoFury', 'hugo567'),  
+(16, 'ValeriaStar', 'valeria890'),  
+(17, 'RodrigoXtreme', 'rodrigo234'),  
+(18, 'FernandaAce', 'fernanda678'),  
+(19, 'PabloTitan', 'pablo910'),  
+(20, 'AndreaCyber', 'andrea112'),  
+(21, 'SergioVortex', 'sergio314'),  
+(22, 'MonicaPhantom', 'monica516'),  
+(23, 'DiegoSpecter', 'diego718'),  
+(24, 'IsabelStorm', 'isabel920'),  
+(25, 'JorgeBlitz', 'jorge123'),  
+(26, 'NataliaSolar', 'natalia456'),  
+(27, 'RicardoPyro', 'ricardo789'),  
+(28, 'VictoriaFalcon', 'victoria321'),  
+(29, 'EmilioDash', 'emilio654'),  
+(30, 'DianaNova', 'diana987');
 
 --
 -- Datos para la tabla partidas
@@ -393,9 +430,9 @@ INSERT INTO objetos_salas (id_sala, id_objeto) VALUES
 
 INSERT INTO estadisticas (id_jugador, tiempo_mejor_partida, numero_muertes, enemigos_derrotados, dano_infligido, dano_recibido, partidas_completadas)  
 VALUES  
-(1, '00:15:30', 3, 25, 1200, 900, 5),  
-(2, '00:10:45', 1, 18, 900, 750, 4),  
-(3, '00:20:10', 5, 32, 1500, 1100, 6),  
+(1, '00:15:30', 3, 25, 1200, 900, 0),  
+(2, '00:10:45', 1, 18, 900, 750, 1),  
+(3, '00:20:10', 5, 32, 1500, 1100, 2),
 (4, '00:12:00', 2, 22, 1100, 850, 5),  
 (5, '00:18:45', 4, 30, 1400, 1000, 7),  
 (6, '00:09:50', 1, 15, 800, 650, 3),  
@@ -477,58 +514,61 @@ VALUES
 -- Datos para la tabla armas
 --
 
-INSERT INTO armas (nombre, tipo, dano, velocidad_ataque, desbloqueo_nivel) VALUES
-("brazo robotico", "cuerpo a cuerpo", 20, 1.2, 1),
-("llave de acero", "cuerpo a cuerpo", 40, 1.2, 2),
-("pistola laser lenta", "distancia", 20, 1, 3),
-("pistola laser rapida", "distancia", 15, 0.5, 4);
+INSERT INTO armas (id_arma, tipo, dano, velocidad_ataque) VALUES
+("brazo robotico", "cuerpo a cuerpo", 20, 500),
+("llave de acero", "cuerpo a cuerpo", 40, 800),
+("pistola laser lenta", "distancia", 20, 250),
+("pistola laser rapida", "distancia", 15, 400);
 
 --
 -- Datos para la tabla inventario
 --
 
-INSERT INTO inventarios (id_jugador, id_arma_cuerpo, id_arma_distancia, estado_pocion, curacion_pocion) VALUES
-(1, 1, 3, TRUE, 50),
-(2, 2, 4, FALSE, 0),
-(3, 1, 3, TRUE, 40),
-(4, 2, 4, TRUE, 60),
-(5, 1, 4, FALSE, 0),
-(6, 2, 3, TRUE, 70),
-(7, 1, 4, TRUE, 30),
-(8, 2, 3, FALSE, 0),
-(9, 1, 4, TRUE, 20),
-(10, 2, 3, TRUE, 80),
-(11, 1, 3, FALSE, 0),
-(12, 2, 4, TRUE, 50),
-(13, 1, 3, TRUE, 60),
-(14, 2, 4, FALSE, 0),
-(15, 1, 3, TRUE, 40),
-(16, 2, 3, TRUE, 30),
-(17, 1, 4, FALSE, 0),
-(18, 2, 3, TRUE, 70),
-(19, 1, 3, TRUE, 50),
-(20, 2, 4, FALSE, 0),
-(21, 1, 3, TRUE, 40),
-(22, 2, 4, TRUE, 60),
-(23, 1, 4, FALSE, 0),
-(24, 2, 3, TRUE, 80),
-(25, 1, 3, TRUE, 30),
-(26, 2, 4, FALSE, 0),
-(27, 1, 3, TRUE, 70),
-(28, 2, 4, TRUE, 50),
-(29, 1, 3, FALSE, 0),
-(30, 2, 4, TRUE, 60);
-
+INSERT INTO inventarios (id_jugador, id_arma_cuerpo, id_arma_distancia, estado_pocion) VALUES
+(1, "brazo robotico", NULL, TRUE),
+(2, "llave de acero", "pistola laser rapida", FALSE),
+(3, "llave de acero", "pistola laser rapida", TRUE),
+(4, "brazo robotico", "pistola laser lenta", TRUE),
+(5, "brazo robotico", "pistola laser lenta", FALSE),
+(6, "brazo robotico", "pistola laser lenta", TRUE),
+(7, "brazo robotico", "pistola laser lenta", TRUE),
+(8, "brazo robotico", "pistola laser lenta", FALSE),
+(9, "brazo robotico", "pistola laser lenta", TRUE),
+(10, "brazo robotico", "pistola laser lenta", TRUE),
+(11, "brazo robotico", "pistola laser lenta", FALSE),
+(12, "brazo robotico", "pistola laser lenta", TRUE),
+(13, "brazo robotico", "pistola laser lenta", TRUE),
+(14, "brazo robotico", "pistola laser lenta", FALSE),
+(15, "brazo robotico", "pistola laser lenta", TRUE),
+(16, "brazo robotico", "pistola laser lenta", TRUE),
+(17, "brazo robotico", "pistola laser lenta", FALSE),
+(18, "brazo robotico", "pistola laser lenta", TRUE),
+(19, "brazo robotico", "pistola laser lenta", TRUE),
+(20, "brazo robotico", "pistola laser lenta", FALSE),
+(21, "brazo robotico", "pistola laser lenta", TRUE),
+(22, "brazo robotico", "pistola laser lenta", TRUE),
+(23, "brazo robotico", "pistola laser lenta", FALSE),
+(24, "brazo robotico", "pistola laser lenta", TRUE),
+(25, "brazo robotico", "pistola laser lenta", TRUE),
+(26, "brazo robotico", "pistola laser lenta", FALSE),
+(27, "brazo robotico", "pistola laser lenta", TRUE),
+(28, "brazo robotico", "pistola laser lenta", TRUE),
+(29, "brazo robotico", "pistola laser lenta", FALSE),
+(30, "brazo robotico", "pistola laser lenta", TRUE);
 -- 
 -- Triggers
 -- 
 
+-- Trigger para crear un registro de estadísticas e inventario después de registrar un jugador
 DELIMITER $$
-CREATE TRIGGER crear_estadistica_jugador AFTER INSERT
+CREATE TRIGGER crear_estadistica_e_inventario_jugador AFTER INSERT
 ON jugadores
 FOR EACH ROW
 BEGIN
-	INSERT INTO estadisticas (id_jugador)
-	VALUES (NEW.id_jugador);
+    INSERT INTO estadisticas (id_jugador)
+    VALUES (NEW.id_jugador);
+
+    INSERT INTO inventarios (id_jugador)
+    VALUES (NEW.id_jugador);
 END $$
-DELIMITER ; (SQL)
+DELIMITER ;

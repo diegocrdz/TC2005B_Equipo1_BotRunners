@@ -6,7 +6,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 11/04/2025
 */
 
 // Define the main menu for the game
@@ -106,13 +106,24 @@ class MainMenu extends GameObject {
     }
 
     // Button click actions
-    buttonClicked(buttonType) {
+    async buttonClicked(buttonType) {
         // Decide what to do based on the button type
         switch (buttonType) {
             case "play":
                 restartRooms(true, 0, 6);
                 game.startCinematic();
                 console.log(game.player);
+                // If the player is not logged in
+                // Create him in the database
+                if (game.player.id == null) {
+                    // Create a new player in the database
+                    const result = await addPlayer();
+                    // Set the player id
+                    game.player.id = result.id;
+                    // Log in
+                    await setPlayerStats(game.player.id);
+                    console.log("Jugador invitado creado");
+                }
                 break;
             case "options":
                 game.optionsMenu.show();
