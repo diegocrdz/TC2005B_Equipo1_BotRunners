@@ -209,6 +209,7 @@ L - Ladder
 0 - Button
 P - Spike
 O - Turtle Boss
+Z - Sword Boss
 X - Final Boss
 */
 
@@ -450,7 +451,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
         // Place a box in the level
         placeRandomly('B', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
         placeRandomly('P', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
-        //level[height - 2][width - 6] = 'O' // Debug turtle boss
+        //level[height - 2][width - 6] = 'Z' // Debug boss
         // Place the player at the bottom of the level
         level[height - 2][2] = '@';
         return level.map(row => row.join('')).join('\n');
@@ -472,7 +473,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
         if (levelNumber == 0) {
             bossChar = 'O'; // Turtle Boss
         } else if (levelNumber == 1) {
-            bossChar = 'X'; // Fast Boss
+            bossChar = 'Z'; // Fast Boss
         } else {
             bossChar = 'X'; // Final Boss
         }

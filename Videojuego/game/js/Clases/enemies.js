@@ -515,14 +515,12 @@ class SwordEnemy extends Enemy {
         this.damage = 10;
         this.xp_reward = 500;
 
-        this.speed = 0.003;
+        this.speed = 0.001;
         this.velocity = new Vec(this.speed, 0);
 
+        // Dashing properties
         this.isDashing = false;
-        this.canDash = false; // Flag to check if the enemy can dash
-
-
-
+        this.canDash = false;
         this.hasDashAnimationPlayed = false;
 
         // Hitbox properties
@@ -566,37 +564,38 @@ class SwordEnemy extends Enemy {
             }
         };
 
+        // Timeout to start the dash
         setTimeout(() => {
-            this.canDash = true; // Allow the enemy to dash after 5 seconds
-        }
-        , 5000); // 5 seconds
-
+            this.canDash = true;
+        }, 5000);
     }
 
     update(level, deltaTime) {
         this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
         this.velocity.y += gravity * deltaTime;
 
+        // If the enemy can dash and is not dashing
         if(this.canDash &&!this.isDashing) {
-            this.isDashing = true; // Set the dashing flag
+            this.isDashing = true;
             this.canDash = false;
-            this.dash(level, deltaTime); // Call the dash function
+            this.dash(level, deltaTime);
+        // If the enemy is not dashing, move normally
         } else {
             this.moveHorizontally(level, deltaTime);
             this.followPlayer(level, deltaTime);
             this.moveVertically(level, deltaTime);
         }
-
-
         this.updateFrame(deltaTime);
     }
     
+    // Make the enemy dash towards the player
     dash(level, deltaTime) {
-        let dashDistance = 15;
+        let dashDistance = 8;
         let dashSpeed = 0.05;
         let moved = 0;
         let step = dashSpeed * deltaTime;
 
+        // Play the dash animation
         let dashData = this.movement.dash;
         if(!this.hasDashAnimationPlayed){
             if (this.isFacingRight) {
@@ -604,15 +603,11 @@ class SwordEnemy extends Enemy {
             } else {
                 this.setAnimation(...dashData.left, dashData.repeat, dashData.duration);
             }
-            console.log("direction", this.isFacingRight);
-
             this.hasDashAnimationPlayed = true;
         }
         
-    
+        // Move the enemy in the direction of the dash
         let dashMove = () => {
-            
-            
             if (moved < dashDistance) {
                 let direction = this.isFacingRight ? 1 : -1;
                 let newXPosition = this.position.plus(new Vec(direction * step, 0));
@@ -627,21 +622,27 @@ class SwordEnemy extends Enemy {
                 moved += step;
 
                 requestAnimationFrame(dashMove);
+            
+            // If the enemy is not dashing, stop the animation
+            } else {
+                setTimeout(() => {
+                    this.startMovement(this.isFacingRight ? "right" : "left");
+                }, 500);
             }
         };
     
         sfx.dash.play();
         dashMove();
 
-    
+        // Timeout to reset the dashing flag
         setTimeout(() => {
-            this.isDashing = false; // Reset the dashing flag after the dash duration
+            this.isDashing = false;
         }, 500);
-    
+        
+        // Timeout to reset enemy ability to dash
         setTimeout(() => {
             this.canDash = true;
-            this.hasDashAnimationPlayed = false; // Reset the dash animation flag
-             // Start the dash movement
+            this.hasDashAnimationPlayed = false;
         }, 5000);
     }
     
