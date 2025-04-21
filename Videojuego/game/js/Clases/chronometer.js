@@ -117,9 +117,8 @@ class Chronometer {
 
     // Check if the elapsed time is greater than the best player's time
     checkTime(bestTimeStr) {
-        const now = new Date();
-        const difference = now.getTime() - this.initialTime.getTime() + this.temporaryDifference;
-        const currentTimeStr = this.millisecondsToSQLTime(difference);
+        // Get the current time of the chronometer
+        const currentTimeStr = this.millisecondsToSQLTime(this.temporaryDifference);
     
         // Debug
         console.log("Tiempo actual: " + currentTimeStr);
@@ -127,7 +126,7 @@ class Chronometer {
     
         // If the best time is not set or the current time is better, return the current time
         // since the best time is in SQL format (HH:MM:SS), we can compare it directly
-        if (!bestTimeStr || currentTimeStr < bestTimeStr) {
+        if (bestTimeStr === "00:00:00" || currentTimeStr < bestTimeStr) {
             console.log("Nuevo mejor tiempo: " + currentTimeStr);
             // Return the current time in SQL format
             return currentTimeStr;

@@ -29,6 +29,8 @@ let deltaTime = 0;
 let game;
 let player;
 let level;
+let showHitboxes = false;
+let xpMultiplier = 1;
 
 // Scale of the whole world, to be applied to all objects
 // Each unit in the level file will be drawn as these many square pixels
@@ -47,7 +49,6 @@ class Game {
         this.actors = level.actors;
         // Menu for displaying abilities
         this.abilities = new popUpAbility();
-        this.xpMultiplier = 1;
         // Button state for the boss room
         this.isButtonPressed = false;
         // Cinematic properties
@@ -71,6 +72,8 @@ class Game {
         this.optionsMenu = new OptionsMenu(null, canvasWidth, canvasHeight, 0, 0, 'optionsmenu');
         // Stats menu
         this.statsMenu = new StatsMenu(null, canvasWidth, canvasHeight, 0, 0, 'statsmenu');
+        // Label to notify the user of any event
+        this.eventLabel = new EventLabel();
 
         // List of the player's projectiles
         this.projectiles = [];
@@ -118,6 +121,12 @@ class Game {
         this.tutorial2Image = new GameObject(null, 360, 180,
                                             (canvasWidth / 2) - 175, canvasHeight / 3 - 100,
                                             'tutorial');
+        
+        // Load the exit image
+        this.exitImage = new GameObject(null, 120, 60,
+                                        (canvasWidth / 2) + 200, canvasHeight / 3 - 20,
+                                        'exit');
+        this.exitImage.setSprite('../../assets/backgrounds/sign_exit.png');
 
         // Health bar for the player
         this.playerHealthBar = new Bar(
@@ -319,10 +328,7 @@ class Game {
                 this.projectiles.splice(index, 1);
             }
         }
-        
     }
-
-
 
     // Function to load a specific level
     moveToLevel(levelNumber, playerPositionX, playerPositionY) {
@@ -347,6 +353,12 @@ class Game {
                 this.state = 'win';
                 // Pause the chronometer
                 this.chronometer.pause();
+                // Get the time from the chronometer
+                const newTime = game.chronometer.checkTime(game.player.bestTime);
+                // If the player got a new best time, update it
+                if (newTime) {
+                    game.player.bestTime = newTime;
+                }
                 selectMusicMenus('win');
                 // Update the player state
                 this.player.firstTimePlaying = false;
@@ -354,6 +366,8 @@ class Game {
                 return;
             }
         }
+
+        sfx.door.play(); // Play door sound effect
 
         // Create the new level
         this.level = new Level(GAME_LEVELS[levelNumber]);
@@ -484,11 +498,11 @@ class Game {
                 }
             }
 
-            // Detect collisions with projectiles
+            // Detect collisions with enemy projectiles
             if (this.enemiesProjectiles.length > 0) {   
                 for (let projectile of this.enemiesProjectiles) {
                     if (overlapRectangles(projectile, game.player)) {
-                        game.player.takeDamage(10); // Deal damage to the enemy
+                        game.player.takeDamage(10); // Deal damage to the player
                         this.removeProjectile(projectile); // Remove the projectile
                         break; // Stop checking other projectiles for this actor
                     }
@@ -502,7 +516,7 @@ class Game {
 
                 } else if (actor.type == 'coin' && actor.isCollectible) {
                     // Collect the coin
-                    this.player.gainXp(Math.floor(actor.xp_value * this.xpMultiplier)); // Gain XP
+                    this.player.gainXp(Math.floor(actor.xp_value * xpMultiplier)); // Gain XP
                     // Remove the coin from the level string
                     GAME_LEVELS[this.levelNumber] = GAME_LEVELS[this.levelNumber].replace('$', '.');
                     // Remove the coin from the actors list
@@ -634,13 +648,16 @@ class Game {
             return;
         }
 
+        // Draw the background of the level
+        rooms.get(this.levelNumber).background.draw(ctx, 1);
+
         // First draw the background tiles
         for (let actor of this.actors) {
             if (actor.type === 'floor' || actor.type === 'wall') {
                 actor.draw(ctx, scale);
             }
         }
-
+        
         // Assign the tutorial image depending on the level
         if (level == 0) {
             this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial1.png');
@@ -653,12 +670,13 @@ class Game {
             this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial6.png');
         }
 
-        // Draw the tutorial images
+        // Draw the tutorial images and the exit sign
         if (rooms.get(this.levelNumber).type === "start") {
             this.tutorial1Image.draw(ctx, 1);
-        }
-        else if (rooms.get(this.levelNumber).type === "second") {
+        } else if (rooms.get(this.levelNumber).type === "second") {
             this.tutorial2Image.draw(ctx, 1);
+        } else if (rooms.get(this.levelNumber).type === "boss") {
+            this.exitImage.draw(ctx, 1);
         }
 
         // Draw the ladders signs
@@ -677,6 +695,10 @@ class Game {
             || rooms.get(this.levelNumber).type === "button") {
             this.ladderDownImage.draw(ctx, 1);
         }
+
+        // Draw the projectiles
+        this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
+        this.enemiesProjectiles.forEach(projectile => projectile.draw(ctx, scale));
     
         // Then draw the rest of the actors
         for (let actor of this.actors) {
@@ -692,10 +714,6 @@ class Game {
 
         // Draw the player on top of everything else
         this.player.draw(ctx, scale);
-
-        // Draw the projectiles
-        this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
-        this.enemiesProjectiles.forEach(projectile => projectile.draw(ctx, scale));
 
         // Draw the player bars
         this.playerHealthBar.draw(ctx);
@@ -1036,6 +1054,8 @@ function restartRooms(restartPlayer, levelNumber, numRooms) {
             game.player.canDoubleJump = false;
             game.player.canDash = false;
             game.player.damage = 20;
+            // Reset the xp multiplier
+            xpMultiplier = 1;
         }
         // Update the player stats
         updatePlayerStats(game.player.id);
@@ -1058,6 +1078,9 @@ function restartRooms(restartPlayer, levelNumber, numRooms) {
             // the player stats and inventory
             restorePlayerData(savedId);
         }
+
+        // Reset the xp multiplier
+        xpMultiplier = 1;
     }
 }
 
@@ -1089,14 +1112,6 @@ function setEventListeners() {
             return;
         } else if (game.state === 'win') {
             if (event.key == ' ') {
-                // Get the time from the chronometer
-                const newTime = game.chronometer.checkTime(game.player.bestTime);
-
-                // If the player got a new best time, update it
-                if (newTime) {
-                    game.player.bestTime = newTime;
-                }
-
                 // Update the player stats
                 game.player.completedGames++;
 
@@ -1167,6 +1182,7 @@ function setEventListeners() {
             // Update the player stats in the database
             if (game.player.id !== null) {
                 updatePlayerStats(game.player.id);
+                game.eventLabel.show("Guardando el progreso...");
             }
         }
         
@@ -1174,6 +1190,9 @@ function setEventListeners() {
         if (event.code == 'KeyR' && game.state === 'playing') {
             restartRooms(true, 0, 6);
             selectMusicMenus('playing');
+            if (game.player.id !== null) {
+                game.eventLabel.show("Juego reiniciado...");
+            }
         }
 
         // Select weapons or use health potion
@@ -1194,6 +1213,11 @@ function setEventListeners() {
         }
         if (event.key == 'ArrowDown') {
             game.player.isPressingDown = true;
+        }
+
+        // Show hitboxes
+        if (event.code == 'KeyH') {
+            showHitboxes = !showHitboxes;
         }
     });
 
@@ -1306,6 +1330,8 @@ function setEventListeners() {
 
         // Get the login message element
         const loginMessage = document.getElementById("loginMessage");
+        // Get the username label element
+        const usernameLabel = document.getElementById("usernameLabel");
     
         // Check if the username and password are not empty
         if (username && password) {
@@ -1313,6 +1339,7 @@ function setEventListeners() {
             if (result) {
                 // Change the loginMessage from the container
                 loginMessage.textContent = "Sesión iniciada como: " + username;
+                usernameLabel.textContent = "Sesión iniciada como: " + username;
             } else {
                 loginMessage.textContent = "El usuario " + username + " ya existe";
             }
@@ -1336,6 +1363,8 @@ function setEventListeners() {
 
         // Get the login message element
         const loginMessage = document.getElementById("loginMessage");
+        // Get the username label element
+        const usernameLabel = document.getElementById("usernameLabel");
     
         // Check if the username and password are not empty
         if (username && password) {
@@ -1343,6 +1372,7 @@ function setEventListeners() {
             if (result) {
                 // Change the loginMessage from the container
                 loginMessage.textContent = "Sesión iniciada como: " + username;
+                usernameLabel.textContent = "Sesión iniciada como: " + username;
             } else {
                 loginMessage.textContent = "Usuario o contraseña incorrectos";
             }
@@ -1374,17 +1404,32 @@ function setEventListeners() {
 
     document.getElementById('statsPlayer').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
-        getStatistics(game.player.id); 
+        // Show the table 
+        getStatistics(game.player.id);
+        // Check if the player is logged in
+        if (game.player.id !== null) {
+            // Show the charts
+            drawCharts('player', game.player.id);
+        } else {
+            // Empty charts
+            drawCharts('none');
+        }
     });
 
     document.getElementById('statsGlobal').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
+        // Show the table 
         getGlobalStatistics();
+        // Show the charts
+        drawCharts('global');
     });
 
     document.getElementById('statsTop').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
+        // Show the table
         getTopStatistics();
+        // Show the charts
+        drawCharts('top');
     });
 
     // Apply button for the options menu

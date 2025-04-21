@@ -26,9 +26,14 @@ const sfx = {
     getHit : new Audio("../../assets/Sounds/sfx/getHit.mp3"),
     dash : new Audio("../../assets/Sounds/sfx/dash.mp3"),
     shoot : new Audio("../../assets/Sounds/sfx/shoot.ogg"),
+    heal : new Audio("../../assets/Sounds/sfx/heal.ogg"),
     bossDie : new Audio("../../assets/Sounds/sfx/bossDie.ogg"),
     enemyDie : new Audio("../../assets/Sounds/sfx/enemyDie.ogg"),
     button : new Audio("../../assets/Sounds/sfx/button.wav"),
+    turtleClose : new Audio("../../assets/Sounds/sfx/turtle_close.ogg"),
+    turtleOpen : new Audio("../../assets/Sounds/sfx/turtle_open.ogg"),
+    turtleShoot : new Audio("../../assets/Sounds/sfx/turtle_shoot.ogg"),
+    door : new Audio("../../assets/Sounds/sfx/door.ogg"),
 };
 
 // Background music

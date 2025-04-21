@@ -14,7 +14,7 @@ class Projectile extends GameObject {
     constructor(_color, width, height, x, y, _type, direction) {
         super("blue", width, height, x, y, "projectile");
 
-        this.setSprite('../../assets/objects/xp_orb.png', new Rect(0, 0, 32, 32));
+        this.setSprite('../../assets/objects/projectile.png', new Rect(0, 0, 18, 18));
     
         this.speed = 0.04 // Speed of the projectile
         this.duration = 1000; // Duration of the projectile in milliseconds

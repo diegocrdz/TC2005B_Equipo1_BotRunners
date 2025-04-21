@@ -30,7 +30,7 @@ body {
   grid-template-columns: 1fr 2fr 1fr;
   grid-template-areas:
     "header header header"
-    "left main .";
+    "left main right";
   justify-content: center;
   align-items: center;
   justify-items: center;
@@ -88,7 +88,7 @@ h1{
   margin: 0px;
 }
 
-canvas {
+#canvas {
     /* width: 75vw; */
     /* height: 75vh; */
     height: 80vh;
@@ -98,7 +98,6 @@ canvas {
     /* width: 600px; */
     /* height: 600px; */
 }
-
 #canvas {
   background-color: #1c1e25;
   grid-area: main;
@@ -171,6 +170,13 @@ canvas {
   font-family: 'Press Start 2P';
   font-size: 16px;
 }
+#registerMessage {
+  font-family: 'roboto';
+  font-size: 14px;
+  margin: 0;
+  color: #ffcd81;
+  text-align: center;
+}
 /* Style for slider inputs */
 /* Ref: https://eclixxo.com/crear-slider-control-volumen-html-5/ */
 .options-container input[type="range"] {
@@ -208,6 +214,7 @@ canvas {
 }
 
 /* Stats Menu */
+
 .stats-container {
   position: absolute; /* Ignore the grid layout */
   top: 10vh; /* Place the container below the header */
@@ -231,11 +238,15 @@ canvas {
 }
 #statsResults {
   /* Allows scrolling if content overflows */
-  overflow-x: auto; 
+  overflow-x: auto;
+  /* Keep the table fixed when scrolling */
+  position: sticky;
+  top: 0; 
 }
 .stats-container table {
   width: 100%;
   border-collapse: collapse;
+  background-color: #434A5F;
 }
 .stats-container th, .stats-container td {
   border: 2px solid #6C6EA0;
@@ -248,4 +259,73 @@ canvas {
 }
 .stats-container td {
   background-color: #272b36;
+}
+
+#results-container {
+  display: flex;
+  gap: 20px;
+}
+#results-container div {
+  width: 100%;
+  height: max-content;
+}
+
+/* Charts */
+
+#chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: auto; /* Allows scrolling if content overflows */
+}
+#chart-container canvas {
+  width: 100%;
+  height: auto;
+  background-color: #1c1e25;
+  border: 2px solid #6C6EA0;
+  padding: 20px;
+}
+
+/* Left Menu and Right Menu */
+
+#leftMenu, #rightMenu {
+  height: 80vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  color: white;
+}
+#leftMenu {
+  grid-area: left;
+  margin-right: 20px;
+}
+#rightMenu {
+  grid-area: right;
+  margin-left: 20px;
+}
+#usernameLabel, #eventLabel {
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+#usernameLabel {
+  font-size: 0.8em;
+  color: #6C6EA0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Event label */
+
+#eventLabel {
+  border-left: 4px solid #ffcd81;
+  background-color: #201e1a;
+  color: #ffcd81;
+  transform: translateX(100%); /* Move the element out of view */
+  transition: transform 0.5s; /* Transition when transforming */
+}
+#eventLabel.show {
+  transform: translateX(0); /* Bring the element back into view */
 }

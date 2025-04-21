@@ -87,7 +87,7 @@ app.get('/api/jugadores/:id', async (request, response) => {
         connection = await connectToDB()
 
         const [results_user, _] = await connection.query(
-            'SELECT * FROM jugadores WHERE id_jugador= ?',
+            'SELECT * FROM overclocked.jugadores WHERE id_jugador= ?',
             [request.params.id]
         )
         
@@ -116,9 +116,7 @@ app.post('/api/jugadores', async (request, response)=>{
     {    
         connection = await connectToDB()
 
-        const [results, fields] = await connection.query(
-            'INSERT INTO jugadores VALUES ()',
-        )
+        const [results, fields] = await connection.query('INSERT INTO overclocked.jugadores VALUES ()')
         
         console.log(`${results.affectedRows} row inserted`)
         response.status(201).json({'message': "Data inserted correctly.", "id": results.insertId})
@@ -148,7 +146,7 @@ app.put('/api/jugadores', async (request, response) => {
         connection = await connectToDB()
 
         const [results, fields] = await connection.query(
-            'UPDATE jugadores SET nombre_usuario = ?, contrasena = ? WHERE id_jugador= ?',
+            'UPDATE overclocked.jugadores SET nombre_usuario = ?, contrasena = ? WHERE id_jugador= ?',
             [request.body['nombre_usuario'], request.body['contrasena'], request.body['id_jugador']]
         )
         
@@ -177,7 +175,7 @@ app.delete('/api/jugadores/:id', async (request, response)=>{
         connection = await connectToDB()
 
         const [results, fields] = await connection.query(
-            'DELETE FROM jugadores WHERE id_jugador = ?',
+            'DELETE FROM overclocked.jugadores WHERE id_jugador = ?',
             [request.params.id])
         
         console.log(`${results.affectedRows} row deleted`)
@@ -214,7 +212,7 @@ app.post('/api/jugadores/auth', async (request, response) => {
 
         // Query to find the player by username and password
         const [results_user] = await connection.query(
-            'SELECT * FROM cuentas WHERE nombre_usuario = ? AND contrasena = ?',
+            'SELECT * FROM overclocked.cuentas WHERE nombre_usuario = ? AND contrasena = ?',
             [nombre_usuario, contrasena]
         );
 
@@ -250,7 +248,7 @@ app.post('/api/cuentas', async (request, response) => {
 
         // Insert the new account into the database
         const [results] = await connection.query(
-            'INSERT INTO cuentas (id_jugador, nombre_usuario, contrasena) VALUES (?, ?, ?)',
+            'INSERT INTO overclocked.cuentas (id_jugador, nombre_usuario, contrasena) VALUES (?, ?, ?)',
             [
                 request.body.id_jugador,
                 request.body.nombre_usuario,
@@ -279,7 +277,7 @@ app.get('/api/cuentas/:nombre_usuario', async (request, response) => {
         connection = await connectToDB()
 
         const [results] = await connection.query(
-            'SELECT * FROM cuentas WHERE nombre_usuario = ?',
+            'SELECT * FROM overclocked.cuentas WHERE nombre_usuario = ?',
             [request.params.nombre_usuario]
         )
 
@@ -312,7 +310,7 @@ app.get('/api/stats/view/:id', async (request, response) => {
     try {
         connection = await connectToDB()
         const [results] = await connection.query(
-            'SELECT * FROM estadisticas_jugadores WHERE id_jugador = ?',
+            'SELECT * FROM overclocked.estadisticas_jugadores WHERE id_jugador = ?',
             [request.params.id])
         
         console.log(`${results.affectedRows} rows returned`)
@@ -336,7 +334,7 @@ app.get('/api/stats', async (request, response) => {
 
     try {
         connection = await connectToDB()
-        const [results] = await connection.query('SELECT * FROM estadisticas_globales')
+        const [results] = await connection.query('SELECT * FROM overclocked.estadisticas_globales')
         
         console.log(`${results.affectedRows} rows returned`)
         response.json(results[0])
@@ -359,10 +357,40 @@ app.get('/api/stats/:id', async (request, response) => {
     try {
         connection = await connectToDB()
         const [results] = await connection.query(
-            'SELECT * FROM estadisticas WHERE id_jugador = ?',
+            'SELECT * FROM overclocked.estadisticas WHERE id_jugador = ?',
             [request.params.id])
         console.log(`${results.affectedRows} rows returned`)
         response.json(results[0])
+    }
+    catch (error) {
+        response.status(500).json(error)
+        console.log(error)
+    }
+    finally {
+        if(connection!==null) {
+            connection.end()
+            console.log("Connection closed succesfully!")
+        }
+    }
+})
+
+// Get the statistics of the top 5 players from the db
+app.get('/api/top/stats', async (request, response) => {
+    let connection = null
+    try {
+        connection = await connectToDB()
+        const [results] = await connection.query(
+            `SELECT A.*
+            FROM overclocked.estadisticas AS A
+            JOIN overclocked.cuentas AS B
+            USING (id_jugador)
+            JOIN overclocked.top_5_jugadores AS C
+            ON B.nombre_usuario = C.Usuario
+            ORDER BY A.tiempo_mejor_partida`
+        )
+
+        console.log(`${results.affectedRows} rows returned`)
+        response.json(results)
     }
     catch (error) {
         response.status(500).json(error)
@@ -382,7 +410,7 @@ app.get('/api/top', async (request, response) => {
 
     try {
         connection = await connectToDB()
-        const [results] = await connection.query('SELECT * FROM top_5_jugadores')
+        const [results] = await connection.query('SELECT * FROM overclocked.top_5_jugadores')
         
         console.log(`${results.affectedRows} rows returned`)
         response.json(results)
@@ -407,7 +435,7 @@ app.put('/api/stats/:id', async (request, response) => {
         connection = await connectToDB()
 
         const [results, fields] = await connection.query(
-            'UPDATE estadisticas SET ? WHERE id_jugador= ?',
+            'UPDATE overclocked.estadisticas SET ? WHERE id_jugador= ?',
             [request.body, request.params.id]
         )
         
@@ -437,7 +465,7 @@ app.get('/api/inventory/:id', async (request, response) => {
         connection = await connectToDB()
 
         const [results_user, _] = await connection.query(
-            'SELECT * FROM inventarios WHERE id_jugador= ?',
+            'SELECT * FROM overclocked.inventarios WHERE id_jugador= ?',
             [request.params.id]
         )
         
@@ -465,7 +493,7 @@ app.put('/api/inventory/:id', async (request, response) => {
         connection = await connectToDB()
 
         const [results, fields] = await connection.query(
-            'UPDATE inventarios SET ? WHERE id_jugador= ?',
+            'UPDATE overclocked.inventarios SET ? WHERE id_jugador= ?',
             [request.body, request.params.id]
         )
         

@@ -29,14 +29,13 @@ class Level {
                 let item = levelChars[ch];
                 let objClass = item.objClass;
                 let cellType = item.label;
+                
                 // Create a new instance of the type specified
-                let actor = new objClass(this.getBackgroundForLevel(), 1, 1, x, y, item.label);
+                let actor = new objClass("#1c1e25", 1, 1, x, y, item.label);
+
                 // Configurations for each type of cell
                 // TODO: Simplify this code, sinde most of it is repeated
                 if (actor.type == "player") {
-                    // Also instantiate a floor tile below the player
-                    this.addBackgroundFloor(x, y);
-
                     // Make the player larger
                     actor.position = actor.position.plus(new Vec(0, -3));
                     actor.size = new Vec(3, 3);
@@ -51,16 +50,12 @@ class Level {
                     cellType = "empty";
 
                 } else if (actor.type == "coin") {
-                    // Also instantiate a floor tile below the player
-                    this.addBackgroundFloor(x, y);
-
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "empty";
 
                 } else if (actor.type == "enemy") {
                     // Make the enemy larger
-                    this.addBackgroundFloor(x, y);
                     actor.position = actor.position.plus(new Vec(0, -3));
                     actor.size = new Vec(3, 3);
 
@@ -75,7 +70,6 @@ class Level {
                 
                 } else if (actor.type == "boss") {
                     // Make the enemy larger
-                    this.addBackgroundFloor(x, y);
                     actor.position = actor.position.plus(new Vec(0, -5));
                     actor.size = new Vec(5, 5);
 
@@ -89,66 +83,55 @@ class Level {
                     cellType = "empty";
 
                 } else if (actor.type == "wall") {
-                    // Randomize sprites for each wall tile
-                    // item.rect = this.randomEvironment(rnd);
+                    this.addBackgroundFloor(x, y, "#1c1e25");
                     item.sprite = this.getWallForLevel();
+                    // Randomize the wall sprite
+                    item.rect = this.randomTile(0, 3, 0, 18, 18); // choose between the first three tiles
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "wall";
 
-                } else if (actor.type == "floor") {
-                    //actor.setSprite(item.sprite, item.rect);
-                    this.actors.push(actor);
-                    cellType = "floor";
-
                 } else if (actor.type == "door") {
-                    this.addBackgroundFloor(x, y);
+                    this.addBackgroundFloor(x, y, "#baf7ca");
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     this.doors.push(actor);
                     cellType = "door";
 
                 } else if (actor.type == "door_down" || actor.type == "door_up") {
-                    this.addBackgroundFloor(x, y);
                     item.sprite = this.getPlatformForLevel();
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "wall";
 
                 } else if (actor.type == "box") {
-                    this.addBackgroundFloor(x, y);
                     item.sprite = this.getBoxForLevel();
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "box";
                     
                 } else if(actor.type == "end_pipe") {
-                    this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "wall";
 
                 }   else if(actor.type == "start_pipe"){
-                    this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);    
                     this.actors.push(actor);
                     cellType = "wall";
 
                 }else if(actor.type == "spikes"){
-                    this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "spikes";
 
                 }else if (actor.type == "ladder") {
-                    this.addBackgroundFloor(x, y);
                     item.sprite = this.getLadderForLevel();
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "empty";
 
                 } else if (actor.type == "button") {
-                    this.addBackgroundFloor(x, y);
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "empty";
@@ -220,17 +203,22 @@ class Level {
     }
 
     // Add a floor tile to the background of the level
-    addBackgroundFloor(x, y) {
+    addBackgroundFloor(x, y, color) {
         let floor = levelChars['.'];
-        let floorActor = new GameObject(this.getBackgroundForLevel(level), 1, 1, x, y, floor.label);
+        let floorActor = new GameObject(this.getBackgroundForLevel(), 1, 1, x, y, floor.label);
+        if (color) {
+            floorActor.color = color;
+        } else {
+            floorActor.color = this.getBackgroundForLevel();
+        }
         //floorActor.setSprite(floor.sprite, floor.rect);
         this.actors.push(floorActor);
     }
 
     // Randomize sprites for each wall tile
-    randomTile(xStart, xRange, y) {
+    randomTile(xStart, xRange, y, rectX, rectY) {
         let tile = Math.floor(Math.random() * xRange + xStart);
-        return new Rect(tile, y, 32, 32);
+        return new Rect(tile, y, rectX, rectY);
     }
 
     // Randomize the environment for each level

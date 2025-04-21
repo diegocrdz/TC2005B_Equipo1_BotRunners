@@ -29,5 +29,8 @@ class Button extends GameObject {
         // this is used to determine if the door that leads to
         // the boss room should be opened
         game.isButtonPressed = true;
+
+        // Show the event message
+        game.eventLabel.show("La sala del jefe ha sido desbloqueada");
     }
 }

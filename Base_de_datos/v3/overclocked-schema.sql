@@ -77,6 +77,8 @@ CREATE TABLE estadisticas (
   dano_infligido INT UNSIGNED NOT NULL DEFAULT 0,
   dano_recibido INT UNSIGNED NOT NULL DEFAULT 0,
   partidas_completadas INT UNSIGNED NOT NULL DEFAULT 0,
+  ataques_cuerpo INT UNSIGNED NOT NULL DEFAULT 0,
+  ataques_distancia INT UNSIGNED NOT NULL DEFAULT 0,
   
   -- Llave primaria
   PRIMARY KEY (id_estadisticas),
@@ -401,7 +403,9 @@ SELECT
   SUM(C.numero_muertes) AS "Muertes",
   SUM(C.dano_recibido) AS "Daño Recibido",
   SUM(C.dano_infligido) AS "Daño Infligido",
-  SUM(C.partidas_completadas) AS "Partidas Completadas"
+  SUM(C.partidas_completadas) AS "Partidas Completadas",
+  SUM(C.ataques_cuerpo) AS "Ataques Pinza",
+  SUM(C.ataques_distancia) AS "Ataques Pistola"
 FROM overclocked.jugadores AS A
 LEFT JOIN overclocked.cuentas AS B
 USING (id_jugador)
@@ -450,7 +454,9 @@ SELECT
     B.enemigos_derrotados AS "Enemigos Derrotados",
     B.dano_infligido AS "Daño Infligido",
     B.dano_recibido AS "Daño Recibido",
-    B.partidas_completadas AS "Victorias"
+    B.partidas_completadas AS "Victorias",
+    B.ataques_cuerpo AS "Ataques Pinza",
+    B.ataques_distancia AS "Ataques Pistola"
 FROM overclocked.jugadores AS A
 JOIN overclocked.estadisticas AS B
 USING (id_jugador);

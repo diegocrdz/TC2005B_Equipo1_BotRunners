@@ -4,13 +4,18 @@
         <title>Overclocked - Jugar</title>
         <!-- Stylesheet of the page -->
         <link rel="stylesheet" href="../css/styles.css">
-        <!-- Import font PRESS START 2P for titles -->
+
+        <!-- Font for titles (PRESS START 2P) -->
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
         <!-- Requests for the database -->
         <script src="../js/requests.js"></script>
 
-        <!-- Classes of the game -->
+        <!-- Charts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.js" integrity="sha512-vCUbejtS+HcWYtDHRF2T5B0BKwVG/CLeuew5uT2AiX4SJ2Wff52+kfgONvtdATqkqQMC9Ye5K+Td0OTaz+P7cw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="../js/charts.js"></script>
+
+        <!-- Classes -->
         <script src="../js/game_classes.js"></script>
         <script src="../js/Clases/weapon.js"></script>
         <script src="../js/Clases/player.js"></script>
@@ -22,15 +27,21 @@
         <script src="../js/Clases/projectile.js"></script>
         <script src="../js/Clases/door.js"></script>
         <script src="../js/Clases/level.js"></script>
+
+        <!-- Menus -->
         <script src="../js/Clases/minimap.js"></script>
         <script src="../js/Clases/optionsMenu.js"></script>
         <script src="../js/Clases/pauseMenu.js"></script>
         <script src="../js/Clases/looseMenu.js"></script>
         <script src="../js/Clases/mainMenu.js"></script>
         <script src="../js/Clases/statsMenu.js"></script>
-        <script src="../js/sfx.js"></script>
 
-        <!-- Main scripts of the game -->
+        <!-- Other -->
+        <script src="../js/Clases/eventLabel.js"></script>
+        <script src="../js/sfx.js"></script>
+        <script src="../js/backgrounds.js"></script>
+
+        <!-- Main scripts -->
         <script src="../js/platformer.js"></script>
         <script src="../js/level_generation.js"></script>
     </head>
@@ -55,6 +66,7 @@
                 <input type="password" id="password" placeholder="Contraseña" required>
                 <p id="loginMessage">Inicia sesión o registrate</p>
                 <button id="loginButton" type="submit">Iniciar sesión</button>
+                <p id="registerMessage">¿No tienes una cuenta?</p>
                 <button id="registerButton" type="submit">Registrarse</button>
             </form>
         </div>
@@ -82,11 +94,22 @@
                 <button id="statsGlobal">Global</button>
                 <button id="statsTop">Top 5</button>
             </div>
-            <div id="statsResults"></div>
+            <div id="results-container">
+                <div id="statsResults"></div>
+                <div id="chart-container"></div>
+            </div>
         </div>
 
         <div id="timerContainer">
             <h2 id="elapsedTime"></h2>
+        </div>
+
+        <div id="leftMenu">
+            <p id="usernameLabel">Regístrate o inicia sesión para guardar tu progreso y ver tus estadísticas</p>
+        </div>
+
+        <div id="rightMenu">
+            <p id="eventLabel"></p>
         </div>
 
         <script> main(); </script>

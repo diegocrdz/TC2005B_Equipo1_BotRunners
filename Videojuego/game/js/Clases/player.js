@@ -29,6 +29,8 @@ class Player extends AnimatedObject {
         this.outgoingDamage = 0;
         this.receivedDamage = 0;
         this.completedGames = 0;
+        this.meleeCont = 0;
+        this.gunCont = 0;
         
         this.njumps = 0; //counter for double jumping
 
@@ -366,6 +368,9 @@ class Player extends AnimatedObject {
             this.offsetX -= 1;
         }
 
+        // Update hit counter
+        this.meleeCont++;
+
         setTimeout(() => {
             this.isAttacking = false;
             this.size.x = originalSize; // Adjust the size to match the new sprite
@@ -400,7 +405,7 @@ class Player extends AnimatedObject {
         // Crear el proyectil
         let projectile = new Projectile("blue", 1, 1,
                                         this.position.x + 1.5,
-                                        this.position.y + 1.8,
+                                        this.position.y + 1.65,
                                         "projectile",
                                         this.isFacingRight ? "right" : "left");
 
@@ -414,6 +419,9 @@ class Player extends AnimatedObject {
         else {
             this.setAnimation(...attackData.left, attackData.repeat, attackData.duration);
         }
+
+        // Update hit counter
+        this.gunCont++;
 
         // Cooldown for the animation
         setTimeout(() => {
@@ -484,6 +492,9 @@ class Player extends AnimatedObject {
 
             game.abilities.activate();
             game.state = "abilities";
+
+            // Show the event message
+            game.eventLabel.show("¡Subiste de nivel! Usa el ratón para elegir una habilidad.");
         }
     }
 
@@ -648,6 +659,7 @@ class Player extends AnimatedObject {
             // The player cant select the gun in the first level
             // if the player is not playing for the first time
             if (level === 0 && this.firstTimePlaying) {
+                game.eventLabel.show("No has desbloqueado la pistola");
                 return;
             }
             this.selectedWeapon = 2;
@@ -674,6 +686,9 @@ class Player extends AnimatedObject {
             }
             this.hasUsedPotion = true; // Mark the potion as used
             game.potionImage.setSprite('../../assets/objects/battery_empty.png');
+
+            sfx.heal.play();
+            game.eventLabel.show("Vida restaurada");
         }
     }
 }

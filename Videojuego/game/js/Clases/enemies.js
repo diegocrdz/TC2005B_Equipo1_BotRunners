@@ -194,7 +194,7 @@ class Enemy extends AnimatedObject {
 
         // Create a coin with the experience value of the enemy
         let expCoin = new Coin("yellow", 1, 1, x, y, "$");
-        expCoin.xp_value = Math.floor(this.xp_reward * game.xpMultiplier); // Asigna el valor de experiencia del enemigo
+        expCoin.xp_value = Math.floor(this.xp_reward * xpMultiplier); // Asigna el valor de experiencia del enemigo
         expCoin.hasGravity = true; // Make the coin fall
     
         // Add the coin to the actors list of the game
@@ -210,6 +210,7 @@ class Enemy extends AnimatedObject {
             GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('F', '.');
         } else if (this.type === "boss") {
             GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('X', '.');
+            GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('O', '.');
         }
 
         // Update the player statistics
@@ -306,14 +307,13 @@ class TurtleEnemy extends Enemy {
         super("red", width, height, x, y, "boss");
         this.isFacingRight = true; // Default direction is right
 
-
         // Properties
         this.health = 300;
         this.maxHealth = 300;
         this.damage = 30;
         this.xp_reward = 100;
 
-        this.speed = 0.002;
+        this.speed = 0.001;
         this.velocity = new Vec(this.speed, 0);
 
         this.state = "open"; // State of the turtle (open or closed)
@@ -322,12 +322,6 @@ class TurtleEnemy extends Enemy {
 
         this.hasClosedAnimationPlayed = false;
         this.hasOpenAnimationPlayed = false;
-
-        // Hitbox properties
-        this.offsetX = 1;
-        this.offsetY = 1;
-        this.hWidth = this.size.x + 2;
-        this.hHeight = this.size.y + 3;
 
         this.movement = {
             right: { 
@@ -363,6 +357,12 @@ class TurtleEnemy extends Enemy {
                 right: [7, 7]
             }
         };
+
+        // Hitbox properties
+        this.offsetX = 0.8;
+        this.offsetY = 2;
+        this.hWidth = this.size.x + 2.4;
+        this.hHeight = this.size.y + 2;
     }
 
     update(level, deltaTime) {
@@ -371,16 +371,16 @@ class TurtleEnemy extends Enemy {
         
         if(this.state === "open") {
            this.open(level, deltaTime);
-        } else if(this.state === "closed") {
+        } else if (this.state === "closed") {
             this.close();
         }
         
-
         this.updateFrame(deltaTime);
     }
 
     close(){
         this.isImmortal = true;
+        this.damage = 2;
 
         if(!this.hasClosedAnimationPlayed){
             const closeData = this.movement.closed;
@@ -391,21 +391,24 @@ class TurtleEnemy extends Enemy {
                 this.setAnimation(...closeData.left, closeData.repeat, closeData.duration);
             }
 
+            sfx.turtleClose.play();
+
             this.hasClosedAnimationPlayed = true;
             this.hasOpenAnimationPlayed = false;
         }
         
-
         if(!this.isShooting){
             this.isShooting = true;
+            sfx.turtleShoot.play();
+
             let projectileRight = new Projectile("blue", 1.5, 1.5,
-                this.position.x + this.size.x + 0.5, 
+                this.position.x + this.size.x / 2, 
                 this.position.y + this.size.y / 2,
                 "projectile",
                 "right");
     
             let projectileLeft = new Projectile("blue", 1.5, 1.5,
-                this.position.x - this.size.x + 0.5, 
+                this.position.x + this.size.x / 2 - 1.5, 
                 this.position.y + this.size.y / 2,
                 "projectile",
                 "left");
@@ -419,25 +422,31 @@ class TurtleEnemy extends Enemy {
             projectileLeft.setSprite('../../assets/objects/lapiz2.png', new Rect(0, 0, 28, 28));
             projectileLeft.speed = 0.005;
             projectileLeft.velocity = new Vec(-projectileLeft.speed, 0);
-    
-            game.addProjectile(projectileRight);
-            game.addProjectile(projectileLeft);
-    
-            // Cooldown for shooting
+
             setTimeout(() => {
+                if (this.state === "closed") {
+                    game.addProjectile(projectileRight);
+                    game.addProjectile(projectileLeft);
+                }
                 this.isShooting = false;
-            }, 1000);
+
+            }, 1500); // Coodown for shooting
         }
 
         setTimeout(() => {
             this.state = "open"; // Change state to open
-        }
-        , 5000); // Change state every 5 seconds
+        }, 5000); // Change state every 5 seconds
     }
 
     open(level, deltaTime){
         this.isImmortal = false; // Make the turtle vulnerable again
+        this.damage = 30; // Reset the damage value
+        
         if(!this.hasOpenAnimationPlayed){
+            this.startMovement(this.isFacingRight ? "right" : "left");
+
+            sfx.turtleOpen.play();
+
             this.hasOpenAnimationPlayed = true;
             this.hasClosedAnimationPlayed = false;
         }
@@ -448,8 +457,7 @@ class TurtleEnemy extends Enemy {
 
         setTimeout(() => {
             this.state = "closed"; // Change state to open
-        }
-        , 5000); // Change state every 5 seconds
+        }, 5000); // Change state every 5 seconds
     }
 
     hit() {
@@ -518,7 +526,6 @@ class SwordEnemy extends Enemy {
         this.offsetY = 1;
         this.hWidth = this.size.x + 2;
         this.hHeight = this.size.y + 3;
-
     }
 
     update(level, deltaTime) {
@@ -537,28 +544,27 @@ class SwordEnemy extends Enemy {
             let dashSpeed = 0.05;
 
 
-        // Make the boss jump if health is below 50%
-        if (this.health < this.maxHealth / 2
-            && this.velocity.y === 0
-            && !this.isJumping) {
-            this.velocity.y = -0.039; // Make the boss jump if on the ground
-            this.isJumping = true; // Set the jumping flag
-            setTimeout(() => {
-                this.velocity.y = 0; // Stop the boss from jumping
-                this.isJumping = false; // Reset the jumping flag
-            }, 1000); // 1 second
-        } 
-        
+            // Make the boss jump if health is below 50%
+            if (this.health < this.maxHealth / 2
+                && this.velocity.y === 0
+                && !this.isJumping) {
 
-        this.updateFrame(deltaTime);
+                this.velocity.y = -0.039; // Make the boss jump if on the ground
+                this.isJumping = true; // Set the jumping flag
+
+                setTimeout(() => {
+                    this.velocity.y = 0; // Stop the boss from jumping
+                    this.isJumping = false; // Reset the jumping flag
+                }, 1000); // 1 second
+            }
+            this.updateFrame(deltaTime);
         }
-    
     }
+
     playDieSound(){
         sfx.bossDie.play();
     }
 }
-
 
 // Boss enemy that follows the player and jumps when health is low
 class BossEnemy extends Enemy {
@@ -569,7 +575,7 @@ class BossEnemy extends Enemy {
         this.health = 300;
         this.maxHealth = 300;
         this.damage = 30;
-        this.xp_reward = 500;
+        this.xp_reward = 150;
 
         this.speed = 0.003;
         this.velocity = new Vec(this.speed, 0);
@@ -582,7 +588,6 @@ class BossEnemy extends Enemy {
         this.offsetY = 1;
         this.hWidth = this.size.x + 2;
         this.hHeight = this.size.y + 3;
-
     }
 
     update(level, deltaTime) {

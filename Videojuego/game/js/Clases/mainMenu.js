@@ -130,7 +130,16 @@ class MainMenu extends GameObject {
                 break;
             case "statistics":
                 game.statsMenu.show();
+                // Show the table 
                 getStatistics(game.player.id); 
+                // Check if the player is logged in
+                if (game.player.id !== null) {
+                    // Show the charts
+                    drawCharts('player', game.player.id);
+                } else {
+                    // Empty charts
+                    drawCharts('none');
+                }
                 break;
             case "login":
                 game.state = "login";

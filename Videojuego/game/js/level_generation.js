@@ -34,6 +34,12 @@ class Room {
         // Check if the room has been explored
         // Used to update the minimap
         this.isExplored = false;
+
+        // Get a random background for the room
+        this.background = new GameObject(null,
+                                        canvasWidth, canvasHeight - 88,
+                                        0, 0, "background");
+        this.background.setSprite(getRandomBackground(level));
     }
 
     // Connect this room to another room
@@ -201,11 +207,13 @@ E - Pipe end
 S - Pipe start
 L - Ladder
 0 - Button
-X - Boss
+P - Spike
+O - Turtle Boss
+X - Final Boss
 */
 
 // Generate the rooms layout
-function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies, maxEnemies, roomType) {
+function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies, maxEnemies, roomType, levelNumber) {
     let level = Array.from({ length: height }, () => Array(width).fill('.'));
     
     // Level borders
@@ -440,9 +448,9 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     // Only place a box and the player
     if (roomType == "start") {
         // Place a box in the level
-        //placeRandomly('B', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
-        //placeRandomly('P', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
-        level[height - 2][width - 6] = 'O'
+        placeRandomly('B', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
+        placeRandomly('P', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
+        //level[height - 2][width - 6] = 'O' // Debug turtle boss
         // Place the player at the bottom of the level
         level[height - 2][2] = '@';
         return level.map(row => row.join('')).join('\n');
@@ -451,6 +459,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     // If the room is the second
     // Only place a normal enemy
     if (roomType == "second") {
+        // Place a normal enemy
         placeRandomly('N', 1, height - 2, height - 2, width - 4, width - 4);
         return level.map(row => row.join('')).join('\n');
     }
@@ -458,8 +467,17 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     // If roomType is "boss"
     // Only place a heavy enemy
     if (roomType == "boss") {
-        // Place a heavy enemy in a determined position
-        level[height - 2][width - 6] = 'O';
+        // Choose the boss depending on the level number
+        let bossChar;
+        if (levelNumber == 0) {
+            bossChar = 'O'; // Turtle Boss
+        } else if (levelNumber == 1) {
+            bossChar = 'X'; // Fast Boss
+        } else {
+            bossChar = 'X'; // Final Boss
+        }
+        // Place the boss
+        level[height - 2][width - 6] = bossChar;
         return level.map(row => row.join('')).join('\n');
     }
     
@@ -513,8 +531,8 @@ function generateLevel(numRooms) {
 
     // Fill the list of levels with the generated rooms
     for (let i = 0; i < rooms.size; i++) {
-        let level = generateRandomLevel(levelWidth, 16, 10, 1, 1, 3, rooms.get(i).type);
-        GAME_LEVELS.push(level);
+        let randomLevel = generateRandomLevel(levelWidth, 16, 10, 1, 1, 3, rooms.get(i).type, level);
+        GAME_LEVELS.push(randomLevel);
     }
 
     // Print the generated levels to the console

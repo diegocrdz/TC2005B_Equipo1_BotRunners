@@ -110,6 +110,11 @@ class GameObject {
     }
 
     drawHitbox(ctx, scale) {
+        // If the hitbox global variable is set to false, dont draw the hitbox
+        if (!showHitboxes) {
+            return;
+        }
+
         ctx.strokeStyle = "red"; // Use red color for the hitbox
         ctx.lineWidth = 2; // Set the line width for better visibility
 

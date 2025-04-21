@@ -149,6 +149,8 @@ async function setPlayerStats(id) {
             game.player.outgoingDamage = results.dano_infligido;
             game.player.receivedDamage = results.dano_recibido;
             game.player.completedGames = results.partidas_completadas;
+            game.player.meleeCont = results.ataques_cuerpo;
+            game.player.gunCont = results.ataques_distancia;
             if (results.partidas_completadas > 0) {
                 game.player.firstTimePlaying = false;
             }
@@ -212,7 +214,9 @@ async function updatePlayerStats(id) {
             enemigos_derrotados: game.player.enemiesKilled,
             dano_infligido: game.player.outgoingDamage,
             dano_recibido: game.player.receivedDamage,
-            partidas_completadas: game.player.completedGames
+            partidas_completadas: game.player.completedGames,
+            ataques_cuerpo: game.player.meleeCont,
+            ataques_distancia: game.player.gunCont
         })
     });
     if (response.ok) {

@@ -35,11 +35,11 @@ class Ability{
             console.log("Resistance increased to " + game.player.resistance);
         }
         else if (this.name == "xp") {
-            game.xpMultiplier += 0.5;
+            xpMultiplier += 0.5;
         }
         else if (this.name == "cooldown") {
-            game.player.attackCooldown -= 0.2;
-            game.player.shootCooldown -= 0.2;
+            game.player.attackCooldown -= 100;
+            game.player.shootCooldown -= 100;
         }
         else if (this.name == "doubleJump" && !this.isUnlocked) {
             game.player.canDoubleJump = true;
@@ -86,7 +86,7 @@ let abilitiesList = [
 
     new Ability('cooldown',
                 'Recarga',
-                'Aumenta la velocidad de ataque de tus armas',
+                'Aumenta la velocidad de ataque de tus armas durante este nivel',
                 '../../../Videojuego/assets/objects/melee_1.png'),
 
     new Ability('doubleJump',
@@ -97,10 +97,7 @@ let abilitiesList = [
     new Ability('dash',
                 'Dash',
                 'Al presionar shift, podrás desplazarte rápidamente',
-                '../../../Videojuego/assets/objects/ui_dash.png'),
-    
-
-                
+                '../../../Videojuego/assets/objects/ui_dash.png'),         
 ]
 
 // Global list of colors
