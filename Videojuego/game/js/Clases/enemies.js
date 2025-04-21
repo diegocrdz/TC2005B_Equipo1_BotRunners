@@ -504,14 +504,18 @@ class SwordEnemy extends Enemy {
         // Properties
         this.health = 300;
         this.maxHealth = 300;
-        this.damage = 30;
+        this.damage = 10;
         this.xp_reward = 500;
 
         this.speed = 0.003;
         this.velocity = new Vec(this.speed, 0);
 
-        // Jumping flag for special attack
         this.isDashing = false;
+        this.canDash = false; // Flag to check if the enemy can dash
+
+
+
+        this.hasDashAnimationPlayed = false;
 
         // Hitbox properties
         this.offsetX = 1;
@@ -519,41 +523,120 @@ class SwordEnemy extends Enemy {
         this.hWidth = this.size.x + 2;
         this.hHeight = this.size.y + 3;
 
+        this.movement = {
+            right: { 
+                status: false,
+                axis: "x",
+                sign: 1,
+                repeat: true,
+                duration: 100,
+                moveFrames: [3, 4],
+                idleFrames: [3, 4]
+            },
+            left: {
+                status: false,
+                axis: "x",
+                sign: -1,
+                repeat: true,
+                duration: 100,
+                moveFrames: [0, 1],
+                idleFrames: [0, 1]
+            },
+            hit: { 
+                status: false,
+                repeat: true,
+                duration: 200,
+                right: [5, 5],
+                left: [2, 2]
+            },
+            dash: {
+                status : false,
+                repeat: true,
+                duration : 200,
+                left: [6, 6],
+                right: [7, 7]
+            }
+        };
+
+        setTimeout(() => {
+            this.canDash = true; // Allow the enemy to dash after 5 seconds
+        }
+        , 5000); // 5 seconds
+
     }
 
     update(level, deltaTime) {
         this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
         this.velocity.y += gravity * deltaTime;
-        this.moveHorizontally(level, deltaTime);
-        this.followPlayer(level, deltaTime);
-        this.moveVertically(level, deltaTime);
 
         if(this.canDash &&!this.isDashing) {
             this.isDashing = true; // Set the dashing flag
             this.canDash = false;
+            this.dash(level, deltaTime); // Call the dash function
+        } else {
+            this.moveHorizontally(level, deltaTime);
+            this.followPlayer(level, deltaTime);
+            this.moveVertically(level, deltaTime);
+        }
 
-            let dashDistance = 15;
-            let direction  = this.isFacingRight ? 1 : -1
-            let dashSpeed = 0.05;
-
-
-        // Make the boss jump if health is below 50%
-        if (this.health < this.maxHealth / 2
-            && this.velocity.y === 0
-            && !this.isJumping) {
-            this.velocity.y = -0.039; // Make the boss jump if on the ground
-            this.isJumping = true; // Set the jumping flag
-            setTimeout(() => {
-                this.velocity.y = 0; // Stop the boss from jumping
-                this.isJumping = false; // Reset the jumping flag
-            }, 1000); // 1 second
-        } 
-        
 
         this.updateFrame(deltaTime);
-        }
-    
     }
+    
+    dash(level, deltaTime) {
+        let dashDistance = 15;
+        let dashSpeed = 0.05;
+        let moved = 0;
+        let step = dashSpeed * deltaTime;
+
+        let dashData = this.movement.dash;
+        if(!this.hasDashAnimationPlayed){
+            if (this.isFacingRight) {
+                this.setAnimation(...dashData.right, dashData.repeat, dashData.duration);
+            } else {
+                this.setAnimation(...dashData.left, dashData.repeat, dashData.duration);
+            }
+            console.log("direction", this.isFacingRight);
+
+            this.hasDashAnimationPlayed = true;
+        }
+        
+    
+        let dashMove = () => {
+            
+            
+            if (moved < dashDistance) {
+                let direction = this.isFacingRight ? 1 : -1;
+                let newXPosition = this.position.plus(new Vec(direction * step, 0));
+    
+                if (level.contact(newXPosition, this.size, 'wall') || 
+                    level.contact(newXPosition, this.size, 'box')) {
+                    this.isDashing = false; // Stop dashing if a wall or box is hit
+                    return;
+                }
+    
+                this.position = newXPosition;
+                moved += step;
+
+                requestAnimationFrame(dashMove);
+            }
+        };
+    
+        sfx.dash.play();
+        dashMove();
+
+    
+        setTimeout(() => {
+            this.isDashing = false; // Reset the dashing flag after the dash duration
+        }, 500);
+    
+        setTimeout(() => {
+            this.canDash = true;
+            this.hasDashAnimationPlayed = false; // Reset the dash animation flag
+             // Start the dash movement
+        }, 5000);
+    }
+    
     playDieSound(){
         sfx.bossDie.play();
     }

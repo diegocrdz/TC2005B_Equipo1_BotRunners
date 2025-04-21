@@ -442,7 +442,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
         // Place a box in the level
         //placeRandomly('B', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
         //placeRandomly('P', 1, height - 2, height - 2, Math.floor(width / 3), Math.floor(width / 3) * 2);
-        level[height - 2][width - 6] = 'O'
+        level[height - 2][width - 6] = 'Z'
         // Place the player at the bottom of the level
         level[height - 2][2] = '@';
         return level.map(row => row.join('')).join('\n');
