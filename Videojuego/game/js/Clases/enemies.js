@@ -510,9 +510,9 @@ class SwordEnemy extends Enemy {
         super("red", width, height, x, y, "boss");
 
         // Properties
-        this.health = 300;
-        this.maxHealth = 300;
-        this.damage = 10;
+        this.health = 500;
+        this.maxHealth = 500;
+        this.damage = 20;
         this.xp_reward = 500;
 
         this.speed = 0.001;
@@ -657,9 +657,9 @@ class BossEnemy extends Enemy {
         super("red", width, height, x, y, "boss");
 
         // Properties
-        this.health = 300;
-        this.maxHealth = 300;
-        this.damage = 30;
+        this.health = 800;
+        this.maxHealth = 800;
+        this.damage = 40;
         this.xp_reward = 150;
 
         this.speed = 0.003;
@@ -682,8 +682,8 @@ class BossEnemy extends Enemy {
         this.followPlayer(level, deltaTime);
         this.moveVertically(level, deltaTime);
 
-        // Make the boss jump if health is below 50%
-        if (this.health < this.maxHealth / 2
+        // Make the boss jump if health is below 80%
+        if (this.health < this.maxHealth * 0.8
             && this.velocity.y === 0
             && !this.isJumping) {
             this.velocity.y = -0.039; // Make the boss jump if on the ground
