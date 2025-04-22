@@ -15,9 +15,13 @@ class EventLabel {
     constructor() {
         this.labelContainer = document.getElementById("eventLabel");
         this.duration = 5000;
+        // Flag to prevent showing the label on specific events
+        this.canBeShown = true;
     }
 
     show(text) {
+        if (!this.canBeShown) { return; } // If the label should not be shown, exit the function
+
         // If the label is already visible, wait for it to hide before showing it again
         if (this.labelContainer.classList.contains("show")) {
             this.hide();
@@ -42,5 +46,6 @@ class EventLabel {
     hide() {
         // Remove the show class to trigger the css animation
         this.labelContainer.classList.remove("show");
+        this.canBeShown = true; // Allow the label to be shown again
     }
 }

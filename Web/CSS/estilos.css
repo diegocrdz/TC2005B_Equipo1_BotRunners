@@ -54,7 +54,10 @@ header img:hover {
 header nav {
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    gap: 10px;
+}
+header nav a {
+    font-size: 0.8em; /* Tamaño de fuente */
 }
 
 /* Botones */
@@ -174,7 +177,7 @@ section {
 
 /* Créditos */
 
-#titulo-creditos {
+#titulo-creditos, #titulo-guia {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -226,6 +229,68 @@ section {
     padding: 10px;
     box-sizing: border-box; /* Asegura que el ancho incluya el padding */
     display: block; /* Hace que el enlace ocupe todo el ancho disponible */
+}
+
+/* Guía */
+
+/* Tabla de controles */
+#controles table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: auto; /* Desplazamiento */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8); /* Sombra */
+    transition: 0.2s;
+}
+#controles table:hover {
+    box-shadow: 0 0 50px rgb(132, 137, 226); /* Sombra */
+    transform: scale(1.005); /* Efecto de zoom */
+}
+#controles th, #controles td {
+    padding: 10px;
+    text-align: center;
+    border: 4px solid #6C6EA0; /* Borde morado */
+}
+#controles th {
+    font-family: 'Press Start 2P', sans-serif;
+    background-color: #434A5F; /* Gris oscuro */
+    color: white;
+}
+#controles td {
+    background-color: #272b36; /* Gris oscuro */
+    color: white;
+}
+
+/* Objetivo */
+#objetivo {
+    border-top: 4px solid #6C6EA0; /* Borde morado */
+    border-bottom: 4px solid #6C6EA0; /* Borde morado */
+    background: rgba(11, 11, 21, 0.8);
+    color: white;
+    transition: 0.2s;
+}
+#objetivo:hover {
+    background: rgba(11, 11, 21, 0.9);
+}
+#objetivo ul, #recompensas ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+#objetivo li, #recompensas li {
+    text-decoration: none;
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #434A5F; /* Gris oscuro */
+    color: white;
+    border: 2px solid #6C6EA0; /* Borde morado */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); /* Sombra */
+    transition: 0.2s; /* Transiciones */
+}
+#objetivo li:hover, #recompensas li:hover {
+    background-color: #6C6EA0; /* Morado */
+    color: white;
+    transform: scale(1.005); /* Efecto de zoom */
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7); /* Sombra más intensa */
 }
 
 /* Footer */

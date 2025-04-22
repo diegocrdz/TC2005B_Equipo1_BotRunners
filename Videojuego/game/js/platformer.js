@@ -77,7 +77,6 @@ class Game {
 
         // List of the player's projectiles
         this.projectiles = [];
-
         // List of the enemies' projectiles
         this.enemiesProjectiles = [];
 
@@ -127,6 +126,12 @@ class Game {
                                         (canvasWidth / 2) + 200, canvasHeight / 3 - 20,
                                         'exit');
         this.exitImage.setSprite('../../assets/backgrounds/sign_exit.png');
+
+        // Lock image for the boss door
+        this.lockImage = new GameObject(null, 40, 40,
+                                        canvasWidth - 35, canvasHeight - 190,
+                                        'lock');
+        this.lockImage.setSprite('../../assets/objects/lock.png');
 
         // Health bar for the player
         this.playerHealthBar = new Bar(
@@ -550,6 +555,16 @@ class Game {
                         this.moveToLevel(this.levelNumber + 1, 2, 12);
                         this.lastRoomNumber = this.levelNumber;
                     }
+                
+                } else if (actor.type == 'door' && !actor.isOpen) {
+
+                    // If the next room is a boss room and the direction
+                    // is to the right, show a message
+                    if (this.levelNumber === 4 && actor.direction === 'right') {
+                        this.eventLabel.show("Busca y presiona el botón azul para desbloquear la sala del jefe");
+                        // Prevent the label from showing and hiding again
+                        this.eventLabel.canBeShown = false;
+                    }
 
                 } else if (actor.type == 'ladder' && !hasEnemies) {
 
@@ -780,6 +795,11 @@ class Game {
 
         // Draw the minimap and chronometer
         this.topRightMenu.draw(ctx);
+
+        // Draw the lock image for the boss door
+        if (this.levelNumber === 4 && !this.isButtonPressed) {
+            this.lockImage.draw(ctx, 1);
+        }
 
         // Draw menus and popups
         if (this.state === 'paused') {
