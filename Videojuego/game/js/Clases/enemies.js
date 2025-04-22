@@ -694,7 +694,6 @@ class BossEnemy extends Enemy {
             }, 1000); // 1 second
         } 
         
-
         this.updateFrame(deltaTime);
     }
 

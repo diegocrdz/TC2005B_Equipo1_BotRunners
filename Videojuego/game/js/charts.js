@@ -7,8 +7,10 @@ function random_color(alpha=1.0) {
     return `rgba(${r_c()}, ${r_c()}, ${r_c()}, ${alpha}`
 }
 
-// Set the default font size for the charts
+// Set the default elements for the charts
 Chart.defaults.font.size = 16;
+Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.2)';
+Chart.defaults.color = 'white';
 
 // Draw the charts for the given section
 async function drawCharts(section, id) {
@@ -87,7 +89,7 @@ async function drawChartsPlayer(id) {
             // Plotting variables
             let level_names = ['Muertes', 'Victorias'];
             let level_colors = level_names.map(() => random_color(0.8));
-            let level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
+            let level_borders = 'white';
             let level_completion = [
                 deaths,
                 completedGames
@@ -104,6 +106,7 @@ async function drawChartsPlayer(id) {
                                 label: 'Muertes vs. Victorias',
                                 backgroundColor: level_colors,
                                 borderColor: level_borders,
+                                borderWidth: 2,
                                 data: level_completion
                             }
                         ]
@@ -115,7 +118,6 @@ async function drawChartsPlayer(id) {
 
             level_names = ['Daño Infligido', 'Daño recibido'];
             level_colors = level_names.map(() => random_color(0.8));
-            level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
             level_completion = [
                 outgoingDamage,
                 incomingDamage
@@ -131,6 +133,8 @@ async function drawChartsPlayer(id) {
                             {
                                 label: 'Daño Infligido vs. Recibido',
                                 backgroundColor: level_colors,
+                                borderColor: level_borders,
+                                borderWidth: 2,
                                 pointRadius: 10,
                                 data: level_completion
                             }
@@ -154,7 +158,6 @@ async function drawChartsPlayer(id) {
             // Plotting variables
             level_names = ['Mejor Tiempo', 'Tiempo Global Promedio'];
             level_colors = level_names.map(() => random_color(0.8));
-            level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
             level_completion = [
                 parsedBestTime,
                 parsedGlobalAvgTime
@@ -185,7 +188,6 @@ async function drawChartsPlayer(id) {
 
             level_names = ['Muertes', 'Victorias'];
             level_colors = level_names.map(() => random_color(0.8));
-            level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
             level_completion = [
                 deaths,
                 completedGames
@@ -202,6 +204,7 @@ async function drawChartsPlayer(id) {
                                 label: 'Muertes vs. Victorias',
                                 backgroundColor: level_colors,
                                 borderColor: level_borders,
+                                borderWidth: 2,
                                 data: level_completion
                             }
                         ]
@@ -213,7 +216,6 @@ async function drawChartsPlayer(id) {
 
             level_names = ['Ataques Pinza', 'Ataques Pistola'];
             level_colors = level_names.map(() => random_color(0.8));
-            level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
             level_completion = [
                 meleeCont,
                 gunCont
@@ -230,6 +232,7 @@ async function drawChartsPlayer(id) {
                                 label: 'Ataques Pinza vs. Ataques Pistola',
                                 backgroundColor: level_colors,
                                 borderColor: level_borders,
+                                borderWidth: 2,
                                 data: level_completion
                             }
                         ]
@@ -289,7 +292,7 @@ async function drawChartsGlobal() {
             // Plotting variables
             let level_names = ['Registrados', 'Invitados'];
             let level_colors = level_names.map(() => random_color(0.8));
-            let level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
+            let level_borders = 'white';
             let level_completion = [
                 registered,
                 invited
@@ -306,6 +309,7 @@ async function drawChartsGlobal() {
                                 label: 'Jugadores Registrados vs. Invitados',
                                 backgroundColor: level_colors,
                                 borderColor: level_borders,
+                                borderWidth: 2,
                                 data: level_completion
                             }
                         ]
@@ -317,7 +321,6 @@ async function drawChartsGlobal() {
 
             level_names = ['Daño Infligido', 'Daño Recibido'];
             level_colors = level_names.map(() => random_color(0.8));
-            level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
             level_completion = [
                 incomingDamage,
                 outgoingDamage
@@ -333,6 +336,7 @@ async function drawChartsGlobal() {
                             {
                                 label: 'Daño Infligido vs. Recibido',
                                 backgroundColor: level_colors,
+                                borderColor: level_borders,
                                 pointRadius: 10,
                                 data: level_completion
                             }
@@ -344,8 +348,6 @@ async function drawChartsGlobal() {
             // Chart 3 - average time vs registered and invited players
 
             level_names = ['Registrados', 'Invitados'];
-            level_colors = level_names.map(() => random_color(0.8));
-            level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
 
             // Convert time to numbers
             const parsedAvgTime = parseTime(avgTime);
@@ -389,7 +391,6 @@ async function drawChartsGlobal() {
 
             level_names = ['Muertes', 'Victorias'];
             level_colors = level_names.map(() => random_color(0.8));
-            level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
             level_completion = [
                 deaths,
                 completedGames
@@ -416,7 +417,6 @@ async function drawChartsGlobal() {
 
             level_names = ['Ataques Pinza', 'Ataques Pistola'];
             level_colors = level_names.map(() => random_color(0.8));
-            level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
             level_completion = [
                 meleeCont,
                 gunCont
@@ -433,6 +433,7 @@ async function drawChartsGlobal() {
                                 label: 'Ataques Pinza vs. Ataques Pistola',
                                 backgroundColor: level_colors,
                                 borderColor: level_borders,
+                                borderWidth: 2,
                                 data: level_completion
                             }
                         ]
@@ -488,7 +489,6 @@ async function drawChartsTop() {
             // Plotting variables
             let level_names = usernames;
             let level_colors = level_names.map(() => random_color(0.8));
-            let level_borders = level_names.map(() => 'rgba(0, 0, 0, 1.0)');
             let level_completion = parsedTimes
 
             const ctx_levels1 = document.getElementById('apiChart1').getContext('2d');
@@ -501,7 +501,7 @@ async function drawChartsTop() {
                             {
                                 label: 'Mejor Tiempo de Jugadores [Segundos]',
                                 backgroundColor: level_colors,
-                                borderColor: level_borders,
+                                borderColor: 'white',
                                 borderWidth: 2,
                                 pointRadius: 10,
                                 pointHoverRadius: 20,
@@ -544,6 +544,7 @@ async function drawChartsTop() {
 
             // Plotting variables
             level_names = usernames;
+            let level_borders = 'white';
             level_colors = level_names.map(() => random_color(0.8));
 
             // Generate random estable colors for the bars
@@ -561,12 +562,14 @@ async function drawChartsTop() {
                                 label: 'Muertes',
                                 backgroundColor: level_color_1,
                                 borderColor: level_borders,
+                                borderWidth: 2,
                                 data: deaths
                             },
                             {
                                 label: 'Victorias',
                                 backgroundColor: level_color_2,
                                 borderColor: level_borders,
+                                borderWidth: 2,
                                 data: completedGames
                             }
                         ]
@@ -603,12 +606,14 @@ async function drawChartsTop() {
                                 label: 'Daño Infligido',
                                 backgroundColor: level_color_1,
                                 borderColor: level_borders,
+                                borderWidth: 2,
                                 data: outgoingDamage
                             },
                             {
                                 label: 'Daño Recibido',
                                 backgroundColor: level_color_2,
                                 borderColor: level_borders,
+                                borderWidth: 2,
                                 data: incomingDamage
                             }
                         ]
