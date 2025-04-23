@@ -728,7 +728,9 @@ class Game {
         }
 
         // Draw the player on top of everything else
-        this.player.draw(ctx, scale);
+        if (this.state !== 'gameover') {
+            this.player.draw(ctx, scale);
+        }
 
         // Draw the player bars
         this.playerHealthBar.draw(ctx);
@@ -896,37 +898,37 @@ const levelChars = {
     "N": {objClass: NormalEnemy,
           label: "enemy",
           sprite: '../../assets/characters/enemies/robot_normal.png',
-          rect: new Rect(0, 0, 24, 24),
+          rectParams: [0, 0, 24, 24],
           sheetCols: 6,
           startFrame: [0, 0]},
     "H": {objClass: HeavyEnemy,
           label: "enemy",
           sprite: '../../assets/characters/enemies/robot_heavy.png',
-          rect: new Rect(0, 0, 24, 24),
+          rectParams: [0, 0, 24, 24],
           sheetCols: 6,
           startFrame: [0, 0]},
     "F": {objClass: FlyingEnemy,
           label: "enemy",
           sprite: '../../assets/characters/enemies/robot_fly.png',
-          rect: new Rect(0, 0, 24, 24),
+          rectParams: [0, 0, 24, 24],
           sheetCols: 6,
           startFrame: [0, 0]},
     "X": {objClass: BossEnemy,
           label: "boss",
           sprite: '../../assets/characters/enemies/robot_boss.png',
-          rect: new Rect(0, 0, 28, 28),
+          rectParams: [0, 0, 28, 28],
           sheetCols: 8,
           startFrame: [0, 0]},
     "O": {objClass: TurtleEnemy,
           label: "turtle",
           sprite: '../../assets/characters/enemies/tortutron.png',
-          rect: new Rect(0, 0, 28, 28),
+          rectParams: [0, 0, 28, 28],
           sheetCols: 8,
           startFrame : [0, 0]},
     "Z": {objClass: SwordEnemy,
           label: "sword",
           sprite: '../../assets/characters/enemies/espadatron.png',
-          rect: new Rect(0, 0, 28, 28),
+          rectParams: [0, 0, 28, 28],
           sheetCols: 8, 
           startFrame: [0, 0]},
     "$": {objClass: Coin,
@@ -1024,6 +1026,11 @@ function restartRooms(restartPlayer, levelNumber, numRooms) {
 
     console.log("New rooms for level " + level);
 
+    // Save the current kills of the player
+    // This is used to apply a buff to the player
+    // when he restarts the game
+    let savedKills = game.player.enemiesKilled;
+
     // Check if the player should be restarted
     let savedPlayer = null;
     let savedChronometer = null;
@@ -1067,6 +1074,7 @@ function restartRooms(restartPlayer, levelNumber, numRooms) {
         // Set and start the saved chronometer
         game.chronometer = savedChronometer;
         game.chronometer.start();
+
         // If the player is back to the first level (he won)
         // reset the player stats
         if (levelNumber === 0) {
@@ -1082,9 +1090,16 @@ function restartRooms(restartPlayer, levelNumber, numRooms) {
             game.player.damage = 20;
             // Reset the xp multiplier
             xpMultiplier = 1;
+            // Restore the player kills and buffs applied
+            game.player.enemiesKilled = savedKills;
+            game.player.buffsApplied = 0;
+            // Apply the buff to the player
+            game.player.applyBuff();
         }
+
         // Update the player stats
         updatePlayerStats(game.player.id);
+
     // If the player is restarted
     } else if (restartPlayer) {
         // If the chronometer doesnt exist, create a new one
@@ -1107,7 +1122,15 @@ function restartRooms(restartPlayer, levelNumber, numRooms) {
 
         // Reset the xp multiplier
         xpMultiplier = 1;
+
+        // Apply the buff to the player
+        game.player.enemiesKilled = savedKills;
+        game.player.buffsApplied = 0;
+        game.player.applyBuff();
     }
+
+    console.log(game.player.enemiesKilled + " enemies killed");
+    console.log(game.player.buffsApplied + " buffs applied");
 }
 
 // Async function to call the database and
@@ -1154,7 +1177,11 @@ function setEventListeners() {
                 selectMusic(level, 0, 'playing');
             }
             return;
-        } else if (game.state === 'mainMenu') {
+        }
+        
+        if (game.state !== 'playing') {
+            let playerDirection = game.player.isFacingRight ? "right" : "left";
+            game.player.stopMovement(playerDirection);
             return; // Block all actions
         }
 
@@ -1176,7 +1203,7 @@ function setEventListeners() {
         }
 
         // Dash
-        if(event.shiftKey){
+        if (event.shiftKey) {
             game.player.dash(game.level, deltaTime);
         }
 
@@ -1249,7 +1276,9 @@ function setEventListeners() {
 
     window.addEventListener("keyup", event => {
         // Prevent player actions during the cinematic
-        if (game.state === 'cinematic') {
+        if (game.state !== 'playing') {
+            let playerDirection = game.player.isFacingRight ? "right" : "left";
+            game.player.stopMovement(playerDirection);
             return; // Block all actions
         }
         

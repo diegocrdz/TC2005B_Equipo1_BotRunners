@@ -216,6 +216,8 @@ class Enemy extends AnimatedObject {
         // Update the player statistics
         game.player.enemiesKilled++;
         game.player.outgoingDamage += this.maxHealth;
+        // Apply a buff to the player
+        game.player.applyBuff();
     }
 
     // Play the sound effect when the enemy dies

@@ -59,7 +59,8 @@ class Level {
                     actor.position = actor.position.plus(new Vec(0, -3));
                     actor.size = new Vec(3, 3);
 
-                    actor.setSprite(item.sprite, item.rect);
+                    let instanceRect = new Rect(...item.rectParams);
+                    actor.setSprite(item.sprite, instanceRect);
                     actor.sheetCols = item.sheetCols;
 
                     const dirData = actor.movement["left"];
@@ -73,7 +74,8 @@ class Level {
                     actor.position = actor.position.plus(new Vec(0, -5));
                     actor.size = new Vec(5, 5);
 
-                    actor.setSprite(item.sprite, item.rect);
+                    let instanceRect = new Rect(...item.rectParams);
+                    actor.setSprite(item.sprite, instanceRect);
                     actor.sheetCols = item.sheetCols;
 
                     const dirData = actor.movement["left"];

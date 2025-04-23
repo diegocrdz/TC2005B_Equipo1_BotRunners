@@ -155,6 +155,11 @@ class AnimatedObject extends GameObject {
         this.repeat = repeat;
         this.totalTime = 0;
         this.frameDuration = duration;
+
+        // Get the column of the sprite sheet
+        this.spriteRect.x = this.frame % this.sheetCols;
+        // Get the row of the sprite sheet
+        this.spriteRect.y = Math.floor(this.frame / this.sheetCols);
     }
 
     updateFrame(deltaTime) {

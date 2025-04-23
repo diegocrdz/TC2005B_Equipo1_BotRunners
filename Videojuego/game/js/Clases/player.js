@@ -31,6 +31,9 @@ class Player extends AnimatedObject {
         this.completedGames = 0;
         this.meleeCont = 0;
         this.gunCont = 0;
+
+        // Buffs
+        this.buffsApplied = 0;
         
         this.njumps = 0; //counter for double jumping
 
@@ -168,7 +171,6 @@ class Player extends AnimatedObject {
 
     // Start moving the player in a certain direction
     startMovement(direction) {
-
         const dirData = this.movement[direction];
         this.isFacingRight = direction == "right"; // Check if the direction is right
 
@@ -189,7 +191,9 @@ class Player extends AnimatedObject {
                 this.crouch();
             }
             else {
-                this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
+                if (!this.isHit) {
+                    this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
+                }
             }
         }
     }
@@ -203,7 +207,9 @@ class Player extends AnimatedObject {
         if (this.isAttacking) {
             return;
         } else {
-            this.setAnimation(...dirData.idleFrames, dirData.repeat, 100);
+            if (!this.isHit) {
+                this.setAnimation(...dirData.idleFrames, dirData.repeat, 100);
+            }
         }
     }
 
@@ -217,7 +223,9 @@ class Player extends AnimatedObject {
         } else if (this.isFacingRight) {
             this.setAnimation(...crouchData.right, crouchData.repeat, crouchData.duration);
         } else {
-            this.setAnimation(...crouchData.left, crouchData.repeat, crouchData.duration);
+            if (!this.isHit) {
+                this.setAnimation(...crouchData.left, crouchData.repeat, crouchData.duration);
+            }
         }
     }
 
@@ -228,7 +236,9 @@ class Player extends AnimatedObject {
         if (this.isFacingRight) {
             this.setAnimation(...crouchData.upRight, crouchData.repeat, crouchData.duration);
         } else {
-            this.setAnimation(...crouchData.upLeft, crouchData.repeat, crouchData.duration);
+            if (!this.isHit) {
+                this.setAnimation(...crouchData.upLeft, crouchData.repeat, crouchData.duration);
+            }
         }
     }
 
@@ -240,7 +250,7 @@ class Player extends AnimatedObject {
             this.isJumping = true;
             const jumpData = this.movement.jump;
             sfx.jump.play(); // Play the jump sound
-            if (this.isAttacking) {
+            if (this.isAttacking || this.isHit) {
                 return;
             } else if (this.isFacingRight) {
                 this.setAnimation(...jumpData.right, jumpData.repeat, jumpData.duration);
@@ -266,6 +276,9 @@ class Player extends AnimatedObject {
         this.velocity.y = 0;
         // Force the player to move down to touch the floor
         this.position.y = Math.ceil(this.position.y);
+        // If the player is hit, keep the hit animation
+        if (this.isHit) return;
+
         if (this.isJumping) {
             // Reset the jump variable
             this.isJumping = false;
@@ -507,6 +520,7 @@ class Player extends AnimatedObject {
         if (this.id) {
             updatePlayerStats(this.id);
         }
+        // Make the player disappear
         game.state = "gameover";
         // Play the game over music
         selectMusicMenus('gameover');
@@ -515,7 +529,11 @@ class Player extends AnimatedObject {
     // Make the player play the hit animation
     hit() {
         if (this.isHit) return; // Prevent re-triggering the hit animation if already playing
-    
+        
+        this.isAttacking = false;
+        this.isCrouching = false;
+        this.isShooting = false;
+        this.isDashing = false;
         this.isHit = true;
         const hitData = this.movement.hit;
     
@@ -528,7 +546,16 @@ class Player extends AnimatedObject {
         // Reset the isHit flag after the animation duration
         setTimeout(() => {
             this.isHit = false;
-        }, hitData.duration);
+
+            // Restore the original animation to idle
+            const leftData = this.movement["left"];
+            const rightData = this.movement["right"];
+            if (this.isFacingRight) {
+                this.setAnimation(...rightData.idleFrames, rightData.repeat, rightData.duration);
+            } else {
+                this.setAnimation(...leftData.idleFrames, leftData.repeat, leftData.duration);
+            }
+        }, 200);
     }
 
     // Update the weapons based on the level
@@ -689,6 +716,34 @@ class Player extends AnimatedObject {
 
             sfx.heal.play();
             game.eventLabel.show("Vida restaurada");
+        }
+    }
+
+    // Apply a buff to the player after defeating a certain number of enemies
+    applyBuff() {
+        // Parameters fot the buff
+        const killsForBuff = 5;
+        const maxBuffs = 10;
+        const extraHealthPerBuff = 5;
+
+        // Calculate the number of buffs earned based on the number of enemies killed
+        // If the player has exceeded the maximum number of buffs, set it to the maximum
+        // Otherwise, calculate the number of buffs earned based on the kills
+        const buffsEarned = Math.min(Math.floor(this.enemiesKilled / killsForBuff), maxBuffs);
+
+        // Check if there are buffs to apply
+        if (buffsEarned > this.buffsApplied) {
+            // Calculate the extra health to add based on the number of buffs earned
+            const newBuffs = buffsEarned - this.buffsApplied;
+            const healthToAdd = newBuffs * extraHealthPerBuff;
+            
+            // Increase the player health and max health
+            this.health += healthToAdd;
+            this.maxHealth += healthToAdd;
+            this.buffsApplied = buffsEarned;
+            
+            // Show the event message
+            game.eventLabel.show(`¡Has derrotado a ${this.enemiesKilled} enemigos! Tienes +${healthToAdd} de vida`);
         }
     }
 }
