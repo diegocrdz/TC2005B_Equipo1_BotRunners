@@ -150,7 +150,6 @@ function selectMusicMenus(gameState) {
     } else if (gameState === 'paused') {
         musicMenus.musicPause.play();
     } else if (gameState === 'gameover') {
-        console.log("Game Over music playing");
         musicMenus.musicGameOver.play();
     } else if (gameState === 'win') {
         musicMenus.musicWin.play();

@@ -127,7 +127,8 @@ class Chronometer {
         // If the best time is not set or the current time is better, return the current time
         // since the best time is in SQL format (HH:MM:SS), we can compare it directly
         if (bestTimeStr === "00:00:00" || currentTimeStr < bestTimeStr) {
-            console.log("Nuevo mejor tiempo: " + currentTimeStr);
+            // Show a message indicating that the current time is better
+            game.eventLabel.show("Felicidades, obtuviste un nuevo mejor tiempo")
             // Return the current time in SQL format
             return currentTimeStr;
         }

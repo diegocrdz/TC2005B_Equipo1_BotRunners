@@ -360,7 +360,6 @@ class Player extends AnimatedObject {
 
         this.isAttacking = true;
         const attackData = this.movement.attack;
-        let originalSize = this.size.x;
 
         // Change to the attack sprite and rect
         this.setSprite(this.attackSprite, new Rect(0, 0, 32, 24));
@@ -386,7 +385,7 @@ class Player extends AnimatedObject {
 
         setTimeout(() => {
             this.isAttacking = false;
-            this.size.x = originalSize; // Adjust the size to match the new sprite
+            this.size.x = 3; // Adjust the size to match the new sprite
             // Restore the original sprite and rect
             this.setSprite(this.meleeSprite, new Rect(0, 0, 24, 24));
             // Restore hitbox size and position
@@ -513,14 +512,17 @@ class Player extends AnimatedObject {
 
     // Make the player die and reset the game
     die() {
-        sfx.gameOver.play(); // Play the game over sound
+        // Reset the health to 0
+        this.health = 0;
+        game.playerHealthBar.currentValue = 0;
+        // Play the game over sound
+        sfx.gameOver.play();
         // Update the player statistics
         this.deaths++;
         // Update the database
         if (this.id) {
             updatePlayerStats(this.id);
         }
-        // Make the player disappear
         game.state = "gameover";
         // Play the game over music
         selectMusicMenus('gameover');
@@ -703,7 +705,7 @@ class Player extends AnimatedObject {
 
     // Use the health potion to heal the player
     useHealthPotion() {
-        if (!this.hasUsedPotion && this.health < 100) {
+        if (!this.hasUsedPotion && this.health < this.maxHealth) {
 
             let increase = (this.maxHealth * 50) / 100; // Calculate 50% of the max health
 

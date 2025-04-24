@@ -92,7 +92,6 @@ class LevelGenerator {
         // Add the button branch before generating the other branches
         // between room 2 and rooms length - 1
         let random = Math.floor(Math.random() * (this.numRooms - 3)) + 2;
-        console.log("Button room: " + random);
 
         for (let i = 2; i < this.numRooms - 1; i++) {
             // Create a branch with a button

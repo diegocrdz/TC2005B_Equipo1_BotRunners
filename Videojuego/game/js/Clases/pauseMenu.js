@@ -110,9 +110,7 @@ class PauseMenu extends GameObject {
         // Decide what to do based on the button type
         switch (buttonType) {
             case "continue":
-                game.state = "playing";
-                game.chronometer.start(); // Start the chronometer
-                selectMusicMenus('playing')
+                game.togglePause();
                 break;
             case "restart":
                 restartRooms(true, 0, 6);

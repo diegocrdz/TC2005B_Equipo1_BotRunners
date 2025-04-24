@@ -23,16 +23,19 @@ class Ability{
     // Effect of the ability
     effect() {
         if (this.name == "damage") {
-            game.player.baseDamage += 10;
-            game.player.damage += 10;
-            console.log("Damage increased to " + game.player.damage);
+            game.player.baseDamage += 5;
+            game.player.damage += 5;
         } else if (this.name == "health") {
-            game.player.maxHealth += 10;
-            console.log("Max health increased to " + game.player.maxHealth);
+            let increase = 20;
+            let newHealth = game.player.health + increase;
+            if (newHealth < game.player.maxHealth) {
+                game.player.health += 20;
+            } else {
+                game.player.health = game.player.maxHealth;
+            }
         }
         else if (this.name == "resistance") {
             game.player.resistance += 10;
-            console.log("Resistance increased to " + game.player.resistance);
         }
         else if (this.name == "xp") {
             xpMultiplier += 0.5;
@@ -47,7 +50,6 @@ class Ability{
 
             let index = abilitiesList.indexOf(this);
             abilitiesList.splice(index, 1);
-            console.log("Double jump ability gained");
         }
         else if (this.name == "dash" && !this.isUnlocked) {
             game.player.canDash = true;
@@ -55,8 +57,6 @@ class Ability{
 
             let index = abilitiesList.indexOf(this);
             abilitiesList.splice(index, 1);
-
-            console.log("Dash ability gained");
         }
     }
 }
@@ -65,17 +65,17 @@ class Ability{
 // This list is used to generate the random abilities in the popUpAbility class
 let abilitiesList = [
     new Ability('health', 
-                'Vida máxima', 
-                'Aumenta tu vida máxima 10 puntos', 
+                'Vida +20', 
+                'Recupera 20 puntos de vida', 
                 '../../../Videojuego/assets/objects/health.png'),
 
     new Ability('damage',
-                'Daño',
-                'Aumenta tu daño en 10 puntos',
+                'Daño +5',
+                'Aumenta tu daño en 5 puntos',
                 '../../../Videojuego/assets/objects/ui_damage.png'),
 
     new Ability('resistance',
-                'Resistencia',
+                'Resistencia +10',
                 'Aumenta tu resistencia en 10 puntos',
                 '../../../Videojuego/assets/objects/ui_resistance.png'),
     
@@ -150,7 +150,7 @@ class AbilityCard{
         "17px monospace", "white", 120);
         card1Title.draw(ctx, this.title);
 
-        let card1Description = new cardTextLabel(this.position.x + 40, this.position.y + 180,
+        let card1Description = new cardTextLabel(this.position.x + 40, this.position.y + 200,
                                     "11px monospace", "white", 120);
         card1Description.draw(ctx, this.description);
 

@@ -133,6 +133,22 @@ class Game {
                                         'lock');
         this.lockImage.setSprite('../../assets/objects/lock.png');
 
+        // Load input keyboard images for the UI
+        this.key1Image = new GameObject(null, 30, 30,
+                                        60, canvasHeight - 35,
+                                        'key1');
+        this.key1Image.setSprite('../../assets/objects/key1.png');
+
+        this.key2Image = new GameObject(null, 30, 30,
+                                        140, canvasHeight - 35,
+                                        'key2');
+        this.key2Image.setSprite('../../assets/objects/key2.png');
+
+        this.key3Image = new GameObject(null, 30, 30,
+                                        220, canvasHeight - 35,
+                                        'key3');
+        this.key3Image.setSprite('../../assets/objects/key3.png');
+
         // Health bar for the player
         this.playerHealthBar = new Bar(
             canvasWidth / 2 + 33, // X position
@@ -200,7 +216,7 @@ class Game {
         this.doubleJumpImage = new Image();
         this.doubleJumpImage.src = '../../../Videojuego/assets/objects/ui_doublejump.png';
 
-        //Method to draw the selection backgrounds
+        // Method to draw the selection backgrounds
         this.drawBackgrounds = (ctx) => {
             const weaponPositions = [
                 { x: (canvasWidth / 2) - 387, y: canvasHeight - 78 }, // Arm background
@@ -229,6 +245,13 @@ class Game {
                 this.weaponSelectionImage.position = new Vec(weaponPositions[2].x, weaponPositions[2].y);
                 this.weaponSelectionImage.draw(ctx, 1);
             }
+        }
+
+        // Method to draw the keyboard input images
+        this.drawKeys = (ctx) => {
+            this.key1Image.draw(ctx, 1);
+            this.key2Image.draw(ctx, 1);
+            this.key3Image.draw(ctx, 1);
         }
         
         // Method to draw the weapons
@@ -261,8 +284,6 @@ class Game {
                 ctx.drawImage(this.dashImage, dashX, permanentAbilitiesY, habilitiesWidth, habilitiesHeight);
             }
         }
-        
-        console.log(`############ LEVEL ${level} START ###################`);
     }
 
     // Start the cinematic sequence
@@ -290,21 +311,21 @@ class Game {
     // Pause the game
     pauseGame() {
         this.state = 'paused';
-        console.log("Game paused");
+        console.log("Juego pausado");
         this.chronometer.pause();
     }
 
     // Resume the game
     resumeGame() {
         this.state = 'playing';
-        console.log("Game resumed");
+        console.log("Juego resumido");
         this.chronometer.start();
     }
 
     // Start the game for the first time
     startGame() {
         this.state = 'playing';
-        console.log("Game started");
+        console.log("Juego Iniciado");
         this.chronometer.reset();
         this.chronometer.start();
         // Start music
@@ -354,7 +375,7 @@ class Game {
                 selectMusic(level, this.levelNumber, 'playing');
                 return;
             } else {
-                console.log("You win");
+                console.log("Ganaste");
                 this.state = 'win';
                 // Pause the chronometer
                 this.chronometer.pause();
@@ -412,7 +433,7 @@ class Game {
         // Adjust the difficulty of the enemies
         game.adjustDificulty();
     
-        console.log("Moved to level " + levelNumber);
+        console.log("Avanzando al nivel " + levelNumber);
     }
 
     // Get a branch room from from the specified type
@@ -420,7 +441,6 @@ class Game {
         // Check if the current room has a connection to a branch
         const currentRoom = rooms.get(this.levelNumber); // Get the current room
         const connectedRooms = Array.from(currentRoom.connections); // Get the connected rooms as an array
-        console.log("Connected rooms: " + connectedRooms);
 
         // Search for a room of type "branch" or "button" in the connected rooms
         const targetRoomId = connectedRooms.find(roomId => {
@@ -615,7 +635,6 @@ class Game {
                                 && rooms.get(this.levelNumber).type === "ladder2") {
                         targetRoomId = this.getBranch("branch2");
                         if (targetRoomId !== undefined) {
-                            console.log("Going to branch2");
                             this.moveToLevel(targetRoomId, this.player.position.x, 5);
                         }
                     }
@@ -643,7 +662,6 @@ class Game {
 
                 } else if (actor.type == 'button' && !actor.isPressed) {
                     actor.press(); // Press the button
-                    console.log("Boss room opened");
                 }
             }
         }
@@ -657,9 +675,19 @@ class Game {
             this.labelSkip.draw(ctx, "Presiona ESPACIO para omitir");
             this.cinematicImage.draw(ctx, 1);
             return;
-        }
-        else if (this.state === 'win') {
+        } else if (this.state === 'win') {
             this.winImage.draw(ctx, 1);
+            return;
+        } else if (this.state === 'mainMenu') { 
+            // Draw the main menu
+            this.mainMenu.draw(ctx);
+            return;
+        } else if (this.state === 'login') {
+            // Draw the login menu over the game
+            const loginContainer = document.querySelector('.login-container');
+            loginContainer.style.display = 'block'; // Show the login container
+            // Keep the main menu displayed
+            this.mainMenu.draw(ctx);
             return;
         }
 
@@ -784,6 +812,9 @@ class Game {
         }
         this.drawWeapons(ctx);
 
+        // Draw the keyboard input images
+        this.drawKeys(ctx);
+
         // Draw the abilities
         this.drawAbilities(ctx);
 
@@ -813,15 +844,6 @@ class Game {
         } else if (this.state === 'gameover') {
             // Draw the game over menu
             this.looseMenu.draw(ctx);
-        } else if (this.state === 'mainMenu') { 
-            // Draw the main menu
-            this.mainMenu.draw(ctx);
-        } else if (this.state === 'login') {
-            // Draw the login menu over the game
-            const loginContainer = document.querySelector('.login-container');
-            loginContainer.style.display = 'block'; // Show the login container
-            // Keep the main menu displayed
-            this.mainMenu.draw(ctx);
         }
     }
     
@@ -832,14 +854,24 @@ class Game {
         // Update the game state
         this.state = this.paused ? 'paused' : 'playing';
 
+        // Play the pause sound effect
+        sfx.pause.play();
+
         // Pause or resume game
         if(this.paused){
+            selectMusicMenus('paused')
+            // Update the player stats in the database
+            if (game.player.id !== null) {
+                updatePlayerStats(game.player.id);
+                game.eventLabel.show("Guardando el progreso...");
+            }
             this.chronometer.pause();
         } else{
+            selectMusicMenus('playing')
             this.chronometer.start();
         }
 
-        console.log(this.paused ? "Game paused" : "Game resumed");
+        console.log(this.paused ? "Juego pausado" : "Juego reanudado");
     }
 
     // Increase the stats of the enemies depending on the level of the game
@@ -873,7 +905,7 @@ class Game {
             }
         }
 
-        console.log("Difficulty increased by " + increase);
+        console.log("Dificultad aumentada en " + increase);
     }
 }
 
@@ -1024,8 +1056,6 @@ function restartRooms(restartPlayer, levelNumber, numRooms) {
     // Update the global variable of level
     level = levelNumber;
 
-    console.log("New rooms for level " + level);
-
     // Save the current kills of the player
     // This is used to apply a buff to the player
     // when he restarts the game
@@ -1128,9 +1158,6 @@ function restartRooms(restartPlayer, levelNumber, numRooms) {
         game.player.buffsApplied = 0;
         game.player.applyBuff();
     }
-
-    console.log(game.player.enemiesKilled + " enemies killed");
-    console.log(game.player.buffsApplied + " buffs applied");
 }
 
 // Async function to call the database and
@@ -1177,6 +1204,11 @@ function setEventListeners() {
                 selectMusic(level, 0, 'playing');
             }
             return;
+        } else if (game.state === 'paused') {
+            if (event.code == 'KeyP' || event.code == 'Escape') {
+                game.togglePause();
+                return;
+            }
         }
         
         if (game.state !== 'playing') {
@@ -1229,14 +1261,7 @@ function setEventListeners() {
 
         // Pause the game
         if (event.code == 'KeyP' || event.code == 'Escape') {
-            game.state = 'paused';
-            sfx.pause.play(); // Play the pause sound
-            selectMusicMenus('paused')
-            // Update the player stats in the database
-            if (game.player.id !== null) {
-                updatePlayerStats(game.player.id);
-                game.eventLabel.show("Guardando el progreso...");
-            }
+            game.togglePause(); // Toggle the pause state
         }
         
         // Restart the game
