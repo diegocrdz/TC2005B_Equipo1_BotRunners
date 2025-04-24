@@ -1420,6 +1420,10 @@ function setEventListeners() {
                 // Change the loginMessage from the container
                 loginMessage.textContent = "Sesión iniciada como: " + username;
                 usernameLabel.textContent = "Sesión iniciada como: " + username;
+
+                // Reset the player stats for the new player
+                game.player.enemiesKilled = 0;
+                game.player.buffsApplied = 0;
             } else {
                 loginMessage.textContent = "El usuario " + username + " ya existe";
             }
