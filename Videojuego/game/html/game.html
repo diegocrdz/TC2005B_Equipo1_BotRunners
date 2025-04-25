@@ -60,21 +60,24 @@
         <canvas id="canvas"></canvas>
 
         <div class="login-container">
-            <button id="backButtonLogin">X</button>
-            <h2>Iniciar sesión</h2>
+            <div class="menu-header">
+                <h2>Iniciar sesión</h2>
+                <button id="backButtonLogin">X</button>
+            </div>
             <form id="loginForm">
+                <p id="loginMessage">Inicia sesión o registrate</p>
                 <input type="text" id="username" placeholder="Usuario" required>
                 <input type="password" id="password" placeholder="Contraseña" required>
-                <p id="loginMessage">Inicia sesión o registrate</p>
                 <button id="loginButton" type="submit">Iniciar sesión</button>
-                <p id="registerMessage">¿No tienes una cuenta?</p>
                 <button id="registerButton" type="submit">Registrarse</button>
             </form>
         </div>
 
         <div class="options-container">
-            <button id="backButtonOptions">X</button>
-            <h2>Opciones</h2>
+            <div class="menu-header">
+                <h2>Opciones</h2>
+                <button id="backButtonOptions">X</button>
+            </div>
             <form id="optionsForm">
                 <!-- Sliders ref: https://eclixxo.com/crear-slider-control-volumen-html-5/ -->
                 <label for="musicSlider">Volumen Música: 10</label>
@@ -88,8 +91,10 @@
         </div>
 
         <div class="stats-container">
-            <button id="backButtonStats">X</button>
-            <h2>Estadísticas</h2>
+            <div class="menu-header">
+                <h2>Estadísticas</h2>
+                <button id="backButtonStats">X</button>
+            </div>
             <div id="buttonsStats">
                 <button id="statsPlayer">Mías</button>
                 <button id="statsGlobal">Global</button>

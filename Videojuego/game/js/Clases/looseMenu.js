@@ -6,7 +6,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 24/04/2025
 */
 
 "use strict";
@@ -110,9 +110,8 @@ class LooseMenu extends GameObject {
                 selectMusicMenus('playing');
                 break;
             case "menu":
-                restartRooms(true, 0, 6);
                 game.state = "mainMenu";
-                selectMusicMenus('mainMenu');
+                selectMusicMenus("mainMenu")
                 break;
             default:
                 break;

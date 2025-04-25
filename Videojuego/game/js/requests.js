@@ -8,8 +8,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 11/04/2025
+ * Date: 24/04/2025
 */
+
+"use strict";
 
 // Get a player by username and password
 async function getPlayer(username, password) {
@@ -398,6 +400,7 @@ async function getTopStatistics() {
     }
 }
 
+// Add statistics to the database
 async function addStatistics() {
     let response = await fetch('/api/stats', {
         method: 'POST',
@@ -422,6 +425,7 @@ async function addStatistics() {
     }
 }
 
+// Update statistics in the database
 async function updateStatistics() {
     let response = await fetch(`/api/stats/${id}`, {
         method: 'PUT',

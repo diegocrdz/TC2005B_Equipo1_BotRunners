@@ -1,3 +1,14 @@
+/*
+ * Charts for the statistics menu
+ *
+ * Team BotRunners:
+ * - Diego Córdova Rodríguez, A01781166
+ * - Lorena Estefanía Chewtat Torres, A01785378
+ * - Eder Jezrael Cantero Moreno, A01785888
+ *
+ * Date: 24/04/2025
+*/
+
 /**
  * @param {number} alpha Indicated the transparency of the color
  * @returns {string} A string of the form 'rgba(240, 50, 123, 1.0)' that represents a color

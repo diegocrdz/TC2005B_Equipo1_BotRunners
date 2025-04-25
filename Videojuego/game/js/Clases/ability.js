@@ -6,8 +6,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 11/04/2025
+ * Date: 24/04/2025
 */
+
+"use strict";
 
 // Abilities that can be used by the player
 class Ability{

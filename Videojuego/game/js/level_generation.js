@@ -8,7 +8,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 24/04/2025
 */
 
 "use strict";
@@ -26,7 +26,7 @@ class Room {
     constructor(id, type = "normal") {
         this.id = id;
         // Room types:
-        // "start", "room2", "normal", "boss",
+        // "start", "second", "normal", "boss",
         // "button1", "button2", "branch",
         // "ladder1", "ladder2"
         this.type = type;
@@ -327,7 +327,7 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
                 continue;
             }
     
-            let pipeLength = Math.floor(Math.random() * 5) + 3; // 3 to 7 blocks long
+            let pipeLength = Math.floor(Math.random() * 3) + 3; // 3 to 5 blocks long
     
             // Check if the pipe will be placed in a valid position
             if (level[1][pipeX] !== '.') {
@@ -459,8 +459,17 @@ function generateRandomLevel(width, height, numObstacles, numRewards, minEnemies
     // If the room is the second
     // Only place a normal enemy
     if (roomType == "second") {
-        // Place a normal enemy
-        placeRandomly('N', 1, height - 2, height - 2, width - 4, width - 4);
+        if (levelNumber == 0) {
+            // Place normal enemy
+            placeRandomly('N', 1, height - 2, height - 2, width - 4, width - 4);
+        } else if (levelNumber == 1) {
+            // Place spikes
+            placeRandomly('P', 3, height - 2, height - 2, Math.floor(width / 2), Math.floor(width / 3) * 2);
+        } else {
+            // Place heavy enemy
+            placeRandomly('H', 2, height - 2, height - 2, Math.floor(width / 2), Math.floor(width / 3) * 2);
+        }
+        
         return level.map(row => row.join('')).join('\n');
     }
 
@@ -529,9 +538,23 @@ function generateLevel(numRooms) {
     rooms = levelGenerator.generate();
     console.log(rooms);
 
+    let minEnemies = 1;
+    let maxEnemies = 3;
+
+    if (level == 0) {
+        minEnemies = 2;
+        maxEnemies = 4;
+    } else if (level == 1) {
+        minEnemies = 2;
+        maxEnemies = 5;
+    } else {
+        minEnemies = 3;
+        maxEnemies = 6;
+    }
+
     // Fill the list of levels with the generated rooms
     for (let i = 0; i < rooms.size; i++) {
-        let randomLevel = generateRandomLevel(levelWidth, 16, 10, 1, 1, 3, rooms.get(i).type, level);
+        let randomLevel = generateRandomLevel(levelWidth, 16, 10, 1, minEnemies, maxEnemies, rooms.get(i).type, level);
         GAME_LEVELS.push(randomLevel);
     }
 

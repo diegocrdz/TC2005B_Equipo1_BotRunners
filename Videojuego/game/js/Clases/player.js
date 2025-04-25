@@ -6,8 +6,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 11/04/2025
+ * Date: 24/04/2025
 */
+
+"use strict";
 
 // Global variables that affect the player movement
 // The project works only with very small values for velocities and acceleration
@@ -365,10 +367,6 @@ class Player extends AnimatedObject {
         this.setSprite(this.attackSprite, new Rect(0, 0, 32, 24));
         this.size.x = 4; // Adjust the size to match the new sprite
 
-        // Save the original hitbox size and position
-        let originalHWidth = this.hWidth;
-        let originalOffsetX = this.offsetX;
-
         // Change hitbox size
         this.hWidth += 2;
 
@@ -389,8 +387,8 @@ class Player extends AnimatedObject {
             // Restore the original sprite and rect
             this.setSprite(this.meleeSprite, new Rect(0, 0, 24, 24));
             // Restore hitbox size and position
-            this.hWidth = originalHWidth;
-            this.offsetX = originalOffsetX;
+            this.hWidth -= 2;
+            this.offsetX = 0.5;
             // Restore the animation to idle
             const leftData = this.movement["left"];
             const rightData = this.movement["right"];

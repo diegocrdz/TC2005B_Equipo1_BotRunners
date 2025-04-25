@@ -152,9 +152,6 @@ h1{
   border: 2px solid white;
   font-family: 'Press Start 2P';
 }
-.login-container h2, .options-container h2, .stats-container h2 {
-  margin-bottom: 50px;
-}
 .login-container form, .options-container form{
   display: flex;
   flex-direction: column; /* Align elements in a column */
@@ -170,12 +167,16 @@ h1{
   font-family: 'Press Start 2P';
   font-size: 16px;
 }
-#registerMessage {
-  font-family: 'roboto';
-  font-size: 14px;
-  margin: 0;
+#loginMessage {
   color: #ffcd81;
-  text-align: center;
+  font-size: 0.8em;
+  margin: 0;
+}
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 /* Style for slider inputs */
 /* Ref: https://eclixxo.com/crear-slider-control-volumen-html-5/ */
@@ -320,12 +321,14 @@ h1{
 /* Event label */
 
 #eventLabel {
-  border-left: 4px solid #ffcd81;
-  background-color: #201e1a;
+  border-left: 8px solid #ffcd81;
+  background: linear-gradient(to right, #50412c, #1c1e25);
   color: #ffcd81;
   transform: translateX(100%); /* Move the element out of view */
-  transition: transform 0.5s; /* Transition when transforming */
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Transition when transforming */
+  opacity: 0; /* Start with the element invisible */
 }
 #eventLabel.show {
   transform: translateX(0); /* Bring the element back into view */
+  opacity: 1; /* Make the element visible */
 }

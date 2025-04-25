@@ -6,8 +6,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 24/04/2025
 */
+
+"use strict";
 
 // Generic enemy class
 class Enemy extends AnimatedObject {
@@ -396,10 +398,12 @@ class TurtleEnemy extends Enemy {
         this.updateFrame(deltaTime);
     }
 
+    // Make the turtle close and shoot projectiles
     close(){
         this.isImmortal = true;
         this.damage = 2;
 
+        // Set the animation
         if(!this.hasClosedAnimationPlayed){
             const closeData = this.movement.closed;
         
@@ -415,6 +419,7 @@ class TurtleEnemy extends Enemy {
             this.hasOpenAnimationPlayed = false;
         }
         
+        // Create and shoot projectiles
         if(!this.isShooting){
             this.isShooting = true;
             sfx.turtleShoot.play();
@@ -456,6 +461,7 @@ class TurtleEnemy extends Enemy {
         }, 5000); // Change state every 5 seconds
     }
 
+    // Make the turtle open and follow the player
     open(level, deltaTime){
         this.isImmortal = false; // Make the turtle vulnerable again
         this.damage = 30; // Reset the damage value
@@ -478,6 +484,7 @@ class TurtleEnemy extends Enemy {
         }, 5000); // Change state every 5 seconds
     }
 
+    // Play the hit animation
     hit() {
         if (this.isHit) return; // Prevent re-triggering the hit animation if already playing
     
@@ -500,6 +507,7 @@ class TurtleEnemy extends Enemy {
         }, hitData.duration * 2); // 2 times the duration of the hit animation
     }
     
+    // If the turtle is immortal, it won't take damage
     takeDamage(amount, cooldown) {
         if (this.isInvulnerable || this.isImmortal) return;
         
@@ -516,7 +524,7 @@ class TurtleEnemy extends Enemy {
             }, cooldown); // Cooldown period
         }
     }
-
+    
     playDieSound(){
         sfx.bossDie.play();
     }
@@ -704,7 +712,7 @@ class BossEnemy extends Enemy {
         if (this.health < this.maxHealth * 0.8
             && this.velocity.y === 0
             && !this.isJumping) {
-            this.velocity.x = 0.01; // Increase speed while jumping
+            this.speed = 0.006; // Increase speed while jumping
             this.velocity.y = -0.039; // Make the boss jump if on the ground
             this.isJumping = true; // Set the jumping flag
             setTimeout(() => {
