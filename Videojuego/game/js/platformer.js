@@ -8,7 +8,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 24/04/2025
+ * Date: 25/04/2025
 */
 
 "use strict";
@@ -1235,7 +1235,7 @@ function setEventListeners() {
         }
 
         // Dash
-        if (event.shiftKey) {
+        if (event.shiftKey || event.code == "KeyE") {
             game.player.dash(game.level, deltaTime);
         }
 
@@ -1397,7 +1397,7 @@ function setEventListeners() {
         game.state = 'mainMenu';
         // Hide the login container
         const loginContainer = document.querySelector('.login-container');
-        loginContainer.style.display = 'none'; // Show the login container
+        loginContainer.style.display = 'none';
     });
     // Register button
     document.getElementById("registerButton").addEventListener("click", async (event) => {
@@ -1412,29 +1412,53 @@ function setEventListeners() {
         const loginMessage = document.getElementById("loginMessage");
         // Get the username label element
         const usernameLabel = document.getElementById("usernameLabel");
-    
-        // Check if the username and password are not empty
-        if (username && password) {
-            const result = await registerPlayer(username, password);
-            if (result) {
-                // Change the loginMessage from the container
-                loginMessage.textContent = "Sesión iniciada como: " + username;
-                usernameLabel.textContent = "Sesión iniciada como: " + username;
 
-                // Reset the player stats for the new player
-                game.player.enemiesKilled = 0;
-                game.player.buffsApplied = 0;
-            } else {
-                loginMessage.textContent = "El usuario " + username + " ya existe";
-            }
-            game.state = "mainMenu";
-        } else {
+        // Regular expression to check username and password
+        // Ref username: https://stackoverflow.com/questions/46453307/the-ideal-username-and-password-regex-validation
+        // Ref password: https://es.stackoverflow.com/questions/4300/expresiones-regulares-para-contrase%C3%B1a-en-base-a-una-politica
+
+        const regexUsername = /^(?![_ -])(?:(?![_ -]{2})[\w-]){5,16}(?<![_ -])$/;
+        const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{5,10}/;
+
+        // Check if the labels are not empty
+        if (!username || !password) {
             loginMessage.textContent = "Error al registrarse. Completa todos los campos";
+            return;
         }
+
+        // Check the username and password with the regex
+        // .test() returns true if the string matches the regex
+        if (!regexUsername.test(username)) {
+            loginMessage.textContent = "Usuario inválido: 5-16 caracteres, sin espacios ni guiones al inicio/final";
+            return;
+        }
+        if (!regexPassword.test(password)) {
+            loginMessage.textContent = "Contraseña inválida: 5-10 caracteres, con mayúscula, minúscula, número y símbolo ($@$!%*?&)";
+            return;
+        }
+
+        // Try to register the player
+        const result = await registerPlayer(username, password);
+        if (result) {
+            // Change the loginMessage from the container
+            loginMessage.textContent = "Sesión iniciada como: " + username;
+            usernameLabel.textContent = "Sesión iniciada como: " + username;
+
+            // Reset the player stats for the new player
+            game.player.enemiesKilled = 0;
+            game.player.buffsApplied = 0;
+        } else {
+            loginMessage.textContent = "El usuario " + username + " ya existe";
+        }
+        game.state = "mainMenu";
 
         // Clear the input fields
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
+
+        // Hide the login container
+        const loginContainer = document.querySelector('.login-container');
+        loginContainer.style.display = 'none';
     });
     // Login button
     document.getElementById("loginButton").addEventListener("click", async (event) => {
@@ -1468,6 +1492,10 @@ function setEventListeners() {
         // Clear the input fields
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
+
+        // Hide the login container
+        const loginContainer = document.querySelector('.login-container');
+        loginContainer.style.display = 'none';
     });
 
     // Options button click event

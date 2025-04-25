@@ -6,7 +6,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 24/04/2025
+ * Date: 25/04/2025
 */
 
 "use strict";
@@ -98,7 +98,7 @@ let abilitiesList = [
 
     new Ability('dash',
                 'Dash',
-                'Al presionar shift, podrás desplazarte rápidamente',
+                'Al presionar SHIFT o E, podrás desplazarte rápidamente',
                 '../../../Videojuego/assets/objects/ui_dash.png'),         
 ]
 
