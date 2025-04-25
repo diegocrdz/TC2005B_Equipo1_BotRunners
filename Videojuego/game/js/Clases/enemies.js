@@ -229,6 +229,7 @@ class Enemy extends AnimatedObject {
         } else if (this.type === "boss") {
             GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('X', '.');
             GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('O', '.');
+            GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('Z', '.');
         }
 
         // Update the player statistics
