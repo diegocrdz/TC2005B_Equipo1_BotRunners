@@ -206,10 +206,10 @@ Los jugadores son capaces de moverse de izquierda, derecha, arriba (saltar) y ag
 
 **Ataques y curación**
 
-Los jugadores serán capaces de elegir entre dos armas principales: cuerpo a cuerpo y a distancia. Para utilizar estas, el jugador necesitará presionar ya sea la flecha derecha o izquierda dependiendo la dirección hacia donde quiera realizar el ataque. Adicionalmente, el jugador puede seleccionar una poción de curación que solo puede ser utilizada una única vez por nivel y que se regenera al completarlo. Para cambiar de armas/curación, se utilizan los siguientes números del teclado:
+Los jugadores serán capaces de elegir entre dos armas principales: cuerpo a cuerpo y a distancia. Para utilizar estas, el jugador necesitará presionar ya sea la flecha derecha o izquierda dependiendo la dirección hacia donde quiera realizar el ataque. Adicionalmente, el jugador puede seleccionar una Batería que sirve como objeto de curación que solo puede ser utilizada una única vez por nivel y que se regenera al completarlo. Para cambiar de armas/curación, se utilizan los siguientes números del teclado:
 - Número 1: Seleccionar arma cuerpo a cuerpo
 - Número 2: Seleccionar arma a distancia
-- Número 3: Usar poción de curación
+- Número 3: Usar batería de curación
 
 **Eventos dentro del juego**
 
@@ -272,12 +272,15 @@ Cada enemigo otorga un porcentaje diferente de experiencia al jugador:
 - Robot Aéreo: +15 puntos de experiencia
 - Jefe Final: +100 puntos de experiencia (1 nivel completo)
 
-Al subir de nivel, el jugador podrá elegir una de tres opciones aleatorias para mejorar su personaje. La lista completa de habilidades a desbloquear por el jugador es la siguiente:
+Al subir de nivel, se mostrarán tres opciones como un pop up con 3 de las habilidades de forma aleatoria para mejorar su personaje. La lista completa de habilidades a desbloquear por el jugador es la siguiente:
 - +10% de ataque
 - +10% de salud
 - +10% de defensa
 - Doble salto (Solo se puede desbloquear una vez)
 - Esquivar (dash) (Solo se puede desbloquear una vez)
+- Ataque más rapido
+- Multiplicador de experiencia
+
 
 Para otorgar estas habilidades al jugador, se deberá contar con una lista que se actualizará conforme el jugador suba de nivel, eliminando aquellas habilidades que el jugador haya obtenido y solo se puedan adquirir una vez por partida, como el doble salto o la habilidad de esquivar.
 
@@ -412,7 +415,11 @@ Al final de cada nivel, el jugador deberá enfrentarse al jefe final para poder 
 
 El enfrentamiento con el jefe es el mayor reto del nivel, requiriendo que el jugador haya explorado las diferentes salas para haber mejorado sus habilidades. Además, si el jugador no ha activado el botón azul que se encuentra en una de las salas ramificadas, el acceso a la sala del jefe permanecerá bloqueado. Esto agrega un reto adiccional, debido a que no basta con llegar al final del nivel, sino también haber explorado la mayoría de las salas para encontrar el botón.
 
-El jefe es capaz de avanzar en la dirección del jugador (estado normal) o saltar repetidamente en dirección del mismo (estado furioso). El jugador deberá esquivar los ataques del jefe y derrotarlo para avanzar al siguiente nivel.
+El jefe del nivel 1 es una tortuga robotica la cual tiene un desplazamiento hacia la dirección del jugador, esta cuenta con dos estados, siendo el primero el estado de movimiento donde camina en la dirección del jugador, el siguiente estado, simula una tortuga en su caparazón, es identificable con el cambio de sprite, cuando la tortuga se encuentra en este estado, esta se vuelve inmune a ataques y tiene la habilidad de lanzar proyectiles en forma de lapiz, por la temática del nivel, una vez derrotado, se podrá acceder al siguiente nivel.
+
+El jefe del nivel 2 es un robot espadachín el cual cada 5 segundos realiza un dash hacia la posición del jugador inflingiendo daño, una vez derrotado, se podrá acceder al nivel 3.
+
+El jefe del nivel 3 es capaz de avanzar en la dirección del jugador (estado normal) o saltar repetidamente en dirección del mismo (estado furioso). El jugador deberá esquivar los ataques del jefe y derrotarlo para poder completar el juego.
 
 ### **Game Flow**
 
