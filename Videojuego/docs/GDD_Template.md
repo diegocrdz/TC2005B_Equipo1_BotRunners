@@ -104,15 +104,23 @@ El objetivo principal del juego es que el jugador complete cada uno de los 3 niv
 
 Cada nivel cuenta con tres variaciones de enemigos, los cuales tienen distintas estadísticas de salud y daño:
 - Robot Normal: Salud - 50 puntos, Daño - 20 puntos
-- Robot Pesado: Salud - 75 puntos, Daño - 40 puntos
+- Robot Pesado: Salud - 75 puntos, Daño - 25 puntos
 - Robot Aéreo: Salud - 25 puntos, Daño - 10 puntos
-- Jefe Final: Salud - 100 puntos, Daño - 50 puntos
+- Jefe Final 1 (Tortutrón): Salud - 300 puntos, Daño - 30 puntos
+- Jefe Final 2 (Espadatrón): Salud - 500 puntos, Daño - 20 puntos
+- Jefe Final 3 (Skipper): Salud - 800 puntos, Daño - 40 puntos
 
 Cada enemigo reacciona de forma diferente al jugador:
 - Robot Normal: Se mueve rápidamente hacia el jugador y ataca cuerpo a cuerpo.
 - Robot Pesado: Se mueve lentamente hacia el jugador y ataca cuerpo a cuerpo.
 - Robot Aéreo: Se mantiene en el aire, desplazándose de forma horizontal. Ataca al jugador cuando este se encuentra en su misma altura.
-- Jefe Final: Combina las habilidades de los enemigos anteriores, teniendo 2 fases de combate:
+- Tortutrón: Se mueve lentamente hacia el jugador, alternando entre 2 fases:
+    - Fase 1 (abierto): La tortuga está fuera de su caparazón y sigue al jugador. Ataca cuerpo a cuerpo.
+    - Fase 2 (cerrado): La tortuga se esconde en su caparazón y lanza proyectiles al jugador. Se mantiene inmóvil y es inmune a ataques del jugador.
+- Espadatrón: Se mueve rápidamente hacia el jugador y ataca cuerpo a cuerpo. Alterna entre 2 fases:
+    - Fase 1 (caminar): Sigue al jugador y ataca cuerpo a cuerpo.
+    - Fase 2 (dash): Se desplaza rápidamente hacia el jugador. Ataca cuerpo a cuerpo.
+- Skipper: Combina las habilidades de los enemigos anteriores, teniendo 2 fases de combate:
     - Fase 1 (estado normal): Se activa cuando la salud del jefe es mayor a 20%. Avanza hacia el jugador lentamente y ataca cuerpo a cuerpo.
     - Fase 2 (estado furioso): Se activa cuando la salud del jefe es menor a 20%. Se desplaza rápidamente hacia el jugador, saltando desde su última posición hasta la del jugador. Ataca cuerpo a cuerpo.
 
@@ -182,7 +190,8 @@ De esta forma, el jugador es capaz de entender la historia y el objetivo del jue
         - Número de muertes
         - Enemigos derrotados
         - Número total de daño infligido y recibido
-        - Número de partidas completadas.
+        - Número de partidas completadas
+        - Número de ataques cuerpo a cuerpo vs. a distancia.
     4. Puntuaciones: Muestra los jugadores con los mejores tiempos en completar el juego.
         - Nombre del jugador
         - Tiempo en completar el juego.
@@ -202,14 +211,14 @@ De esta forma, el jugador es capaz de entender la historia y el objetivo del jue
 
 **Movimiento básico**
 
-Los jugadores son capaces de moverse de izquierda, derecha, arriba (saltar) y agacharse. Para esto, se utilizan las teclas W, A, S, D del teclado. Asimismo, conforme el jugador va avanzando de nivel, va desbloqueando algunas habilidades específicas como el doble salto, que se activará presionando dos veces “W”, y el dash, que se activará presionando la tecla “shift”, provocando que el jugador avance rápidamente en la dirección actual en el eje “x” (izquierda o derecha). Debido al tiempo limitado de desarrollo, no se espera que los jugadores sean capaces de modificar ninguna de las teclas definidas para los controles del videojuego. 
+Los jugadores son capaces de moverse de izquierda, derecha, arriba (saltar) y agacharse. Para esto, se utilizan las teclas W, A, S, D del teclado. Asimismo, conforme el jugador va avanzando de nivel, va desbloqueando algunas habilidades específicas como el doble salto, que se activará presionando dos veces “W”, y el dash, que se activará presionando la tecla "SHIFT”, provocando que el jugador avance rápidamente en la dirección actual en el eje “x” (izquierda o derecha). Debido al tiempo limitado de desarrollo, no se espera que los jugadores sean capaces de modificar ninguna de las teclas definidas para los controles del videojuego. 
 
 **Ataques y curación**
 
-Los jugadores serán capaces de elegir entre dos armas principales: cuerpo a cuerpo y a distancia. Para utilizar estas, el jugador necesitará presionar ya sea la flecha derecha o izquierda dependiendo la dirección hacia donde quiera realizar el ataque. Adicionalmente, el jugador puede seleccionar una poción de curación que solo puede ser utilizada una única vez por nivel y que se regenera al completarlo. Para cambiar de armas/curación, se utilizan los siguientes números del teclado:
+Los jugadores serán capaces de elegir entre dos armas principales: cuerpo a cuerpo y a distancia. Para utilizar estas, el jugador necesitará presionar ya sea la flecha derecha o izquierda dependiendo la dirección hacia donde quiera realizar el ataque. Adicionalmente, el jugador puede seleccionar una Batería que sirve como objeto de curación que solo puede ser utilizada una única vez por nivel y que se regenera al completarlo. Para cambiar de armas/curación, se utilizan los siguientes números del teclado:
 - Número 1: Seleccionar arma cuerpo a cuerpo
 - Número 2: Seleccionar arma a distancia
-- Número 3: Usar poción de curación
+- Número 3: Usar batería de curación
 
 **Eventos dentro del juego**
 
@@ -254,7 +263,9 @@ Para lograr agregar cada una de estas armas al juego, consideramos los siguiente
 - Para la llave de acero, el robot cuenta con animaciones adicionales para mostrar el arma (moverse, saltar, agacharse, atacar).
 - Para la pistola láser lenta y rápida, las animaciones del arma principal (llave de acero) se mantienen, lanzando proyectiles (rectángulos pequeños de color azul) al atacar con la pistola láser.
 
-Cada una de estas armas se desbloquea de forma permanente para todas las partidas del jugador.
+Si el jugador completa el juego, desbloqueará las mejores armas (llave de acero y pistola láser rápida) en todas sus partidas, incluso si sale del juego (para esto, debe haberse registrado en la base de datos). De esta forma, el jugador podrá utilizar estas armas en sus siguientes partidas, lo que le permitirá completar el juego en un menor tiempo.
+
+Si un jugador desbloquea las mejores armas y decide no registrarse, perderá estas armas al salir del juego.
 
 **Mecánica de experiencia**
 
@@ -270,14 +281,18 @@ Cada enemigo otorga un porcentaje diferente de experiencia al jugador:
 - Robot Normal: +10 puntos experiencia
 - Robot Pesado: + 20 puntos de experiencia
 - Robot Aéreo: +15 puntos de experiencia
-- Jefe Final: +100 puntos de experiencia (1 nivel completo)
+- Tortutrón: +100 puntos de experiencia
+- Espadatrón: +500 puntos de experiencia
+- Skipper: +150 puntos de experiencia
 
-Al subir de nivel, el jugador podrá elegir una de tres opciones aleatorias para mejorar su personaje. La lista completa de habilidades a desbloquear por el jugador es la siguiente:
-- +10% de ataque
-- +10% de salud
-- +10% de defensa
+Al subir de nivel, se mostrarán tres opciones como un pop up con 3 de las habilidades de forma aleatoria para mejorar su personaje. La lista completa de habilidades a desbloquear por el jugador es la siguiente:
+- +5 puntos de ataque
+- +20 puntos de salud
+- +10 puntos de defensa
 - Doble salto (Solo se puede desbloquear una vez)
 - Esquivar (dash) (Solo se puede desbloquear una vez)
+- Ataque más rapido
+- Multiplicador de experiencia
 
 Para otorgar estas habilidades al jugador, se deberá contar con una lista que se actualizará conforme el jugador suba de nivel, eliminando aquellas habilidades que el jugador haya obtenido y solo se puedan adquirir una vez por partida, como el doble salto o la habilidad de esquivar.
 
@@ -320,7 +335,7 @@ En el primer nivel, ¡la competencia de robótica ha comenzado!, y la escuela se
             4. Robot Normal (enemigo)
             5. Robot Pesado (enemigo)
             6. Robot Aéreo (enemigo)
-            7. Jefe Final (enemigo)
+            7. Jefe Final: Tortutrón (enemigo)
 
 **Nivel 2: Laboratorio**
 
@@ -342,7 +357,7 @@ En el segundo nivel, pasamos al lugar en donde nacen las máquinas, un laborator
             4. Robot Normal (enemigo)
             5. Robot Pesado (enemigo)
             6. Robot Aéreo (enemigo)
-            7. Jefe Final (enemigo)
+            7. Jefe Final: Espadatrón (enemigo)
 
 **Nivel 3: Fábrica abandonada**
 
@@ -364,7 +379,7 @@ En el tercer nivel, la competencia llega a su fase final en una fábrica abandon
             4. Robot Normal (enemigo)
             5. Robot Pesado (enemigo)
             6. Robot Aéreo (enemigo)
-            7. Jefe Final (enemigo)
+            7. Jefe Final: Skipper (enemigo)
 
 Aunque muchos de los elementos son similares dentro de los niveles, como los letreros, escaleras, botones o puertas, se busca cambiar la estética de los niveles a partir de los cambios de texturas, elementos situados en el fondo de las salas y color del ambiente. De esta forma, se busca que el jugador sienta que está avanzando en la competencia y que cada nivel es más desafiante que el anterior.
 
@@ -412,7 +427,11 @@ Al final de cada nivel, el jugador deberá enfrentarse al jefe final para poder 
 
 El enfrentamiento con el jefe es el mayor reto del nivel, requiriendo que el jugador haya explorado las diferentes salas para haber mejorado sus habilidades. Además, si el jugador no ha activado el botón azul que se encuentra en una de las salas ramificadas, el acceso a la sala del jefe permanecerá bloqueado. Esto agrega un reto adiccional, debido a que no basta con llegar al final del nivel, sino también haber explorado la mayoría de las salas para encontrar el botón.
 
-El jefe es capaz de avanzar en la dirección del jugador (estado normal) o saltar repetidamente en dirección del mismo (estado furioso). El jugador deberá esquivar los ataques del jefe y derrotarlo para avanzar al siguiente nivel.
+- **Tortutrón:** El jefe del nivel 1 es una tortuga robotica la cual tiene un desplazamiento hacia la dirección del jugador, esta cuenta con dos estados, siendo el primero el estado de movimiento donde camina en la dirección del jugador, el siguiente estado, simula una tortuga en su caparazón, es identificable con el cambio de sprite, cuando la tortuga se encuentra en este estado, esta se vuelve inmune a ataques y tiene la habilidad de lanzar proyectiles en forma de lapiz, por la temática del nivel, una vez derrotado, se podrá acceder al siguiente nivel.
+
+- **Espadatrón:** El jefe del nivel 2 es un robot espadachín el cual cada 5 segundos realiza un dash hacia la posición del jugador inflingiendo daño, una vez derrotado, se podrá acceder al nivel 3.
+
+- **Skipper** El jefe del nivel 3 es capaz de avanzar en la dirección del jugador (estado normal) o saltar repetidamente en dirección del mismo (estado furioso). El jugador deberá esquivar los ataques del jefe y derrotarlo para poder completar el juego.
 
 ### **Game Flow**
 
@@ -439,7 +458,7 @@ El juego se desarrolla en 3 niveles distintos, cada uno con un jefe final que el
     1. Llave de metal
     2. Pistola láser que dispara lento.
     3. Pistola láser que dispara rápido.
-19. El jugador obtiene una poción de curación de un solo uso para el siguiente nivel.
+19. El jugador obtiene una batería que le permite recuperar el 50% de su vida máxima, pero solo tiene un solo por nivel.
 20. El jugador avanza al siguiente nivel y repite el proceso.
 21. Si el jugador termina el juego, se muestra un cómic final donde se muestran las estadísticas del jugador:
     - Tiempo de partida
@@ -450,7 +469,7 @@ El juego se desarrolla en 3 niveles distintos, cada uno con un jefe final que el
 22. Se muestra la tabla de las mejores 5 puntuaciones de tiempo.
 22. El jugador es devuelto al menú principal.
 
-Cada vez que el jugador avanza de nivel, el juego se vuelve más dificil, pues los enemigos tienen un incremento en su salud y daño en un 10%. De la misma forma, conforme el jugador sube de nivel, necesita derrotar más enemigos para seguir subiendo, lo que dificulta que este se vuelva más fuerte que los enemigos y los jefes finales, generando un reto constante para el jugador.
+Cada vez que el jugador avanza de nivel, el juego se vuelve más dificil, pues los enemigos tienen un incremento en su salud y daño en 20 puntos. De la misma forma, conforme el jugador sube de nivel, necesita derrotar más enemigos para seguir subiendo, lo que dificulta que este se vuelva más fuerte que los enemigos y los jefes finales, generando un reto constante para el jugador.
 
 En este ciclo de juego se busca que el jugador se sienta motivado a completar el juego en el menor tiempo posible; sin embargo, este debe aprender a dominar las mecánicas del juego y utilizar las habilidades desbloqueables de forma estratégica para lograrlo.
 
@@ -545,13 +564,13 @@ Adicionalmente, los enemigos cuentan con los siguientes colores específicos:
 
 De esta forma, Overclocked utiliza tonos claros entre blanco, gris, azul, rojo, naranja y café. Se busca que estos tonos creen una atmósfera minimalista, buscando utilizar tan solo 3 tonos entre colores. Ejemplo de esto es el gris, que solo tiene una variante clara, media y oscura. Igualmente, entre niveles pueden cambiar algunos colores para que los enemigos combinen con la estética del nivel.
 
-El estilo gráfico del juego es de 32 bits, por lo que se busca que el diseño de los personajes sea minimalista, estilo retro. Para esto, los personajes deben contar con bordes negros/gris oscuro que resalten su silueta del ambiente resto de elementos en la pantalla.
+El estilo gráfico del juego se determina por sprites de hasta 32x32 pixeles para todos los elemento del juego, por lo que se busca que el diseño de los personajes sea minimalista, estilo retro. Para esto, los personajes deben contar con bordes negros/gris oscuro que resalten su silueta del ambiente resto de elementos en la pantalla.
 
 **Reglas de diseño de Overclocked:**
 
 Para establecer un estilo determinado y homogéneo a lo largo del videojuego, establecieron las siguientes reglas de diseño:
 
-1. Personajes y assets de 32 bits.
+1. Personajes y assets con sprites individuales de hasta 32x32 pixeles.
 2. Paleta de colores pastel: blanco, gris, azul, rojo, naranja y café.
 3. Personajes llamativos y animados: Cada personaje debe tener una animación atractiva de al menos 2 fotogramas al moverse e interactuar con el jugador.
 4. Silueta oscura: Tanto los personajes como los recursos (assets) del videojuego deben contar con una silueta oscura, separándolos del fondo, escenarios y demás  elementos del videojuego.
@@ -578,7 +597,7 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
         2. Robot Normal (idle, caminar, atacar, recibir daño)
         3. Robot Pesado (idle, caminar, atacar, recibir daño)
         4. Robot Volador (idle, volar, atacar, recibir daño)
-        5. Jefe (idle, caminar, atacar, recibir daño)
+        5. Jefes (idle, caminar, atacar, recibir daño)
 2. Bloques
     1. Contenedor (caja de madera, obstáculo)
     2. Contenedor (caja de metal, obstáculo)
@@ -717,6 +736,18 @@ También se cuenta con animaciones para todas las variantes de armas que el juga
 
 ![Robot áereo Sprite-Sheet](img/robot_fly_x16.png)
 
+**Jefe 1:**
+
+![Jefe 1](img/tortutron_mov.gif)
+
+![Jefe 1 Sprite-Sheet](img/tortutron.png)
+
+**Jefe 2:**
+
+![Jefe 2](img/espadatron_mov.gif)
+
+![Jefe 2 Sprite-Sheet](img/espadatron.png)
+
 **Jefe Final:**
 
 ![Jefe Final](img/robot_boss.gif)
@@ -757,9 +788,13 @@ Los niveles cuentan con una estructura lineal con 1 o 2 bifurcaciones en salas i
 
 **Arma a distancia:** Pistola láser rápida. Esta arma se desbloquea al completar el tercer nivel y aumenta el daño del jugador en un 40%.
 
-![Poción](img/healing.png)
+![Batería](img/bateria_llena.png)
 
-**Poción de curación:** Es un fluido rojo en un contenedor de laboratorio. Recupera 50% de la salud del jugador. Se recarga al completar un nivel y solo se puede utilizar una vez por cada uno.
+**Bateria:** Es una batería verde. Recupera 50% de la salud del jugador. Se recarga al completar un nivel y solo se puede utilizar una vez por cada uno.
+
+![Batería vacia](img/bateria_vacia.png)
+
+**Bateria vacia:** Es una batería vacia. El estado vacio de la batería, no se puede recargar hasta el siguiente nivel.
 
 ![Items](img/xp_orb.png)
 
