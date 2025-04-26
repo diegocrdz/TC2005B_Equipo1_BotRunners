@@ -13,7 +13,7 @@
 
 "use strict";
 
-// Global variables
+// Canvas size
 const canvasWidth = 800;
 const canvasHeight = 600;
 
@@ -45,110 +45,41 @@ class Game {
         this.level = level;
         this.levelNumber = 0;
         this.player = level.player;
-        // Initialize the player sprite
         this.actors = level.actors;
-        // Menu for displaying abilities
-        this.abilities = new popUpAbility();
-        // Button state for the boss room
+
+        // Button state for the boss door
         this.isButtonPressed = false;
+
         // Cinematic properties
-        this.cinematicImage = new GameObject(null, canvasWidth, canvasHeight - 100, 0, 0, 'cinematic');
-        this.cinematicImage.setSprite('../../assets/cinematics/intro.png');
         this.cinematicTimer = undefined;
         this.cinematicSkipped = false;
-        this.labelSkip = new TextLabel(canvasWidth / 2 - 150, canvasHeight - 40, "20px monospace", "white");
-        // Win cinematic properties
-        this.winImage = new GameObject(null, canvasWidth, canvasHeight, 0, 0, 'cinematic');
-        this.winImage.setSprite('../../assets/cinematics/win.png');
-        // Minimap and chronometer menu
-        this.topRightMenu = new TopRightMenu(null, 200, 130, canvasWidth - 200, 0, 'trmenu');
-        // Pause menu
-        this.pauseMenu = new PauseMenu(null, canvasWidth, canvasHeight, 0, 0, 'pausemenu');
-        // Loose menu
-        this.looseMenu = new LooseMenu(null, canvasWidth, canvasHeight, 0, 0, 'loosemenu');
-        // Main menu
+
+        // List of projectiles
+        this.projectiles = []; // Player
+        this.enemiesProjectiles = []; // Enemies
+
+        this.loadMenus();
+        this.loadBars();
+        this.loadLabels();
+        this.loadImages();
+    }
+
+    // Load the menus
+    loadMenus() {
+        // Menu for displaying abilities
+        this.abilities = new popUpAbility();
+        // JavaScript Menus
         this.mainMenu = new MainMenu(null, canvasWidth, canvasHeight, 0, 0, 'mainmenu');
-        // Options menu
-        this.optionsMenu = new OptionsMenu(null, canvasWidth, canvasHeight, 0, 0, 'optionsmenu');
-        // Stats menu
-        this.statsMenu = new StatsMenu(null, canvasWidth, canvasHeight, 0, 0, 'statsmenu');
-        // Label to notify the user of any event
-        this.eventLabel = new EventLabel();
+        this.topRightMenu = new TopRightMenu(null, 200, 130, canvasWidth - 200, 0, 'trmenu');
+        this.pauseMenu = new PauseMenu(null, canvasWidth, canvasHeight, 0, 0, 'pausemenu');
+        this.looseMenu = new LooseMenu(null, canvasWidth, canvasHeight, 0, 0, 'loosemenu');
+        // HTML Menus
+        this.optionsMenu = new HTMLMenu('.options-container');
+        this.statsMenu = new HTMLMenu('.stats-container');
+        this.loginMenu = new HTMLMenu('.login-container');
+    }
 
-        // List of the player's projectiles
-        this.projectiles = [];
-        // List of the enemies' projectiles
-        this.enemiesProjectiles = [];
-
-        // Labels
-        this.labelMoney = new TextLabel(20, canvasHeight - 50,
-                                        "30px Ubuntu Mono", "white");
-
-        this.labelDebug = new TextLabel(20, canvasHeight - 60,
-                                        "20px Ubuntu Mono", "white");
-        
-        this.labelHP = new TextLabel(canvasWidth / 2 + 35, canvasHeight - 65,
-                                    "10px monospace", "white");
-        this.labelXP = new TextLabel(canvasWidth / 2 + 35, canvasHeight - 35,
-                                    "10px monospace", "white");
-
-        this.labelLife = new TextLabel(canvasWidth - 92, canvasHeight - 50,
-                                        "20px monospace", "white");
-
-        this.labelLevel = new TextLabel(canvasWidth - 92, canvasHeight - 20,
-                                        "20px monospace", "white");
-
-        this.labelDamage = new TextLabel(canvasWidth - 501, canvasHeight - 52,
-                                        "18px monospace", "white");
-
-        this.labelResistance = new TextLabel(canvasWidth - 437, canvasHeight - 52,
-                                            "18px monospace", "white");
-        
-        // Load board images for indicating ladders direction
-        this.ladderUpImage = new GameObject(null, 60, 60,
-                                            (canvasWidth / 2) - 70, canvasHeight / 3,
-                                            'sign');
-        
-        this.ladderDownImage = new GameObject(null, 60, 60,
-                                            (canvasWidth / 2) - 70, canvasHeight / 3 + 80,
-                                            'sign');
-        
-        // Load the tutorial image
-        this.tutorial1Image = new GameObject(null, 360, 180,
-                                            (canvasWidth / 2) - 175, canvasHeight / 3 - 100,
-                                            'tutorial');
-        this.tutorial2Image = new GameObject(null, 360, 180,
-                                            (canvasWidth / 2) - 175, canvasHeight / 3 - 100,
-                                            'tutorial');
-        
-        // Load the exit image
-        this.exitImage = new GameObject(null, 120, 60,
-                                        (canvasWidth / 2) + 200, canvasHeight / 3 - 20,
-                                        'exit');
-        this.exitImage.setSprite('../../assets/backgrounds/sign_exit.png');
-
-        // Lock image for the boss door
-        this.lockImage = new GameObject(null, 40, 40,
-                                        canvasWidth - 35, canvasHeight - 190,
-                                        'lock');
-        this.lockImage.setSprite('../../assets/objects/lock.png');
-
-        // Load input keyboard images for the UI
-        this.key1Image = new GameObject(null, 30, 30,
-                                        60, canvasHeight - 35,
-                                        'key1');
-        this.key1Image.setSprite('../../assets/objects/key1.png');
-
-        this.key2Image = new GameObject(null, 30, 30,
-                                        140, canvasHeight - 35,
-                                        'key2');
-        this.key2Image.setSprite('../../assets/objects/key2.png');
-
-        this.key3Image = new GameObject(null, 30, 30,
-                                        220, canvasHeight - 35,
-                                        'key3');
-        this.key3Image.setSprite('../../assets/objects/key3.png');
-
+    loadBars() {
         // Health bar for the player
         this.playerHealthBar = new Bar(
             canvasWidth / 2 + 33, // X position
@@ -161,6 +92,7 @@ class Game {
             "black", // Background color
             "black" // Border color
         );
+
         // XP bar for the player
         this.playerXpBar = new Bar(
             canvasWidth / 2 + 33, // X position
@@ -173,34 +105,176 @@ class Game {
             "black", // Background color
             "black" // Border color
         );
+    }
+
+    loadLabels() {
+        // Skip cinematic
+        this.labelSkip = new TextLabel(
+            canvasWidth / 2 - 150, canvasHeight - 40,
+            "20px monospace", "white");
         
-        // Load the health potion image
-        this.potionImage = new GameObject(null, 60, 50,
-                                        (canvasWidth / 2) - 222, canvasHeight - 70,
-                                        'potion');
+        // Label to notify the user of any event
+        this.eventLabel = new EventLabel();
+        
+        // Menu labels
+        this.labelMoney = new TextLabel(20, canvasHeight - 50,
+            "30px Ubuntu Mono", "white");
+
+        this.labelDebug = new TextLabel(20, canvasHeight - 60,
+            "20px Ubuntu Mono", "white");
+
+        this.labelHP = new TextLabel(canvasWidth / 2 + 35, canvasHeight - 65,
+            "10px monospace", "white");
+        this.labelXP = new TextLabel(canvasWidth / 2 + 35, canvasHeight - 35,
+            "10px monospace", "white");
+
+        this.labelLife = new TextLabel(canvasWidth - 92, canvasHeight - 50,
+            "15px monospace", "white");
+
+        this.labelLevel = new TextLabel(canvasWidth - 92, canvasHeight - 20,
+            "15px monospace", "white");
+
+        this.labelDamage = new TextLabel(canvasWidth - 501, canvasHeight - 52,
+            "18px monospace", "white");
+
+        this.labelResistance = new TextLabel(canvasWidth - 437, canvasHeight - 52,
+            "18px monospace", "white");
+    }
+
+    // Load the images for the game
+    loadImages() {
+        // Initial cinematic
+        this.cinematicImage = new GameObject(
+            null,
+            canvasWidth, canvasHeight - 100,
+            0, 0,
+            'cinematic');
+        this.cinematicImage.setSprite('../../assets/cinematics/intro.png');
+
+        // Win cinematic
+        this.winImage = new GameObject(
+            null,
+            canvasWidth, canvasHeight,
+            0, 0,
+            'cinematic');
+        this.winImage.setSprite('../../assets/cinematics/win.png');
+        
+        // Ladder direction
+        this.ladderUpImage = new GameObject(
+            null, 60, 60,
+            (canvasWidth / 2) - 70, canvasHeight / 3,
+            'sign');
+        
+        this.ladderDownImage = new GameObject(
+            null, 60, 60,
+            (canvasWidth / 2) - 70, canvasHeight / 3 + 80,
+            'sign');
+        
+        // Tutorial
+        this.tutorial1Image = new GameObject(
+            null, 360, 180,
+            (canvasWidth / 2) - 175, canvasHeight / 3 - 100,
+            'tutorial');
+
+        this.tutorial2Image = new GameObject(
+            null, 360, 180,
+            (canvasWidth / 2) - 175, canvasHeight / 3 - 100,
+            'tutorial');
+        
+        // Exit
+        this.exitImage = new GameObject(
+            null, 120, 60,
+            (canvasWidth / 2) + 200, canvasHeight / 3 - 20,
+            'exit');
+        this.exitImage.setSprite('../../assets/backgrounds/sign_exit.png');
+
+        // Lock image for the boss door
+        this.lockImage = new GameObject(
+            null, 40, 40,
+            canvasWidth - 35, canvasHeight - 190,
+            'lock');
+        this.lockImage.setSprite('../../assets/objects/lock.png');
+
+        // Load input keyboard images for the UI
+        this.key1Image = new GameObject(
+            null, 30, 30,
+            60, canvasHeight - 35,
+            'key1');
+        this.key1Image.setSprite('../../assets/objects/key1.png');
+
+        this.key2Image = new GameObject(
+            null, 30, 30,
+            140, canvasHeight - 35,
+            'key2');
+        this.key2Image.setSprite('../../assets/objects/key2.png');
+
+        this.key3Image = new GameObject(
+            null, 30, 30,
+            220, canvasHeight - 35,
+            'key3');
+        this.key3Image.setSprite('../../assets/objects/key3.png');
+
+        // Health potion image
+        this.potionImage = new GameObject(
+            null, 60, 50,
+            (canvasWidth / 2) - 222, canvasHeight - 70,
+            'potion');
         this.potionImage.setSprite('../../assets/objects/battery_full.png');
 
         // Weapon background and selection images
-        this.weaponBackgroundImage = new GameObject(null, 70, 70, 0, 0, 'ui');
+        this.weaponBackgroundImage = new GameObject(
+            null,
+            70, 70,
+            0, 0,
+            'ui');
         this.weaponBackgroundImage.setSprite('../../../Videojuego/assets/objects/gray_weapon_background.png');
 
-        this.abilitiesBackgroundImage = new GameObject(null, 147, 70, (canvasWidth / 2) - 137, canvasHeight - 78, 'ui');
+        this.abilitiesBackgroundImage = new GameObject(
+            null,
+            147, 70,
+            (canvasWidth / 2) - 137,
+            canvasHeight - 78,
+            'ui');
         this.abilitiesBackgroundImage.setSprite('../../../Videojuego/assets/objects/gray_weapon_background.png');
 
-        this.weaponSelectionImage = new GameObject(null, 70, 70, 0, 0, 'ui');
+        this.weaponSelectionImage = new GameObject(
+            null,
+            70, 70,
+            0, 0,
+            'ui');
         this.weaponSelectionImage.setSprite('../../../Videojuego/assets/objects/weapon_selection.png');
 
         // Weapon images for the UI
-        this.armImage = new GameObject(null, 55, 50, (canvasWidth / 2) - 380, canvasHeight - 70, 'weapon');
+        this.armImage = new GameObject(
+            null,
+            55, 50,
+            (canvasWidth / 2) - 380,
+            canvasHeight - 70,
+            'weapon');
         this.armImage.setSprite('../../../Videojuego/assets/objects/melee_1.png');
 
-        this.roboticArmImage = new GameObject(null, 55, 50, (canvasWidth / 2) - 380, canvasHeight - 70, 'weapon');
+        this.roboticArmImage = new GameObject(
+            null,
+            55, 50,
+            (canvasWidth / 2) - 380,
+            canvasHeight - 70,
+            'weapon');
         this.roboticArmImage.setSprite('../../../Videojuego/assets/objects/melee_2.png');
 
-        this.slowPistolImage = new GameObject(null, 65, 65, (canvasWidth / 2) - 303, canvasHeight - 80, 'weapon');
+        this.slowPistolImage = new GameObject(
+            null,
+            65, 65,
+            (canvasWidth / 2) - 303,
+            canvasHeight - 80,
+            'weapon');
         this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_1.png');
 
-        this.fastPistolImage = new GameObject(null, 65, 65, (canvasWidth / 2) - 303, canvasHeight - 80, 'weapon');
+        this.fastPistolImage = new GameObject(
+            null,
+            65, 65,
+            (canvasWidth / 2) - 303,
+            canvasHeight - 80,
+            'weapon');
         this.fastPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
 
         // Abilities images for the UI
@@ -215,75 +289,6 @@ class Game {
 
         this.doubleJumpImage = new Image();
         this.doubleJumpImage.src = '../../../Videojuego/assets/objects/ui_doublejump.png';
-
-        // Method to draw the selection backgrounds
-        this.drawBackgrounds = (ctx) => {
-            const weaponPositions = [
-                { x: (canvasWidth / 2) - 387, y: canvasHeight - 78 }, // Arm background
-                { x: (canvasWidth / 2) - 307, y: canvasHeight - 78 }, // Pistol background
-                { x: (canvasWidth / 2) - 227, y: canvasHeight - 78 }  // Potion background
-            ];
-
-            // Draw weapon backgrounds
-            weaponPositions.forEach((pos) => {
-                this.weaponBackgroundImage.position = new Vec(pos.x, pos.y);
-                this.abilitiesBackgroundImage.draw(ctx,1);
-                this.weaponBackgroundImage.draw(ctx, 1);
-            });
-
-            this.weaponBackgroundImage.draw(ctx,1);
-
-            // Draw weapon selection highlight
-            if (game.player.selectedWeapon === 1) {
-                this.weaponSelectionImage.position = new Vec(weaponPositions[0].x, weaponPositions[0].y);
-                this.weaponSelectionImage.draw(ctx, 1);
-            } else if (game.player.selectedWeapon === 2) {
-                this.weaponSelectionImage.position = new Vec(weaponPositions[1].x, weaponPositions[1].y);
-                this.weaponSelectionImage.draw(ctx, 1);
-            }
-            else if (game.player.selectedWeapon === 3) {
-                this.weaponSelectionImage.position = new Vec(weaponPositions[2].x, weaponPositions[2].y);
-                this.weaponSelectionImage.draw(ctx, 1);
-            }
-        }
-
-        // Method to draw the keyboard input images
-        this.drawKeys = (ctx) => {
-            this.key1Image.draw(ctx, 1);
-            this.key2Image.draw(ctx, 1);
-            this.key3Image.draw(ctx, 1);
-        }
-        
-        // Method to draw the weapons
-        this.drawWeapons = (ctx) => {
-            this.armImage.draw(ctx, 1);
-            this.slowPistolImage.draw(ctx, 1);
-        };
-        
-        // Method to draw the abilities signs
-        this.drawAbilities = (ctx) => {
-            const damageX = (canvasWidth / 2) - 125;
-            const habilitiesWidth = 25;
-            const habilitiesHeight = 30;
-
-            const resistanceX = (canvasWidth / 2) - 65;
-            const doubleJumpX = (canvasWidth / 2) - 123;
-            const dashX =  (canvasWidth / 2) - 95;
-            
-            const temporaryAbilitiesY = canvasHeight - 72;
-            const permanentAbilitiesY = canvasHeight - 45;
-
-            ctx.drawImage(this.damageImage, damageX, temporaryAbilitiesY, habilitiesWidth, habilitiesHeight);
-            ctx.drawImage(this.resistanceImage, resistanceX, temporaryAbilitiesY, habilitiesWidth, habilitiesHeight);
-            
-            if (game.player.canDoubleJump) {
-                ctx.drawImage(this.doubleJumpImage, doubleJumpX, permanentAbilitiesY, habilitiesWidth, habilitiesHeight);
-            }
-            
-            if (game.player.canDash) {
-                ctx.drawImage(this.dashImage, dashX, permanentAbilitiesY, habilitiesWidth, habilitiesHeight);
-            }
-        }
     }
 
     // Start the cinematic sequence
@@ -310,16 +315,35 @@ class Game {
 
     // Pause the game
     pauseGame() {
-        this.state = 'paused';
-        console.log("Juego pausado");
+        selectMusicMenus('paused')
+        // Update the player stats in the database
+        if (game.player.id !== null) {
+            updatePlayerStats(game.player.id);
+            game.eventLabel.show("Guardando el progreso...");
+        }
         this.chronometer.pause();
     }
 
     // Resume the game
     resumeGame() {
-        this.state = 'playing';
-        console.log("Juego resumido");
+        selectMusicMenus('playing')
         this.chronometer.start();
+    }
+
+    // Pause or resume the game
+    togglePause() {
+        this.paused = !this.paused;
+
+        // Update the game state
+        this.state = this.paused ? 'paused' : 'playing';
+
+        // Play the pause sound effect
+        sfx.pause.play();
+
+        // Pause or resume game
+        this.paused ? this.pauseGame() : this.resumeGame();
+
+        console.log(this.paused ? "Juego pausado" : "Juego reanudado");
     }
 
     // Start the game for the first time
@@ -451,6 +475,39 @@ class Game {
         return targetRoomId; // Return the found room ID
     }
 
+    // Increase the stats of the enemies depending on the level of the game
+    adjustDificulty() {
+
+        // Vairable to increase the stats of the enemies
+        let increase;
+
+        // If the player is playing for the first time
+        // increase the enemy stats depending on the level
+        if (this.player.firstTimePlaying) {
+            if (level === 0) {
+                increase = 0;
+            } else if (level === 1) {
+                increase = 20;
+            } else if (level === 2) {
+                increase = 40;
+            }
+        } else {
+            // The difficulty keeps increasing
+            // depending on the level of the player
+            increase = this.player.level * 6;
+        }
+
+        // Increase the stats of the enemies
+        for (let actor of this.level.actors) {
+            if (actor.type === 'enemy' || actor.type === 'boss') {
+                actor.maxHealth += increase;
+                actor.health += increase;
+                actor.damage += increase;
+            }
+        }
+        console.log("Dificultad aumentada en " + increase);
+    }
+
     // Update the game state
     update(deltaTime) {
 
@@ -459,7 +516,6 @@ class Game {
             || this.state === 'abilities'
             || this.state === 'gameover'
             || this.state === 'mainMenu'
-            || this.state === 'login'
             || this.state === 'options') {
             // Pause the game and do not update anything
             this.chronometer.pause(); // Pause the chronometer
@@ -535,13 +591,9 @@ class Game {
             }
 
             if (actor.type != 'floor' && overlapRectangles(this.player, actor)) {
-                //console.log(`Collision of ${this.player.type} with ${actor.type}`);
-                if (actor.type == 'wall') {
-                    //console.log("Hit a wall");
-
-                } else if (actor.type == 'coin' && actor.isCollectible) {
+                if (actor.type == 'coin' && actor.isCollectible) {
                     // Collect the coin
-                    this.player.gainXp(Math.floor(actor.xp_value * xpMultiplier)); // Gain XP
+                    this.player.gainXp(Math.floor(actor.xp_value * xpMultiplier));
                     // Remove the coin from the level string
                     GAME_LEVELS[this.levelNumber] = GAME_LEVELS[this.levelNumber].replace('$', '.');
                     // Remove the coin from the actors list
@@ -551,16 +603,15 @@ class Game {
                     // If the player is attacking, deal damage to the enemy
                     if (this.player.isAttacking) {
                         actor.takeDamage(this.player.damage, this.player.attackCooldown);
-                    }
+
                     // If the player is not attacking, the enemy deals damage to the player
-                    else {
+                    } else {
                         this.player.takeDamage(actor.damage);
                     }
                 } else if (actor.type == 'spikes') { 
-                    if(this.player.isCrouching || this.player.isAttacking) {
-                        continue;
-                    } else {
-                        this.player.takeDamage(10); // Player takes 10 damage
+                    // If the player is neither crouching nor attacking, he takes damage
+                    if(!this.player.isCrouching && !this.player.isAttacking) {
+                        this.player.takeDamage(10);
                     }
                 
                 }  else if (actor.type == 'door' && actor.isOpen) {
@@ -667,102 +718,10 @@ class Game {
         }
     }
 
-    // Draw the game on the canvas
-    draw(ctx, scale) {
-        // If the game is in cinematic or win state, draw the respective images
-        // Ignore the rest of the game
-        if (this.state === 'cinematic') {
-            this.labelSkip.draw(ctx, "Presiona ESPACIO para omitir");
-            this.cinematicImage.draw(ctx, 1);
-            return;
-        } else if (this.state === 'win') {
-            this.winImage.draw(ctx, 1);
-            return;
-        } else if (this.state === 'mainMenu') { 
-            // Draw the main menu
-            this.mainMenu.draw(ctx);
-            return;
-        } else if (this.state === 'login') {
-            // Draw the login menu over the game
-            const loginContainer = document.querySelector('.login-container');
-            loginContainer.style.display = 'block'; // Show the login container
-            // Keep the main menu displayed
-            this.mainMenu.draw(ctx);
-            return;
-        }
-
-        // Draw the background of the level
-        rooms.get(this.levelNumber).background.draw(ctx, 1);
-
-        // First draw the background tiles
-        for (let actor of this.actors) {
-            if (actor.type === 'floor' || actor.type === 'wall') {
-                actor.draw(ctx, scale);
-            }
-        }
-        
-        // Assign the tutorial image depending on the level
-        if (level == 0) {
-            this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial1.png');
-            this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial2.png');
-        } else if (level == 1) {
-            this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial3.png');
-            this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial4.png');
-        } else {
-            this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial5.png');
-            this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial6.png');
-        }
-
-        // Draw the tutorial images and the exit sign
-        if (rooms.get(this.levelNumber).type === "start") {
-            this.tutorial1Image.draw(ctx, 1);
-        } else if (rooms.get(this.levelNumber).type === "second") {
-            this.tutorial2Image.draw(ctx, 1);
-        } else if (rooms.get(this.levelNumber).type === "boss") {
-            this.exitImage.draw(ctx, 1);
-        }
-
-        // Draw the ladders signs
-        // If the player can only go up
-        if (rooms.get(this.levelNumber).type === "ladder1"
-            || rooms.get(this.levelNumber).type === "branch2") {
-            this.ladderUpImage.draw(ctx, 1);
-        }
-        // If the player can go up and down
-        if (rooms.get(this.levelNumber).type === "ladder2") {
-            this.ladderUpImage.draw(ctx, 1);
-            this.ladderDownImage.draw(ctx, 1);
-        }
-        // If the player can only go down
-        if (rooms.get(this.levelNumber).type === "branch1"
-            || rooms.get(this.levelNumber).type === "button") {
-            this.ladderDownImage.draw(ctx, 1);
-        }
-
-        // Draw the projectiles
-        this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
-        this.enemiesProjectiles.forEach(projectile => projectile.draw(ctx, scale));
-    
-        // Then draw the rest of the actors
-        for (let actor of this.actors) {
-            if (actor.type !== 'floor' && actor.type !== 'wall') {
-                actor.draw(ctx, scale);
-
-                // Draw health bar for enemies
-                if (actor.type === 'enemy' || actor.type === 'boss') {
-                    actor.drawHealthBar(ctx, scale);
-                }
-            }
-        }
-
-        // Draw the player on top of everything else
-        if (this.state !== 'gameover') {
-            this.player.draw(ctx, scale);
-        }
-
+    // Draw the UI
+    drawUI(ctx) {
         // Draw the player bars
-        this.playerHealthBar.draw(ctx);
-        this.playerXpBar.draw(ctx);
+        this.drawBars(ctx);
         
         //Draw the weapon backgrounds
         this.drawBackgrounds(ctx);
@@ -771,6 +730,24 @@ class Game {
         this.potionImage.draw(ctx, 1);
         
         // Draw the weapons of the UI
+        this.updateWeaponSprites();
+        this.drawWeapons(ctx);
+
+        // Draw the keyboard input images
+        this.drawKeys(ctx);
+
+        // Draw the abilities
+        this.drawAbilities(ctx);
+
+        // Draw the labels
+        this.drawLabels(ctx);
+
+        // Draw the minimap and chronometer
+        this.topRightMenu.draw(ctx);
+    }
+
+    // Update the weapon sprites depending on the player for the UI
+    updateWeaponSprites() {
         if (this.player.id === null && this.player.firstTimePlaying) {
             if (level === 0) {
                 if (this.player.gunWeapon === null) {
@@ -810,31 +787,206 @@ class Game {
                 this.slowPistolImage.setSprite('../../../Videojuego/assets/objects/gun_2.png');
             }
         }
-        this.drawWeapons(ctx);
+    }
 
-        // Draw the keyboard input images
-        this.drawKeys(ctx);
+    // Draw the bars
+    drawBars(ctx) {
+        this.playerHealthBar.draw(ctx);
+        this.playerXpBar.draw(ctx);
+    }
 
-        // Draw the abilities
-        this.drawAbilities(ctx);
-
-        // Draw the labels
+    // Draw labels
+    drawLabels(ctx) {
         this.labelHP.draw(ctx, `${this.player.health} / ${this.player.maxHealth}`);
         this.labelXP.draw(ctx, `${this.player.xp} / ${this.player.xpToNextLevel}`);
         this.labelLife.draw(ctx, `HP: ${this.player.health}`);
         this.labelLevel.draw(ctx, `LVL: ${this.player.level}`);
         this.labelDamage.draw(ctx, `${this.player.damage}`);
         this.labelResistance.draw(ctx, `${this.player.resistance}`);
+    }
 
-        // Draw the minimap and chronometer
-        this.topRightMenu.draw(ctx);
+    // Draw tutorial, exit and ladder signs
+    drawSigns(ctx) {
+        // Assign the tutorial image depending on the level
+        if (level == 0) {
+            this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial1.png');
+            this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial2.png');
+        } else if (level == 1) {
+            this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial3.png');
+            this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial4.png');
+        } else {
+            this.tutorial1Image.setSprite('../../assets/backgrounds/tutorial5.png');
+            this.tutorial2Image.setSprite('../../assets/backgrounds/tutorial6.png');
+        }
+
+        // Draw the tutorial images and the exit sign
+        if (rooms.get(this.levelNumber).type === "start") {
+            this.tutorial1Image.draw(ctx, 1);
+        } else if (rooms.get(this.levelNumber).type === "second") {
+            this.tutorial2Image.draw(ctx, 1);
+        } else if (rooms.get(this.levelNumber).type === "boss") {
+            this.exitImage.draw(ctx, 1);
+        }
+
+        // Draw the ladders signs
+        // If the player can only go up
+        if (rooms.get(this.levelNumber).type === "ladder1"
+            || rooms.get(this.levelNumber).type === "branch2") {
+            this.ladderUpImage.draw(ctx, 1);
+        }
+        // If the player can go up and down
+        if (rooms.get(this.levelNumber).type === "ladder2") {
+            this.ladderUpImage.draw(ctx, 1);
+            this.ladderDownImage.draw(ctx, 1);
+        }
+        // If the player can only go down
+        if (rooms.get(this.levelNumber).type === "branch1"
+            || rooms.get(this.levelNumber).type === "button") {
+            this.ladderDownImage.draw(ctx, 1);
+        }
+    }
+
+    // Draw the selection backgrounds for the weapons in the UI
+    drawBackgrounds(ctx) {
+        const weaponPositions = [
+            { x: (canvasWidth / 2) - 387, y: canvasHeight - 78 }, // Arm background
+            { x: (canvasWidth / 2) - 307, y: canvasHeight - 78 }, // Pistol background
+            { x: (canvasWidth / 2) - 227, y: canvasHeight - 78 }  // Potion background
+        ];
+
+        // Draw weapon backgrounds
+        weaponPositions.forEach((pos) => {
+            this.weaponBackgroundImage.position = new Vec(pos.x, pos.y);
+            this.abilitiesBackgroundImage.draw(ctx,1);
+            this.weaponBackgroundImage.draw(ctx, 1);
+        });
+
+        this.weaponBackgroundImage.draw(ctx,1);
+
+        // Draw weapon selection highlight
+        if (game.player.selectedWeapon === 1) {
+            this.weaponSelectionImage.position = new Vec(weaponPositions[0].x, weaponPositions[0].y);
+            this.weaponSelectionImage.draw(ctx, 1);
+        } else if (game.player.selectedWeapon === 2) {
+            this.weaponSelectionImage.position = new Vec(weaponPositions[1].x, weaponPositions[1].y);
+            this.weaponSelectionImage.draw(ctx, 1);
+        }
+        else if (game.player.selectedWeapon === 3) {
+            this.weaponSelectionImage.position = new Vec(weaponPositions[2].x, weaponPositions[2].y);
+            this.weaponSelectionImage.draw(ctx, 1);
+        }
+    }
+
+    // Draw the keyboard input images in the UI
+    drawKeys(ctx) {
+        this.key1Image.draw(ctx, 1);
+        this.key2Image.draw(ctx, 1);
+        this.key3Image.draw(ctx, 1);
+    }
+    
+    // Draw the weapons in the UI
+    drawWeapons(ctx) {
+        this.armImage.draw(ctx, 1);
+        this.slowPistolImage.draw(ctx, 1);
+    };
+    
+    // Draw the abilities signs in the UI
+    drawAbilities(ctx) {
+        const damageX = (canvasWidth / 2) - 125;
+        const habilitiesWidth = 25;
+        const habilitiesHeight = 30;
+
+        const resistanceX = (canvasWidth / 2) - 65;
+        const doubleJumpX = (canvasWidth / 2) - 123;
+        const dashX =  (canvasWidth / 2) - 95;
+        
+        const temporaryAbilitiesY = canvasHeight - 72;
+        const permanentAbilitiesY = canvasHeight - 45;
+
+        ctx.drawImage(
+            this.damageImage,
+            damageX, temporaryAbilitiesY,
+            habilitiesWidth, habilitiesHeight);
+        ctx.drawImage(
+            this.resistanceImage,
+            resistanceX, temporaryAbilitiesY,
+            habilitiesWidth, habilitiesHeight);
+        
+        if (game.player.canDoubleJump) {
+            ctx.drawImage(
+                this.doubleJumpImage,
+                doubleJumpX, permanentAbilitiesY,
+                habilitiesWidth, habilitiesHeight);
+        }
+        
+        if (game.player.canDash) {
+            ctx.drawImage(
+                this.dashImage,
+                dashX, permanentAbilitiesY,
+                habilitiesWidth, habilitiesHeight);
+        }
+    }
+
+    // Draw the game on the canvas
+    draw(ctx, scale) {
+        // If the game is in a menu, draw it
+        // Ignore the rest of the game
+        if (this.state === 'cinematic') {
+            this.labelSkip.draw(ctx, "Presiona ESPACIO para omitir");
+            this.cinematicImage.draw(ctx, 1);
+            return;
+        } else if (this.state === 'win') {
+            this.winImage.draw(ctx, 1);
+            return;
+        } else if (this.state === 'mainMenu') { 
+            // Draw the main menu
+            this.mainMenu.draw(ctx);
+            return;
+        }
+
+        // First draw the background of the level
+        rooms.get(this.levelNumber).background.draw(ctx, 1);
+
+        // Draw the floor and walls
+        for (let actor of this.actors) {
+            if (actor.type === 'floor' || actor.type === 'wall') {
+                actor.draw(ctx, scale);
+            }
+        }
+        
+        // Draw tutorial, exit and ladder signs
+        this.drawSigns(ctx);
+
+        // Draw the projectiles
+        this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
+        this.enemiesProjectiles.forEach(projectile => projectile.draw(ctx, scale));
+    
+        // Then draw the rest of the actors
+        for (let actor of this.actors) {
+            if (actor.type !== 'floor' && actor.type !== 'wall') {
+                actor.draw(ctx, scale);
+
+                // Draw health bar for enemies
+                if (actor.type === 'enemy' || actor.type === 'boss') {
+                    actor.drawHealthBar(ctx, scale);
+                }
+            }
+        }
+
+        // Draw the player on top of everything else
+        if (this.state !== 'gameover') {
+            this.player.draw(ctx, scale);
+        }
+
+        // Draw the UI
+        this.drawUI(ctx);
 
         // Draw the lock image for the boss door
         if (this.levelNumber === 4 && !this.isButtonPressed) {
             this.lockImage.draw(ctx, 1);
         }
 
-        // Draw menus and popups
+        // Draw ingame menus and popups
         if (this.state === 'paused') {
             // Pause the game and do not update anything
             this.pauseMenu.draw(ctx);
@@ -845,67 +997,6 @@ class Game {
             // Draw the game over menu
             this.looseMenu.draw(ctx);
         }
-    }
-    
-    // Pause or resume the game
-    togglePause() {
-        this.paused = !this.paused;
-
-        // Update the game state
-        this.state = this.paused ? 'paused' : 'playing';
-
-        // Play the pause sound effect
-        sfx.pause.play();
-
-        // Pause or resume game
-        if(this.paused){
-            selectMusicMenus('paused')
-            // Update the player stats in the database
-            if (game.player.id !== null) {
-                updatePlayerStats(game.player.id);
-                game.eventLabel.show("Guardando el progreso...");
-            }
-            this.chronometer.pause();
-        } else{
-            selectMusicMenus('playing')
-            this.chronometer.start();
-        }
-
-        console.log(this.paused ? "Juego pausado" : "Juego reanudado");
-    }
-
-    // Increase the stats of the enemies depending on the level of the game
-    adjustDificulty() {
-
-        // Vairable to increase the stats of the enemies
-        let increase;
-
-        // If the player is playing for the first time
-        // increase the enemy stats depending on the level
-        if (this.player.firstTimePlaying) {
-            if (level === 0) {
-                increase = 0;
-            } else if (level === 1) {
-                increase = 20;
-            } else if (level === 2) {
-                increase = 40;
-            }
-        } else {
-            // The difficulty keeps increasing
-            // depending on the level of the player
-            increase = this.player.level * 6;
-        }
-
-        // Increase the stats of the enemies
-        for (let actor of this.level.actors) {
-            if (actor.type === 'enemy' || actor.type === 'boss') {
-                actor.maxHealth += increase;
-                actor.health += increase;
-                actor.damage += increase;
-            }
-        }
-
-        console.log("Dificultad aumentada en " + increase);
     }
 }
 
@@ -1329,76 +1420,136 @@ function setEventListeners() {
 
     // Mouse click event
     canvas.addEventListener("click", event => {
-        if (game.state === 'mainMenu') {
-            const mouseX = getMousePosition(event).x;
-            const mouseY = getMousePosition(event).y;
-            game.mainMenu.checkClick(mouseX, mouseY);
+
+        if (game.state === 'playing') {
+            return; // Ignore clicks in the game
         }
-        if (game.state === 'signUp') {
-            const mouseX = getMousePosition(event).x;
-            const mouseY = getMousePosition(event).y;
-            game.signUpMenu.checkClick(mouseX, mouseY);
-        }
-        if (game.state === 'paused') {
-            const mouseX = getMousePosition(event).x;
-            const mouseY = getMousePosition(event).y;
-            game.pauseMenu.checkClick(mouseX, mouseY);
-        }
-        if (game.state === 'gameover') {
-            const mouseX = getMousePosition(event).x;
-            const mouseY = getMousePosition(event).y;
-            game.looseMenu.checkClick(mouseX, mouseY);
-        }
-        if (game.state === 'abilities') {
-            const mouseX = getMousePosition(event).x;
-            const mouseY = getMousePosition(event).y;
-            game.abilities.checkClick(mouseX, mouseY);
-            game.abilities.isSelected = true;
-            game.abilities.hide();
-            game.chronometer.start(); // Resume the chronometer
-            game.state = 'playing'; // Resume the game
+
+        // Get the mouse position
+        const mouseX = getMousePosition(event).x;
+        const mouseY = getMousePosition(event).y;
+
+        // Check if the mouse is clicking on a button
+        switch (game.state) {
+            case 'mainMenu':
+                game.mainMenu.checkClick(mouseX, mouseY);
+                break;
+            case 'signUp':
+                game.signUpMenu.checkClick(mouseX, mouseY);
+                break;
+            case 'paused':
+                game.pauseMenu.checkClick(mouseX, mouseY);
+                break;
+            case 'gameover':
+                game.looseMenu.checkClick(mouseX, mouseY);
+                break;
+            case 'abilities':
+                game.abilities.checkClick(mouseX, mouseY);
+                game.abilities.isSelected = true;
+                game.abilities.hide();
+                game.chronometer.start(); // Resume the chronometer
+                game.state = 'playing'; // Resume the game
+                break;
+            default:
+                break;
         }
     });
 
     // Mouse move event
     canvas.addEventListener("mousemove", event => {
-        if (game.state === 'mainMenu') {
-            const mouseX = getMousePosition(event).x;
-            const mouseY = getMousePosition(event).y;
-            game.mainMenu.checkHover(mouseX, mouseY);
+
+        // Ignore mouse movement in certain states
+        if (game.state === 'playing'
+            || game.state === 'win'
+            || game.state === 'cinematic') {
+            return;
         }
-        if( game.state === 'signUp') {
-            const mouseX = getMousePosition(event).x;
-            const mouseY = getMousePosition(event).y;
-            game.signUpMenu.checkHover(mouseX, mouseY);
-        }
-        if (game.state === 'paused') {
-            const mouseX = getMousePosition(event).x;
-            const mouseY = getMousePosition(event).y;
-            game.pauseMenu.checkHover(mouseX, mouseY);
-        }
-        if (game.state === 'gameover') {
-            const mouseX = getMousePosition(event).x;
-            const mouseY = getMousePosition(event).y;
-            game.looseMenu.checkHover(mouseX, mouseY);
-        }
-        if (game.state === 'abilities') {
-            const mouseX = getMousePosition(event).x;
-            const mouseY = getMousePosition(event).y;
-            game.abilities.checkHover(mouseX, mouseY);
+
+        // Get the mouse position
+        const mouseX = getMousePosition(event).x;
+        const mouseY = getMousePosition(event).y;
+
+        // Check if the mouse is hovering over a button
+        switch (game.state) {
+            case 'mainMenu':
+                game.mainMenu.checkHover(mouseX, mouseY);
+                break;
+            case 'signUp':
+                game.signUpMenu.checkHover(mouseX, mouseY);
+                break;
+            case 'paused':
+                game.pauseMenu.checkHover(mouseX, mouseY);
+                break;
+            case 'gameover':
+                game.looseMenu.checkHover(mouseX, mouseY);
+                break;
+            case 'abilities':
+                game.abilities.checkHover(mouseX, mouseY);
+                break;
+            default:
+                break;
         }
     });
 
-    // Login button click event
+    // Quit menu buttons
+
     // Quit login button
     document.getElementById('backButtonLogin').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
-        // Hide the login container after login
-        game.state = 'mainMenu';
-        // Hide the login container
-        const loginContainer = document.querySelector('.login-container');
-        loginContainer.style.display = 'none';
+        game.loginMenu.hide(); // Hide the login menu
     });
+
+    // Quit options button
+    document.getElementById('backButtonOptions').addEventListener('click', function(event) {
+        sfx.click.play(); // Play the click sound
+        game.optionsMenu.hide(); // Hide the options menu
+    });
+
+    // Quit stats button
+    document.getElementById('backButtonStats').addEventListener('click', function(event) {
+        sfx.click.play(); // Play the click sound
+        game.statsMenu.hide(); // Hide the options menu
+    });
+
+    // Login buttons
+
+    // Login button
+    document.getElementById("loginButton").addEventListener("click", async (event) => {
+        // Prevent the page from refreshing
+        event.preventDefault();
+        
+        // Get the values of the username and password fields
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        // Get the login message element
+        const loginMessage = document.getElementById("loginMessage");
+        // Get the username label element
+        const usernameLabel = document.getElementById("usernameLabel");
+    
+        // Check if the username and password are not empty
+        if (username && password) {
+            const result = await getPlayer(username, password);
+            if (result) {
+                // Change the loginMessage from the container
+                loginMessage.textContent = "Sesión iniciada como: " + username;
+                usernameLabel.textContent = "Sesión iniciada como: " + username;
+            } else {
+                loginMessage.textContent = "Usuario o contraseña incorrectos";
+            }
+            game.state = "mainMenu";
+        } else {
+            loginMessage.textContent = "Error al iniciar sesión. Completa todos los campos";
+        }
+
+        // Clear the input fields
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+
+        // Hide the login menu
+        game.loginMenu.hide();
+    });
+
     // Register button
     document.getElementById("registerButton").addEventListener("click", async (event) => {
         // Prevent the page from refreshing
@@ -1456,64 +1607,13 @@ function setEventListeners() {
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
 
-        // Hide the login container
-        const loginContainer = document.querySelector('.login-container');
-        loginContainer.style.display = 'none';
+        // Hide the login menu
+        game.loginMenu.hide();
     });
-    // Login button
-    document.getElementById("loginButton").addEventListener("click", async (event) => {
-        // Prevent the page from refreshing
-        event.preventDefault();
-        
-        // Get the values of the username and password fields
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-
-        // Get the login message element
-        const loginMessage = document.getElementById("loginMessage");
-        // Get the username label element
-        const usernameLabel = document.getElementById("usernameLabel");
     
-        // Check if the username and password are not empty
-        if (username && password) {
-            const result = await getPlayer(username, password);
-            if (result) {
-                // Change the loginMessage from the container
-                loginMessage.textContent = "Sesión iniciada como: " + username;
-                usernameLabel.textContent = "Sesión iniciada como: " + username;
-            } else {
-                loginMessage.textContent = "Usuario o contraseña incorrectos";
-            }
-            game.state = "mainMenu";
-        } else {
-            loginMessage.textContent = "Error al iniciar sesión. Completa todos los campos";
-        }
+    // Stats buttons
 
-        // Clear the input fields
-        document.getElementById("username").value = "";
-        document.getElementById("password").value = "";
-
-        // Hide the login container
-        const loginContainer = document.querySelector('.login-container');
-        loginContainer.style.display = 'none';
-    });
-
-    // Options button click event
-    // Quit options button
-    document.getElementById('backButtonOptions').addEventListener('click', function(event) {
-        sfx.click.play(); // Play the click sound
-        // Hide the options container
-        game.optionsMenu.hide(); // Hide the options menu
-    });
-
-    document.getElementById('backButtonStats').addEventListener('click', function(event) {
-        sfx.click.play(); // Play the click sound
-        // Hide the options container
-        game.statsMenu.hide(); // Hide the options menu
-    });
-
-    // Stats button click event
-
+    // Player stats
     document.getElementById('statsPlayer').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
         // Show the table 
@@ -1528,6 +1628,7 @@ function setEventListeners() {
         }
     });
 
+    // Global stats
     document.getElementById('statsGlobal').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
         // Show the table 
@@ -1536,6 +1637,7 @@ function setEventListeners() {
         drawCharts('global');
     });
 
+    // Top stats
     document.getElementById('statsTop').addEventListener('click', function(event) {
         sfx.click.play(); // Play the click sound
         // Show the table
@@ -1543,6 +1645,8 @@ function setEventListeners() {
         // Show the charts
         drawCharts('top');
     });
+
+    // Options buttons
 
     // Apply button for the options menu
     document.getElementById('applyButton').addEventListener('click', function(event) {
