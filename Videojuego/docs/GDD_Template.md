@@ -724,6 +724,18 @@ También se cuenta con animaciones para todas las variantes de armas que el juga
 
 ![Robot áereo Sprite-Sheet](img/robot_fly_x16.png)
 
+**Jefe 1:**
+
+![Jefe 1](img/tortutron_mov.gif)
+
+![Jefe 1 Sprite-Sheet](img/tortutron.png)
+
+**Jefe 2:**
+
+![Jefe 2](img/espadatron_mov.gif)
+
+![Jefe 2 Sprite-Sheet](img/espadatron.png)
+
 **Jefe Final:**
 
 ![Jefe Final](img/robot_boss.gif)
@@ -764,9 +776,13 @@ Los niveles cuentan con una estructura lineal con 1 o 2 bifurcaciones en salas i
 
 **Arma a distancia:** Pistola láser rápida. Esta arma se desbloquea al completar el tercer nivel y aumenta el daño del jugador en un 40%.
 
-![Poción](img/healing.png)
+![Batería](img/bateria_llena.png)
 
-**Poción de curación:** Es un fluido rojo en un contenedor de laboratorio. Recupera 50% de la salud del jugador. Se recarga al completar un nivel y solo se puede utilizar una vez por cada uno.
+**Bateria:** Es una batería verde. Recupera 50% de la salud del jugador. Se recarga al completar un nivel y solo se puede utilizar una vez por cada uno.
+
+![Batería vacia](img/bateria_vacia.png)
+
+**Bateria vacia:** Es una batería vacia. El estado vacio de la batería, no se puede recargar hasta el siguiente nivel.
 
 ![Items](img/xp_orb.png)
 
