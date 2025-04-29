@@ -622,6 +622,9 @@ class SwordEnemy extends Enemy {
         let moved = 0;
         let step = dashSpeed * deltaTime;
 
+        // Create a particle effect
+        new Particle("gray", 100, 100, 0, 0,"particle", this);
+
         // Play the dash animation
         let dashData = this.movement.dash;
         if(!this.hasDashAnimationPlayed){

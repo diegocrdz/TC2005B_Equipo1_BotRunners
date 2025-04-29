@@ -8,7 +8,7 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 25/04/2025
+ * Date: 29/04/2025
 */
 
 "use strict";
@@ -551,7 +551,7 @@ class Game {
         this.enemiesProjectiles.forEach(projectile => projectile.update(this.level, deltaTime));
         
         // Update particles
-        this.particles.forEach(particle => particle.update(deltaTime));
+        this.particles.forEach(particle => particle.update(this.level, deltaTime));
 
         // Update player bars
         this.playerHealthBar.update(this.player.health, this.player.maxHealth);
