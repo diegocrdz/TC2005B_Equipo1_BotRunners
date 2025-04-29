@@ -58,6 +58,9 @@ class Game {
         this.projectiles = []; // Player
         this.enemiesProjectiles = []; // Enemies
 
+        // List of particles
+        this.particles = []; // Particles left by the player after dashing
+
         this.loadMenus();
         this.loadBars();
         this.loadLabels();
@@ -380,6 +383,19 @@ class Game {
         }
     }
 
+    // Add particles to the game
+    addParticle(particle) {
+        this.particles.push(particle);
+    }
+
+    // Remove particles from the game
+    removeParticle(particle) {
+        const index = this.particles.indexOf(particle);
+        if (index > -1) {
+            this.particles.splice(index, 1);
+        }
+    }
+
     // Function to load a specific level
     moveToLevel(levelNumber, playerPositionX, playerPositionY) {
 
@@ -533,6 +549,9 @@ class Game {
         // Update projectiles
         this.projectiles.forEach(projectile => projectile.update(this.level, deltaTime));
         this.enemiesProjectiles.forEach(projectile => projectile.update(this.level, deltaTime));
+        
+        // Update particles
+        this.particles.forEach(particle => particle.update(deltaTime));
 
         // Update player bars
         this.playerHealthBar.update(this.player.health, this.player.maxHealth);
@@ -960,6 +979,9 @@ class Game {
         // Draw the projectiles
         this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
         this.enemiesProjectiles.forEach(projectile => projectile.draw(ctx, scale));
+
+        // Draw the particles
+        this.particles.forEach(particle => particle.draw(ctx, 1));
     
         // Then draw the rest of the actors
         for (let actor of this.actors) {

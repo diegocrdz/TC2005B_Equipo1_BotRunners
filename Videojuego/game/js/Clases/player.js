@@ -78,7 +78,7 @@ class Player extends AnimatedObject {
         this.xpToNextLevel = 100;
         this.level = 0;
         this.canDoubleJump = false;
-        this.canDash = false;
+        this.canDash = true;
         this.damage = 20;
         this.baseDamage = 20;
 
@@ -124,13 +124,21 @@ class Player extends AnimatedObject {
 
         // Hitbox properties
         this.offsetX = 0.5;
-        this.offsetY = 1;
-        this.hWidth = this.size.x + 1;
+        this.offsetY = 0.9;
+        this.hWidth = this.size.x + 0.6;
         this.hHeight = this.size.y + 1;
     }
 
     update(level, deltaTime) {
         // Update the hitbox
+        if (!this.isAttacking) {
+            if (this.isFacingRight) {
+                this.offsetX = 0.5;
+    
+            } else {
+                this.offsetX = 0.9;
+            }
+        }
         this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
 
         // Make the character fall constantly because of gravity
@@ -347,6 +355,13 @@ class Player extends AnimatedObject {
     
             dashMove(); // Initiates animated dash
             sfx.dash.play(); // Play the dash sound
+
+            // Create particles for the dash effect
+            new Particle(
+                "gray", 10, 10,
+                this.position.x,
+                this.position.y,
+                "particle");
             
             // Set a timeout to reset the dash state
             setTimeout(() => {
@@ -368,14 +383,17 @@ class Player extends AnimatedObject {
         this.size.x = 4; // Adjust the size to match the new sprite
 
         // Change hitbox size
-        this.hWidth += 2;
+        let hitboxWidth = 2.4;
+        this.hWidth += hitboxWidth;
 
         if (this.isFacingRight) {
             this.setAnimation(...attackData.right, attackData.repeat, attackData.duration);
+            // Move the hitbox to the right
+            this.offsetX = 0.5;
         } else {
             this.setAnimation(...attackData.left, attackData.repeat, attackData.duration);
             // Move the hitbox to the left
-            this.offsetX -= 1;
+            this.offsetX = -0.4;
         }
 
         // Update hit counter
@@ -387,8 +405,7 @@ class Player extends AnimatedObject {
             // Restore the original sprite and rect
             this.setSprite(this.meleeSprite, new Rect(0, 0, 24, 24));
             // Restore hitbox size and position
-            this.hWidth -= 2;
-            this.offsetX = 0.5;
+            this.hWidth -= hitboxWidth;
             // Restore the animation to idle
             const leftData = this.movement["left"];
             const rightData = this.movement["right"];
