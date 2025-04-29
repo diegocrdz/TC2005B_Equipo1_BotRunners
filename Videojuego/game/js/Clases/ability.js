@@ -65,42 +65,65 @@ class Ability{
 
 // Global list of abilities
 // This list is used to generate the random abilities in the popUpAbility class
-let abilitiesList = [
-    new Ability('health', 
-                'Vida +20', 
-                'Recupera 20 puntos de vida', 
-                '../../../Videojuego/assets/objects/health.png'),
+let abilitiesList = []
 
-    new Ability('damage',
-                'Daño +5',
-                'Aumenta tu daño en 5 puntos',
-                '../../../Videojuego/assets/objects/ui_damage.png'),
-
-    new Ability('resistance',
-                'Resistencia +10',
-                'Aumenta tu resistencia en 10 puntos',
-                '../../../Videojuego/assets/objects/ui_resistance.png'),
+// Function to initialize the abilities list
+function initAbilitiesList() {
+    // Empty the abilities list
+    abilitiesList = [];
     
-    new Ability('xp',
-                'XP+',
-                'Los orbes dan más experiencia',
-                '../../../Videojuego/assets/objects/xp_orb.png'),
+    // Create abilities
+    let ability1 = new Ability(
+        'health', 
+        'Vida +20', 
+        'Recupera 20 puntos de vida', 
+        '../../../Videojuego/assets/objects/health.png');
 
-    new Ability('cooldown',
-                'Recarga',
-                'Aumenta la velocidad de ataque de tus armas durante este nivel',
-                '../../../Videojuego/assets/objects/melee_1.png'),
+    let ability2 = new Ability(
+        'damage',
+        'Daño +5',
+        'Aumenta tu daño en 5 puntos',
+        '../../../Videojuego/assets/objects/ui_damage.png');
 
-    new Ability('doubleJump',
-                'Doble Salto',
-                'Al presionar dos veces W, podrás realizar un segundo salto en el aire!',
-                '../../../Videojuego/assets/objects/ui_doublejump.png'),
+    let ability3 = new Ability(
+        'resistance',
+        'Resistencia +10',
+        'Aumenta tu resistencia en 10 puntos',
+        '../../../Videojuego/assets/objects/ui_resistance.png');
+    
+    let ability4 = new Ability(
+        'xp',
+        'XP+',
+        'Los orbes dan más experiencia',
+        '../../../Videojuego/assets/objects/xp_orb.png');
 
-    new Ability('dash',
-                'Dash',
-                'Al presionar SHIFT o E, podrás desplazarte rápidamente',
-                '../../../Videojuego/assets/objects/ui_dash.png'),         
-]
+    let ability5 = new Ability(
+        'cooldown',
+        'Recarga',
+        'Aumenta la velocidad de ataque de tus armas durante este nivel',
+        '../../../Videojuego/assets/objects/melee_1.png');
+
+    let ability6 = new Ability(
+        'doubleJump',
+        'Doble Salto',
+        'Al presionar dos veces W, podrás realizar un segundo salto en el aire!',
+        '../../../Videojuego/assets/objects/ui_doublejump.png');
+
+    let ability7 = new Ability(
+        'dash',
+        'Dash',
+        'Al presionar SHIFT o E, podrás desplazarte rápidamente',
+        '../../../Videojuego/assets/objects/ui_dash.png');
+    
+    // Add abilities to the list
+    abilitiesList.push(ability1);
+    abilitiesList.push(ability2);
+    abilitiesList.push(ability3);
+    abilitiesList.push(ability4);
+    abilitiesList.push(ability5);
+    abilitiesList.push(ability6);
+    abilitiesList.push(ability7);
+}
 
 // Global list of colors
 // This list is used to generate the random colors in the popUpAbility class
