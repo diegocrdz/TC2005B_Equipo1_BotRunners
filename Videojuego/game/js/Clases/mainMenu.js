@@ -6,8 +6,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 11/04/2025
+ * Date: 25/04/2025
 */
+
+"use strict";
 
 // Define the main menu for the game
 class MainMenu extends GameObject {
@@ -142,7 +144,7 @@ class MainMenu extends GameObject {
                 }
                 break;
             case "login":
-                game.state = "login";
+                game.loginMenu.show();
                 break;
             default:
                 break;

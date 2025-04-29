@@ -6,8 +6,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 24/04/2025
 */
+
+"use strict";
 
 // Doors used to move between rooms
 class Door extends GameObject {

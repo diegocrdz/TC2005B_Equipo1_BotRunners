@@ -6,8 +6,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 24/04/2025
 */
+
+"use strict";
 
 // Generic enemy class
 class Enemy extends AnimatedObject {
@@ -25,6 +27,13 @@ class Enemy extends AnimatedObject {
 
         this.speed = 0;
         this.velocity = new Vec(this.speed, 0.0);
+
+        // Flag to start the movement
+        this.isActive = false;
+        // Wait a short time before starting the movement
+        setTimeout(() => {
+            this.isActive = true;
+        }, 200);
 
         // Movement variables to define directions and animations
         this.movement = {
@@ -80,6 +89,9 @@ class Enemy extends AnimatedObject {
 
     // Make the enemy move horizontally
     moveHorizontally(level, deltaTime) {
+        // If the enemy is not active, do not move
+        if (!this.isActive) return;
+
         const newXPosition = this.position.plus(new Vec(this.velocity.x * deltaTime, 0));
         if (!level.contact(newXPosition, this.size, 'wall')
             && !level.contact(newXPosition, this.size, 'box')) {
@@ -101,19 +113,22 @@ class Enemy extends AnimatedObject {
     followPlayer(level, deltaTime) {
         const playerToRight = level.player.position.x > this.position.x;
 
-        if (playerToRight) {
-            if (!this.isFacingRight) {
-                this.isFacingRight = true;
-                this.startMovement("right");
+        setTimeout(() => {
+
+            if (playerToRight) {
+                if (!this.isFacingRight) {
+                    this.isFacingRight = true;
+                    this.startMovement("right");
+                }
+                this.velocity.x = Math.abs(this.speed); // Move right
+            } else {
+                if (this.isFacingRight) {
+                    this.isFacingRight = false;
+                    this.startMovement("left");
+                }
+                this.velocity.x = -Math.abs(this.speed); // Move left
             }
-            this.velocity.x = Math.abs(this.speed); // Move right
-        } else {
-            if (this.isFacingRight) {
-                this.isFacingRight = false;
-                this.startMovement("left");
-            }
-            this.velocity.x = -Math.abs(this.speed); // Move left
-        }
+        }, 200); // Delay to avoid immediate direction change
     }
 
     // Make the enemy move vertically
@@ -151,6 +166,9 @@ class Enemy extends AnimatedObject {
 
     // Start the movement in a specific direction
     startMovement(direction) {
+        // If the enemy is not active, do not move
+        if (!this.isActive) return;
+
         const dirData = this.movement[direction];
         dirData.status = true;
         this.velocity[dirData.axis] = dirData.sign * this.speed;
@@ -211,6 +229,7 @@ class Enemy extends AnimatedObject {
         } else if (this.type === "boss") {
             GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('X', '.');
             GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('O', '.');
+            GAME_LEVELS[game.levelNumber] = GAME_LEVELS[game.levelNumber].replace('Z', '.');
         }
 
         // Update the player statistics
@@ -275,7 +294,7 @@ class HeavyEnemy extends Enemy {
         this.damage = 25;
         this.xp_reward = 20;
 
-        this.speed = 0.0005;
+        this.speed = 0.002;
         this.velocity = new Vec(this.speed, 0);
     }
 }
@@ -292,7 +311,7 @@ class FlyingEnemy extends Enemy {
         this.damage = 10;
         this.xp_reward = 15;
 
-        this.speed = 0.002;
+        this.speed = 0.004;
         this.velocity = new Vec(this.speed, 0);
     }
 
@@ -315,7 +334,7 @@ class TurtleEnemy extends Enemy {
         this.damage = 30;
         this.xp_reward = 100;
 
-        this.speed = 0.001;
+        this.speed = 0.002;
         this.velocity = new Vec(this.speed, 0);
 
         this.state = "open"; // State of the turtle (open or closed)
@@ -380,10 +399,12 @@ class TurtleEnemy extends Enemy {
         this.updateFrame(deltaTime);
     }
 
+    // Make the turtle close and shoot projectiles
     close(){
         this.isImmortal = true;
         this.damage = 2;
 
+        // Set the animation
         if(!this.hasClosedAnimationPlayed){
             const closeData = this.movement.closed;
         
@@ -399,6 +420,7 @@ class TurtleEnemy extends Enemy {
             this.hasOpenAnimationPlayed = false;
         }
         
+        // Create and shoot projectiles
         if(!this.isShooting){
             this.isShooting = true;
             sfx.turtleShoot.play();
@@ -440,6 +462,7 @@ class TurtleEnemy extends Enemy {
         }, 5000); // Change state every 5 seconds
     }
 
+    // Make the turtle open and follow the player
     open(level, deltaTime){
         this.isImmortal = false; // Make the turtle vulnerable again
         this.damage = 30; // Reset the damage value
@@ -462,6 +485,7 @@ class TurtleEnemy extends Enemy {
         }, 5000); // Change state every 5 seconds
     }
 
+    // Play the hit animation
     hit() {
         if (this.isHit) return; // Prevent re-triggering the hit animation if already playing
     
@@ -484,6 +508,7 @@ class TurtleEnemy extends Enemy {
         }, hitData.duration * 2); // 2 times the duration of the hit animation
     }
     
+    // If the turtle is immortal, it won't take damage
     takeDamage(amount, cooldown) {
         if (this.isInvulnerable || this.isImmortal) return;
         
@@ -500,7 +525,7 @@ class TurtleEnemy extends Enemy {
             }, cooldown); // Cooldown period
         }
     }
-
+    
     playDieSound(){
         sfx.bossDie.play();
     }
@@ -597,6 +622,9 @@ class SwordEnemy extends Enemy {
         let moved = 0;
         let step = dashSpeed * deltaTime;
 
+        // Create a particle effect
+        new Particle("gray", 100, 100, 0, 0,"particle", this);
+
         // Play the dash animation
         let dashData = this.movement.dash;
         if(!this.hasDashAnimationPlayed){
@@ -688,6 +716,7 @@ class BossEnemy extends Enemy {
         if (this.health < this.maxHealth * 0.8
             && this.velocity.y === 0
             && !this.isJumping) {
+            this.speed = 0.006; // Increase speed while jumping
             this.velocity.y = -0.039; // Make the boss jump if on the ground
             this.isJumping = true; // Set the jumping flag
             setTimeout(() => {

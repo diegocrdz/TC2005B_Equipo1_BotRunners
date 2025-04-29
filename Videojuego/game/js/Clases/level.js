@@ -6,8 +6,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 25/04/2025
 */
+
+"use strict";
 
 // Class to initialize all the actors in the game
 class Level {
@@ -108,35 +110,26 @@ class Level {
 
                 } else if (actor.type == "box") {
                     item.sprite = this.getBoxForLevel();
-                    actor.setSprite(item.sprite, item.rect);
-                    this.actors.push(actor);
-                    cellType = "box";
+                    this.assignActor(actor, item, "box");
                     
                 } else if(actor.type == "end_pipe") {
                     actor.setSprite(item.sprite, item.rect);
                     this.actors.push(actor);
                     cellType = "wall";
+                    this.assignActor(actor, item, "wall");
 
                 }   else if(actor.type == "start_pipe"){
-                    actor.setSprite(item.sprite, item.rect);    
-                    this.actors.push(actor);
-                    cellType = "wall";
+                    this.assignActor(actor, item, "wall");
 
                 }else if(actor.type == "spikes"){
-                    actor.setSprite(item.sprite, item.rect);
-                    this.actors.push(actor);
-                    cellType = "spikes";
+                    this.assignActor(actor, item, "spikes");
 
                 }else if (actor.type == "ladder") {
                     item.sprite = this.getLadderForLevel();
-                    actor.setSprite(item.sprite, item.rect);
-                    this.actors.push(actor);
-                    cellType = "empty";
+                    this.assignActor(actor, item, "empty");
 
                 } else if (actor.type == "button") {
-                    actor.setSprite(item.sprite, item.rect);
-                    this.actors.push(actor);
-                    cellType = "empty";
+                    this.assignActor(actor, item, "empty");
                 }
                 return cellType;
             });
@@ -150,6 +143,13 @@ class Level {
                 door.direction = door.position.x < this.player.position.x ? "left" : "right";
             });
         }
+    }
+
+    // Assign an actor
+    assignActor(actor, item, cellType) {
+        actor.setSprite(item.sprite, item.rect);
+        this.actors.push(actor);
+        return cellType;
     }
 
     // Define the colors and sprites for each level
@@ -221,20 +221,6 @@ class Level {
     randomTile(xStart, xRange, y, rectX, rectY) {
         let tile = Math.floor(Math.random() * xRange + xStart);
         return new Rect(tile, y, rectX, rectY);
-    }
-
-    // Randomize the environment for each level
-    // This function is currently not used, but it is here for future use
-    randomEvironment(rnd) {
-        let rect;
-        if (rnd < 0.33) {
-            rect = this.randomTile(1, 10, 6);    // yellow marble
-        } else if (rnd < 0.66) {
-            rect = this.randomTile(1, 12, 16);     // green marble with carvings
-        } else {
-            rect = this.randomTile(21, 12, 16);  // brown and yellow pebbles
-        }
-        return rect;
     }
 
     // Detect when the player touches a wall

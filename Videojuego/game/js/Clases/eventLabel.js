@@ -6,11 +6,12 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 24/04/2025
 */
 
 "use strict";
 
+// Class that defines the label that appears to notify the user of any event
 class EventLabel {
     constructor() {
         this.labelContainer = document.getElementById("eventLabel");
@@ -19,15 +20,18 @@ class EventLabel {
         this.canBeShown = true;
     }
 
+    // Show the label with the specified text
     show(text) {
         if (!this.canBeShown) { return; } // If the label should not be shown, exit the function
 
         // If the label is already visible, wait for it to hide before showing it again
         if (this.labelContainer.classList.contains("show")) {
-            this.hide();
             setTimeout(() => {
-                this.show(text);
-            }, 500);
+                this.hide();
+                setTimeout(() => {
+                    this.show(text);
+                }, 500); // Wait before showing the new label
+            }, 500); // Wait before hiding the current label
             return;
         }
 
@@ -43,6 +47,7 @@ class EventLabel {
         }, this.duration);
     }
 
+    // Hide the label
     hide() {
         // Remove the show class to trigger the css animation
         this.labelContainer.classList.remove("show");

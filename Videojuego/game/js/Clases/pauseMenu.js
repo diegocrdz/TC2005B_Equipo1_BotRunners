@@ -6,8 +6,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 24/04/2025
 */
+
+"use strict";
 
 // Class that represents the pause menu
 class PauseMenu extends GameObject {
@@ -110,9 +112,7 @@ class PauseMenu extends GameObject {
         // Decide what to do based on the button type
         switch (buttonType) {
             case "continue":
-                game.state = "playing";
-                game.chronometer.start(); // Start the chronometer
-                selectMusicMenus('playing')
+                game.togglePause();
                 break;
             case "restart":
                 restartRooms(true, 0, 6);
@@ -124,7 +124,6 @@ class PauseMenu extends GameObject {
             case "menu":
                 game.state = "mainMenu";
                 selectMusicMenus("mainMenu")
-                selectMusic(this.level, this.levelNumber, 'mainMenu')
                 break;
             default:
                 break;

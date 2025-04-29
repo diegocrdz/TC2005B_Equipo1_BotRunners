@@ -8,8 +8,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 04/04/2025
+ * Date: 24/04/2025
 */
+
+"use strict";
 
 // Global variables for volume
 let sfxVolume = 0.5;
@@ -150,7 +152,6 @@ function selectMusicMenus(gameState) {
     } else if (gameState === 'paused') {
         musicMenus.musicPause.play();
     } else if (gameState === 'gameover') {
-        console.log("Game Over music playing");
         musicMenus.musicGameOver.play();
     } else if (gameState === 'win') {
         musicMenus.musicWin.play();

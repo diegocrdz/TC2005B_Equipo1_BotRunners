@@ -6,8 +6,10 @@
  * - Lorena Estefanía Chewtat Torres, A01785378
  * - Eder Jezrael Cantero Moreno, A01785888
  *
- * Date: 11/04/2025
+ * Date: 29/04/2025
 */
+
+"use strict";
 
 // Global variables that affect the player movement
 // The project works only with very small values for velocities and acceleration
@@ -122,13 +124,21 @@ class Player extends AnimatedObject {
 
         // Hitbox properties
         this.offsetX = 0.5;
-        this.offsetY = 1;
-        this.hWidth = this.size.x + 1;
+        this.offsetY = 0.9;
+        this.hWidth = this.size.x + 0.6;
         this.hHeight = this.size.y + 1;
     }
 
     update(level, deltaTime) {
         // Update the hitbox
+        if (!this.isAttacking) {
+            if (this.isFacingRight) {
+                this.offsetX = 0.5;
+    
+            } else {
+                this.offsetX = 0.9;
+            }
+        }
         this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
 
         // Make the character fall constantly because of gravity
@@ -319,6 +329,9 @@ class Player extends AnimatedObject {
             // Calculates the step size based on the speed and delta time
             let step = dashSpeed * deltaTime;
 
+            // Create particles for the dash effect
+            new Particle("gray", 80, 80, 0, 0,"particle", this);
+
             // Function to move the player during the dash
             let dashMove = () => {
                 
@@ -360,25 +373,23 @@ class Player extends AnimatedObject {
 
         this.isAttacking = true;
         const attackData = this.movement.attack;
-        let originalSize = this.size.x;
 
         // Change to the attack sprite and rect
         this.setSprite(this.attackSprite, new Rect(0, 0, 32, 24));
         this.size.x = 4; // Adjust the size to match the new sprite
 
-        // Save the original hitbox size and position
-        let originalHWidth = this.hWidth;
-        let originalOffsetX = this.offsetX;
-
         // Change hitbox size
-        this.hWidth += 2;
+        let hitboxWidth = 2.4;
+        this.hWidth += hitboxWidth;
 
         if (this.isFacingRight) {
             this.setAnimation(...attackData.right, attackData.repeat, attackData.duration);
+            // Move the hitbox to the right
+            this.offsetX = 0.5;
         } else {
             this.setAnimation(...attackData.left, attackData.repeat, attackData.duration);
             // Move the hitbox to the left
-            this.offsetX -= 1;
+            this.offsetX = -0.4;
         }
 
         // Update hit counter
@@ -386,12 +397,11 @@ class Player extends AnimatedObject {
 
         setTimeout(() => {
             this.isAttacking = false;
-            this.size.x = originalSize; // Adjust the size to match the new sprite
+            this.size.x = 3; // Adjust the size to match the new sprite
             // Restore the original sprite and rect
             this.setSprite(this.meleeSprite, new Rect(0, 0, 24, 24));
             // Restore hitbox size and position
-            this.hWidth = originalHWidth;
-            this.offsetX = originalOffsetX;
+            this.hWidth -= hitboxWidth;
             // Restore the animation to idle
             const leftData = this.movement["left"];
             const rightData = this.movement["right"];
@@ -513,14 +523,17 @@ class Player extends AnimatedObject {
 
     // Make the player die and reset the game
     die() {
-        sfx.gameOver.play(); // Play the game over sound
+        // Reset the health to 0
+        this.health = 0;
+        game.playerHealthBar.currentValue = 0;
+        // Play the game over sound
+        sfx.gameOver.play();
         // Update the player statistics
         this.deaths++;
         // Update the database
         if (this.id) {
             updatePlayerStats(this.id);
         }
-        // Make the player disappear
         game.state = "gameover";
         // Play the game over music
         selectMusicMenus('gameover');
@@ -703,7 +716,7 @@ class Player extends AnimatedObject {
 
     // Use the health potion to heal the player
     useHealthPotion() {
-        if (!this.hasUsedPotion && this.health < 100) {
+        if (!this.hasUsedPotion && this.health < this.maxHealth) {
 
             let increase = (this.maxHealth * 50) / 100; // Calculate 50% of the max health
 
