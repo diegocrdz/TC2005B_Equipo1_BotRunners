@@ -975,13 +975,6 @@ class Game {
         
         // Draw tutorial, exit and ladder signs
         this.drawSigns(ctx);
-
-        // Draw the projectiles
-        this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
-        this.enemiesProjectiles.forEach(projectile => projectile.draw(ctx, scale));
-
-        // Draw the particles
-        this.particles.forEach(particle => particle.draw(ctx, 1));
     
         // Then draw the rest of the actors
         for (let actor of this.actors) {
@@ -994,6 +987,13 @@ class Game {
                 }
             }
         }
+
+        // Draw the projectiles
+        this.projectiles.forEach(projectile => projectile.draw(ctx, scale));
+        this.enemiesProjectiles.forEach(projectile => projectile.draw(ctx, scale));
+
+        // Draw the particles
+        this.particles.forEach(particle => particle.draw(ctx, 1));
 
         // Draw the player on top of everything else
         if (this.state !== 'gameover') {
@@ -1270,6 +1270,9 @@ function restartRooms(restartPlayer, levelNumber, numRooms) {
         game.player.enemiesKilled = savedKills;
         game.player.buffsApplied = 0;
         game.player.applyBuff();
+
+        // Restart the ability list
+        initAbilitiesList();
     }
 }
 

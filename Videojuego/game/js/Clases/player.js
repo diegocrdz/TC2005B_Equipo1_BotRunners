@@ -125,7 +125,7 @@ class Player extends AnimatedObject {
         // Hitbox properties
         this.offsetX = 0.5;
         this.offsetY = 0.9;
-        this.hWidth = this.size.x + 0.6;
+        this.hWidth = this.size.x + 0.7;
         this.hHeight = this.size.y + 1;
     }
 
@@ -136,7 +136,7 @@ class Player extends AnimatedObject {
                 this.offsetX = 0.5;
     
             } else {
-                this.offsetX = 0.9;
+                this.offsetX = 0.8;
             }
         }
         this.setHitbox(this.offsetX, this.offsetY, this.hWidth, this.hHeight);
