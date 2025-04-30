@@ -76,7 +76,7 @@ Este videojuego ha sido desarrollado a lo largo del semestre febrero-junio de 20
 
 Overclocked es un videojuego roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
 
-Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear mejoras aleatorias para potenciar tus estadísticas de fuerza, resistencia, velocidad o habilidades de movimiento. Tras completar cada uno de los 3 niveles, desbloqueas armas permanentes que te permitirán reducir el tiempo en el que terminas el juego, ¿Tienes la habilidad para ser el mejor en la competencia de robots?
+Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear mejoras aleatorias para potenciar tus estadísticas de fuerza, resistencia, velocidad o habilidades de movimiento. Tras completar los 3 niveles del juego, desbloqueas armas mejoradas de forma permanente, permitiendote reducir el tiempo en el que terminas el juego, ¿Tienes la habilidad para ser el mejor en la competencia de robots?
 
 ### **Jugabilidad**
 
@@ -86,19 +86,19 @@ Cada victoria te otorga puntos de experiencia para subir de nivel y desbloquear 
 
 Overclocked es un juego que incentiva a los jugadores a completar el juego en el menor tiempo posible. El jugador encarna un pequeño robot llamado “Skippy”, quien cuenta con un brazo robótico como arma inicial para enfrentarse a los demás robots de la competencia.
 
-El jugador inicia el videojuego en una sala rectangular de fondo blanco, con un letrero en la pared que indica los controles de movimiento con las teclas “W,A,S,D”. De igual forma, hay un letrero con una flecha hacia la derecha, guiando al jugador a avanzar en esa dirección.
+El jugador inicia el videojuego en una sala rectangular de fondo blanco, con un letrero en la pared que indica los controles de movimiento con las teclas “W,A,S,D”. De igual se indica que el jugador puede atacar con las flechas izquierda / derecha y curarse con el número 3.
 
-Al avanzar, el jugador se encuentra con un robot enemigo de categoría Normal (salud y daño equilibrado). En la pared de esta sala, se encuentra un letrero que indica los controles de ataque cuerpo a cuerpo con la tecla “1” y “flecha derecha/izquierda” para atacar.
+Al avanzar, el jugador se encuentra con un robot enemigo de categoría Normal (salud y daño equilibrado). En la pared de esta sala, se encuentra un letrero que indica que el jugador debe explorar las salas para encontrar el botón azul que desbloquea la sala del jefe.
 
 De esta forma, el jugador continúa avanzando por las salas con obstáculos y enemigos generados de forma aleatoria. El jugador puede encontrarse con enemigos de categoría Normal (salud y daño equilibrado), Pesado (salud y daño elevado) y Aéreo (salud y daño bajo).
 
 El jugador debe explorar las salas del nivel hasta encontrar una que contenga un botón azul. Al acercarse, el botón se activa automáticamente, desbloqueando la sala final del nivel, en donde el jugador deberá enfrentarse a un jefe final.
 
-Cada vez que el jugador derrota enemigos, obtiene una bonificación de experiencia, haciendo que cada vez que suba de nivel pueda seleccionar una mejora de estadísticas (salud, daño, protección) o movilidad (doble salto, esquivar (dash)). Al derrotar al jefe final de los niveles, el jugador obtiene un arma permanente que modifica su estadística base de daño.
+Cada vez que el jugador derrota enemigos, obtiene una bonificación de experiencia, haciendo que cada vez que suba de nivel pueda seleccionar una mejora de estadísticas (salud, daño, protección) o movilidad (doble salto, esquivar (dash)). Al derrotar al jefe final de los niveles, el jugador obtiene diferentes armas que modifican sus estadísticas de daño y velocidad de ataque.
 
 **Objetivo del juego**
 
-El objetivo principal del juego es que el jugador complete cada uno de los 3 niveles en el menor tiempo posible, lo que implica dominar las mecánicas del juego y obtener cada una de las armas permanentes posibles tras derrotar a cada jefe de los niveles. De esta forma, el juego invita a que los jugadores optimicen su forma de juego para ser más veloces en cada intento, así como los invita a utilizar diferentes estrategias para completar el juego.
+El objetivo principal del juego es que el jugador complete cada uno de los 3 niveles en el menor tiempo posible, lo que implica dominar las mecánicas del juego y dominar sus mecánicas. De esta forma, el juego invita a que los jugadores optimicen su forma de juego para ser más veloces en cada intento, así como los invita a utilizar diferentes estrategias para completar el juego.
 
 **Obstáculos y Retos**
 
@@ -185,14 +185,15 @@ De esta forma, el jugador es capaz de entender la historia y el objetivo del jue
 1. Pantalla principal: Muestra las opciones que el jugador puede seleccionar al iniciar el juego.
     1. Jugar: Inicia el juego desde el primer nivel.
     2. Opciones: Permite al jugador modificar el volumen de la música y efectos de sonido.
-    3. Estadísticas: Muestra las estadísticas del jugador.
+    3. Estadísticas Personales / Globales: Muestra las estadísticas del jugador / de todos los jugadores
         - Tiempo de partida
         - Número de muertes
         - Enemigos derrotados
         - Número total de daño infligido y recibido
         - Número de partidas completadas
         - Número de ataques cuerpo a cuerpo vs. a distancia.
-    4. Puntuaciones: Muestra los jugadores con los mejores tiempos en completar el juego.
+        - Número de ataques cuerpo a cuerpo vs. a distancia
+    4. Estadísticas de mejores tiempos: Muestra los jugadores con los mejores tiempos en completar el juego.
         - Nombre del jugador
         - Tiempo en completar el juego.
     5. Acceder: Permite al jugador iniciar sesión o registrarse.
@@ -200,12 +201,12 @@ De esta forma, el jugador es capaz de entender la historia y el objetivo del jue
 3. Juego - Nivel 1: Muestra el primer nivel del juego, con el jugador en la primera sala.
 4. Juego - Nivel 2: Muestra el segundo nivel del juego, con el jugador en la primera sala.
 7. Juego - Nivel 3: Muestra el tercer nivel del juego, con el jugador en la primera sala.
-8. Pantalla de puntuación: Muestra el tiempo en el que el jugador completó el juego y si logró superar su mejor tiempo. Se muestran estadísticas del jugador, así como las habilidades desbloqueadas.
-9. Pantalla de derrota: Muestra un mensaje de derrota cuando el jugador pierde todos sus puntos de salud. Le permite reiniciar el nivel o regresar a la pantalla principal.
-10. Pantalla de victoria: Muestra un mensaje de victoria cuando el jugador completa el juego. Le permite regresar a la pantalla principal.
-11. Pausa: Muestra las opciones de pausa. Permite que el jugador continúe, ajuste el volumen o regrese a la pantalla principal.
+8. Pantalla de derrota: Muestra un mensaje de derrota cuando el jugador pierde todos sus puntos de salud. Le permite reiniciar el nivel o regresar a la pantalla principal.
+9. Pantalla de victoria: Muestra un mensaje de victoria cuando el jugador completa el juego. Le permite regresar a la pantalla principal.
+10. Pantalla de derrota: Muestra un mensaje indicando que el jugador ha perdido toda su vida. Le permite reiniciar el juego o regresar al menú principal.
+11. Pausa: Muestra las opciones de pausa. Permite que el jugador continúe, entre al menú de opciones o regrese a la pantalla principal.
 
-*Para ver los bocetos de las pantallas, revisar la sección [Elementos GUI](#elementos-gui).*
+*Para ver imágenes de las pantallas, revisar la sección [Elementos GUI](#elementos-gui).*
 
 ### **Controles**
 
@@ -224,7 +225,7 @@ Los jugadores serán capaces de elegir entre dos armas principales: cuerpo a cue
 
 Los botones que deberán ser presionados para abrir la sala del jefe de cada piso se activarán si el jugador se acerca lo suficiente a estos, por lo que no tienen una tecla asignada de activación.
 
-Cuando el jugador se encuentra frente a una escalera, el jugador podrá subir o bajar presionando la tecla "W" o "S", respectivamente. Esto desplazará al jugador en la dirección de la escalera, sin necesidad de presionar otra tecla adicional. Estas acciones se realizan de forma automática al momento de colisionar con la escalera.
+Cuando el jugador se encuentra frente a una escalera, el jugador podrá subir o bajar presionando la tecla "flecha arriba" o "flecha abajo", respectivamente. Esto desplazará al jugador en la dirección de la escalera, sin necesidad de presionar otra tecla adicional. Estas acciones se realizan de forma automática al momento de colisionar con la escalera.
 
 ### **Mecánicas**
 
@@ -269,13 +270,13 @@ Si un jugador desbloquea las mejores armas y decide no registrarse, perderá est
 
 **Mecánica de experiencia**
 
-Con el fin de crear una mecánica de juego que fomenta las recompensas aleatorias conforme al avance del jugador, este tendrá un nivel de experiencia que irá aumentando desde el nivel 0 hasta el 10. Para incrementar el nivel de experiencia del jugador, este deberá derrotar enemigos, lo que le otorgará una pequeña fracción de la experiencia total a conseguir para subir de nivel, dependiendo de la categoría de enemigos.
+Con el fin de crear una mecánica de juego que fomenta las recompensas aleatorias conforme al avance del jugador, este tendrá un nivel de experiencia que irá aumentando desde el nivel 0, sin límite. Para incrementar el nivel de experiencia del jugador, este deberá derrotar enemigos, lo que le otorgará una pequeña fracción de la experiencia total a conseguir para subir de nivel, dependiendo de la categoría de enemigos.
 
 En el nivel de experiencia 0, el jugador debe conseguir 100 puntos de experiencia. Cada vez que el jugador aumenta de nivel de experiencia, los puntos requeridos para seguir avanzando aumentan en 15. Ejemplo:
 - Nivel 0: El jugador necesita 100 puntos para subir de nivel.
 - Nivel 1: El jugador necesita 115 puntos para subir de nivel.
 - Nivel 2: El jugador necesita 130 puntos para subir de nivel.
-- Así sucesivamente hasta llegar al nivel 10, el cual necesitará 245 puntos.
+- Así sucesivamente hasta que el jugador complete el juego, pierda o salga de este.
 
 Cada enemigo otorga un porcentaje diferente de experiencia al jugador:
 - Robot Normal: +10 puntos experiencia
@@ -301,14 +302,14 @@ Por otro lado, las habilidades desbloqueables que mejoran las estadísticas base
 **Mecánica de movimiento**
 
 El jugador es capaz de moverse en cuatro direcciones: arriba (saltar), moverse a la derecha, a la izquierda y agacharse. A continuación se especifican las características de cada movimiento:
-- Saltar: El jugador es capaz de moverse hacia arriba al presionar la tecla “w”, ejecutando una animación de salto.
+- Saltar: El jugador es capaz de moverse hacia arriba al presionar la tecla “w” o "espacio", ejecutando una animación de salto.
 - Moverse a la derecha o izquierda: El jugador puede moverse en ambas direcciones de los niveles al presionar la tecla “a” (izquierda) o “d” (derecha), ejecutando una misma animación en dirección en la que se mueve.
 - Agacharse: El jugador es capaz de agacharse al presionar la tecla “s”, reduciendo su área para lograr atravesar obstáculos o situaciones en donde se tiene menos espacio. Existe una animación que es ejecutada al momento en el que el jugador se agacha.
 
 **Habilidades de movimiento desbloqueables:**
 
-- Doble salto: El jugador es capaz de utilizar la habilidad de doble salto una vez la desbloquee al presionar la tecla “w” dos veces, lo cual le permitirá saltar el doble de distancia, ejecutando de nuevo la misma animación del salto normal.
-- Esquivar: El jugador es capaz de desplazarse rápidamente en muy poco tiempo al presionar la tecla shift, lo cual puede usar para esquivar ataques de enemigos o acortar su tiempo de la partida.
+- Doble salto: El jugador es capaz de utilizar la habilidad de doble salto una vez la desbloquee al presionar la tecla “w” o "espacio" dos veces, lo cual le permitirá saltar el doble de distancia, ejecutando de nuevo la misma animación del salto normal.
+- Esquivar: El jugador es capaz de desplazarse rápidamente en muy poco tiempo al presionar la tecla "shift" o "e", lo cual puede usar para esquivar ataques de enemigos o acortar su tiempo de la partida.
 
 ## _Diseño de niveles_
 
@@ -339,7 +340,7 @@ En el primer nivel, ¡la competencia de robótica ha comenzado!, y la escuela se
 
 **Nivel 2: Laboratorio**
 
-En el segundo nivel, pasamos al lugar en donde nacen las máquinas, un laboratorio de vanguardia lleno de tecnología secreta de última generación. Se quiere evocar el sentimiento de que el jugador, al pasar del primer nivel, esta situado en el laboratorio donde se crean todos los robots, y para esto se utilizaran recursos como:
+En el segundo nivel, pasamos al lugar en donde nacen las máquinas, un laboratorio lleno de tecnología secreta de última generación. Se quiere evocar el sentimiento de que el jugador, al pasar del primer nivel, esta situado en el laboratorio donde se crean todos los robots, y para esto se utilizaran recursos como:
 
 2. Laboratorio
     1. Ambiente
@@ -443,7 +444,7 @@ El juego se desarrolla en 3 niveles distintos, cada uno con un jefe final que el
 4. El jugador avanza a la derecha y salta la caja de madera el suelo.
 5. El jugador entra en la segunda sala por el extremo izquierdo.
 6. El jugador encuentra un enemigo estático en el extremo derecho.
-7. El jugador observa en la pared un letrero que le indica cómo seleccionar su arma cuerpo a cuerpo y cómo utilizarla.
+7. El jugador observa en la pared un letrero que le cómo completar el juego.
 8. El jugador derrota al enemigo y avanza a la siguiente sala.
 9. El jugador continúa avanzando por salas a la vez que derrota enemigos.
 10. El jugador sube un nivel de experiencia. Se le presenta una pantalla con 3 distintas opciones de estadísticas/habilidades a desbloquear. El jugador selecciona una.
@@ -473,7 +474,7 @@ Cada vez que el jugador avanza de nivel, el juego se vuelve más dificil, pues l
 
 En este ciclo de juego se busca que el jugador se sienta motivado a completar el juego en el menor tiempo posible; sin embargo, este debe aprender a dominar las mecánicas del juego y utilizar las habilidades desbloqueables de forma estratégica para lograrlo.
 
-Los niveles tienen una duración estimada de 5 minutos cada uno, por lo que el jugador deberá completar el juego en un tiempo no mayor a 15 minutos para lograr un récord. De igual forma, el jugador puede repetir el juego las veces que desee para mejorar su tiempo y habilidades.
+Los niveles tienen una duración estimada de 3-5 minutos cada uno. De igual forma, el jugador puede repetir el juego las veces que desee para mejorar su tiempo y habilidades.
 
 ## _Desarrollo_
 
@@ -602,13 +603,13 @@ El jugador puede recibir retroalimentación de qué realizar en diferentes situa
     1. Contenedor (caja de madera, obstáculo)
     2. Contenedor (caja de metal, obstáculo)
     3. Suelo de baldosas
-    4. Muro de laboratorio
-    5. Muro de escuela
-    6. Muro de fábrica abandonada
     7. Tubería de metal (obstáculo)
     8. Picos puntiagudos (obstáculo)
 3. Ambiente
-    3. Letreros
+    1. Letreros
+    2. Fondos de escuela
+    3. Fondos de laboratorio
+    4. Fondos de fábrica
 4. Otros
     1. Botón azul (desbloquea la sala del jefe final de cada nivel)
     2. Puerta de la sala final (se abre al presionar el botón azul)
@@ -634,21 +635,16 @@ Además, los efectos de sonido deben ser distintos entre sí para que el jugador
 ### **Sonidos necesarios**
 
 1. Effectos
-    1. Giro de rueda (movimiento del jugador, igual para todo tipo de suelos)
-    2. Salto del jugador
-    3. Agacharse
-    4. Aterrizaje del jugador (al caer verticalmente)
-    5. Ataque cuerpo a cuerpo (al atacar enemigos u objetos)
-    6. Ataque a distancia (pistola láser)
-    7. Abrir puerta
+    1. Salto del jugador
+    2. Ataque cuerpo a cuerpo (al atacar enemigos u objetos)
+    3. Ataque a distancia (pistola láser)
+    4. Abrir puerta
 2. Retroalimentación (Feedback)
-    1. Abrir botella (recuperar salud)
+    1. Recuperar salud
     2. Golpe (daño hacia el jugador)
     3. Presionar botón
     4. Golpe exagerado (enemigo derrotado)
-    5. Explosión pequeña (jugador derrotado)
-    6. Recoger orbe de experiencia
-    7. Subir escaleras
+    5. Recoger orbe de experiencia
 
 ### **Música necesaria**
 
@@ -658,7 +654,7 @@ Además, los efectos de sonido deben ser distintos entre sí para que el jugador
 4. Música rápida-enérgica, con efectos de sonido de química, sonidos genéricos de ciencia (Nivel 2).
 5. Música lúgubre, efectos de sonido mecánicos, eco, alta reverberación (Nivel 3).
 6.Música épica, con sonidos cyberpunk-mecánicos (Jefe final).
-7. Música feliz-nostálgica(créditos finales).
+7. Música feliz-nostálgica (créditos finales).
 
 **Nota:** La música del los niveles cambiara al llegar al jefe final del nivel, aumentando la tensión del juego. La música del nivel 3 será más lenta y lúgubre, resaltando el ambiente de fábrica abandonada.
 
@@ -794,11 +790,11 @@ Los niveles cuentan con una estructura lineal con 1 o 2 bifurcaciones en salas i
 
 ![Batería vacia](img/bateria_vacia.png)
 
-**Bateria vacia:** Es una batería vacia. El estado vacio de la batería, no se puede recargar hasta el siguiente nivel.
+**Bateria vacia:** En el estado vacio de la batería, no se puede utilizar para recuperar vida hasta el siguiente nivel.
 
 ![Items](img/xp_orb.png)
 
-**Orbe de experiencia:** Aumenta el nivel de experiencia del jugador al ser recogido. Se obtiene al derrotar a los enemigos.
+**Orbe de experiencia:** Aumenta el nivel de experiencia del jugador en 5 puntos al ser recogido. Se obtiene al derrotar a los enemigos.
 
 *Para conocer más sobre los items y armas desbloqueables, visita la sección [Mecánicas](#mecánicas).*
 
@@ -831,26 +827,48 @@ El jugador puede seleccionar una habilidad aleatoria tras subir de nivel.
 
 El menú principal muestra las opciones de juego, configuración y estadísticas.
 
-![Main Menu](img/main_menu.jpg)
+![Main Menu](img/main_menu.png)
 
 **Menú de Configuración/Opciones:**
 
 El menú de configuración muestra las opciones para ajustar el audio global de sonido y música.
 
-![Settings Menu](img/settings_menu.jpg)
+![Options Menu](img/options_menu.png)
+
+**Menú de inicio de sesión / registro:**
+
+El menú de inicio de sesión/registro muestra las opciones para iniciar sesión o registrarse en el juego.
+
+![Login Menu](img/login_menu.png)
 
 **Menú de pausa:**
 
 El menú de pausa muestra las opciones para continuar o salir del juego.
 
-![Pause Menu](img/pause_menu.jpg)
+![Pause Menu](img/pause_menu.png)
 
 **Menú de estadísticas:**
 
-El menú de estadísticas contiene 2 secciones: Estadísticas del jugador y mejores puntuaciones.
+El menú de estadísticas contiene 3 secciones:
 
-![Stats Menu](img/stats_menu_2.jpg)
-![Stats Menu](img/stats_menu_1.jpg)
+- Estadísticas del jugador
+![Stats Menu](img/stats_menu_1.png)
+- Estadísticas globales
+![Stats Menu](img/stats_menu_2.png)
+- Tabla de mejores tiempos
+![Stats Menu](img/stats_menu_3.png)
+
+**Victoria:**
+
+Esta pantalla se muestra al completar el juego, mostrando un mensaje final de felicitaciones para el jugador.
+
+![Win Screen](img/win.png)
+
+**Derrota:**
+
+Esta pantalla se muestra cuando el jugador pierde toda su vida. Se muestra un mensaje de derrota, la opción de reiniciar el juego y salir al menú.
+
+![Loose Screen](img/loose.png)
 
 *Para conocer más sobre las pantallas del juego, visita la sección [Pantallas](#pantallas).*
 
@@ -1007,4 +1025,4 @@ Para el control de tareas y seguimiento del desarrollo del videojuego, se utiliz
 
 Overclocked es un videojuego roguelite 2D con elementos retro, de acción y exploración en el que el jugador encarna un robot llamado Skippy en una competencia de robótica. El jugador debe completar 3 niveles generados de forma aleatoria para ganar la competencia, desbloqueando nuevas armas y habilidades en el camino.
 
-El videojuego cuenta con un sistema de niveles, enemigos, jefes finales, armas y habilidades que buscan ofrecer una experiencia de juego desafiante. Además, el videojuego almacena en la base de datos las estadísticas de cada jugador y los mejores 5 tiempos registrados en completar el juego, permitiendo al jugador competir con otros jugadores y mejorar su tiempo récord. ,m 
+El videojuego cuenta con un sistema de niveles, enemigos, jefes finales, armas y habilidades que buscan ofrecer una experiencia de juego desafiante. Además, el videojuego almacena en la base de datos las estadísticas de cada jugador y los mejores 5 tiempos registrados en completar el juego, permitiendo al jugador competir con otros jugadores y mejorar su tiempo récord.
