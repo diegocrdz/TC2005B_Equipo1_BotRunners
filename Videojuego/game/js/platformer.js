@@ -1559,6 +1559,9 @@ function setEventListeners() {
                 // Change the loginMessage from the container
                 loginMessage.textContent = "Sesión iniciada como: " + username;
                 usernameLabel.textContent = "Sesión iniciada como: " + username;
+
+                // Hide the login menu
+                game.loginMenu.hide();
             } else {
                 loginMessage.textContent = "Usuario o contraseña incorrectos";
             }
@@ -1570,9 +1573,6 @@ function setEventListeners() {
         // Clear the input fields
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
-
-        // Hide the login menu
-        game.loginMenu.hide();
     });
 
     // Register button
@@ -1623,6 +1623,9 @@ function setEventListeners() {
             // Reset the player stats for the new player
             game.player.enemiesKilled = 0;
             game.player.buffsApplied = 0;
+
+            // Hide the login menu
+            game.loginMenu.hide();
         } else {
             loginMessage.textContent = "El usuario " + username + " ya existe";
         }
@@ -1631,9 +1634,6 @@ function setEventListeners() {
         // Clear the input fields
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
-
-        // Hide the login menu
-        game.loginMenu.hide();
     });
     
     // Stats buttons
