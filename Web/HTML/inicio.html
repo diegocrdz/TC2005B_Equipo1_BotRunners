@@ -29,7 +29,7 @@
     
     <section id="contenido">
         <div>
-            <h3>¿Qué es Overclocked?</h3>
+            <h3>¿Qué es OVERCLOCKED?</h3>
             <p>
                 Overclocked es un videojuego roguelite de acción en 2D donde encarnas un robot en una competencia de robótica. 
                 Explora mapas generados aleatoriamente, derrota rivales mecánicos en combate cuerpo a cuerpo o a distancia y encuentra el botón que activa la sala del jefe final.
@@ -40,9 +40,19 @@
                 ¿Tienes la habilidad para ser el mejor en la competencia de robots?
             </p>
         </div>
-        <div>
-            <img src="../../Videojuego/docs/img/skippy_idle.gif" alt="robot">
+        <div id="viewer-container">
+            <canvas id="viewer3d"></canvas>
+            <img id="skippy-img" src="../../Videojuego/docs/img/skippy_idle.gif" alt="Skippy"/>
         </div>
+        <script>
+            // Ocultar el canvas si se está ejecutando desde un archivo local
+            if (location.protocol === 'file:') {
+                document.getElementById('viewer3d').style.display = 'none';
+                document.getElementById('skippy-img').style.display = 'block';
+            } else {
+                document.getElementById('skippy-img').style.display = 'none';
+            }
+        </script>
     </section>
 
     <section id="caracteristicas">
@@ -62,5 +72,7 @@
         <p>Overclocked - Equipo BotRunners © 2025</p>
         <a href="#">Regresar al inicio</a>
     </footer>
+
+    <script type="module" src="../js/main.js"></script>
 </body>
 </html>

@@ -89,9 +89,9 @@ section {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 50px;
+    gap: 40px;
     font-size: 24px;
-    height: 100vh;
+    height: 90vh;
     padding: 0 20vw;
     background: #272b36;
     background-image: url('../img/bkg_titulo.png');
@@ -99,25 +99,38 @@ section {
     background-repeat: no-repeat; /* No repetir */
     background-position: center; /* Centrar */
 }
+#viewer3d {
+    flex: 1 1 50%;
+    max-width: 100%;
+    height: 80vh;
+    display: block;
+    margin: 0;
+    background: transparent;
+    box-sizing: border-box;
+}
 #titulo h1 {
-    font-size: 36px;
+    font-size: 1.2em;
     text-align: center;
+    margin: 0;
 }
 #titulo p {
     color: whitesmoke;
-    font-size: 18px;
+    font-size: 0.7em;
     text-align: justify;
+    margin: 0;
 }
 #titulo a {
-    font-size: 24px;
-    padding: 20px;
-    background-color: #6C6EA0;
+    font-size: 0.7em;
+    padding: 18px 32px;
+    background: linear-gradient(90deg, #6C6EA0 60%, #9fa0be 100%);
     color: #FFFFFF;
-    transition: 0,2s; /* Efecto de rotación */
+    letter-spacing: 1px;
+    transition: 0.2s;
 }
 #titulo a:hover {
-    background-color: #ffcd81;
+    background: #ffcd81;
     color: black;
+    box-shadow: 0 0 20px #ffcd81;
     transform: rotate(2deg) scale(1.1); /* Efecto de rotación */
 }
 
@@ -389,8 +402,18 @@ footer {
         padding: 2vh 3vw;
     }
 
-    #titulo { 
-        background-image: none;
+    #titulo {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 5vw;
+    }
+    #titulo div {
+        flex: 1 1 100%;
+        max-width: 100%;
+        padding: 20px;
+    }
+    #viewer3d {
+        display: none;
     }
 
     #contenido {
