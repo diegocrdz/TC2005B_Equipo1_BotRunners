@@ -8,7 +8,7 @@ body {
     padding: 0;
     font-family: 'Roboto', sans-serif;
     color: #272b36; /* Texto gris oscuro */
-    font-size: 1.2em; /* Tamaño de fuente */;
+    font-size: medium; /* Tamaño de fuente */;
     background-image: url('../img/bkg.gif');
     background-size: cover; /* Fondo completo */
     background-attachment: fixed; /* Fondo fijo */
@@ -17,15 +17,13 @@ body {
 /* Encabezados */
 h1, h2, h3 {
     font-family: 'Press Start 2P', sans-serif;
-    font-size: 1.5em; /* Tamaño de fuente */
+    font-size: larger; /* Tamaño de fuente */
     color: #6C6EA0; /* Morado */
-    text-shadow: 1px 1px #000000; /* Sombra retro */
 }
 h4, h5, h6 {
     font-family: 'Press Start 2P', sans-serif;
-    font-size: 1em; /* Tamaño de fuente */
+    font-size: large; /* Tamaño de fuente */
     color: #9fa0be; /* Morado */
-    text-shadow: 1px 1px #000000; /* Sombra retro */
 }
 
 /* Header */
@@ -37,9 +35,9 @@ header {
     background-color: #272b36; /* Gris oscuro */
     color: #FFFFFF;
     padding: 1vh 5vw;
+    height: 5vh;
     border-bottom: 4px solid #434A5F; /* Borde oscuro */
 }
-
 header img {
     width: 30vw;
     max-width: 300px;
@@ -50,11 +48,11 @@ header img:hover {
     cursor: pointer;
     transform: rotate(2deg); /* Efecto de rotación */
 }
-
 header nav {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    flex-wrap: wrap;
 }
 header nav a {
     font-size: 0.8em; /* Tamaño de fuente */
@@ -80,7 +78,7 @@ a:hover {
 
 /* Secciones */
 section {
-    padding: 10vh 10vw;
+    padding: 2vh 10vw;
 }
 
 /* Titulo */
@@ -91,26 +89,18 @@ section {
     align-items: center;
     gap: 40px;
     font-size: 24px;
-    height: 90vh;
-    padding: 0 20vw;
+    height: 95vh;
+    padding: 0 30vw;
     background: #272b36;
     background-image: url('../img/bkg_titulo.png');
     background-size: cover; /* Fondo completo */
     background-repeat: no-repeat; /* No repetir */
     background-position: center; /* Centrar */
 }
-#viewer3d {
-    flex: 1 1 50%;
-    max-width: 100%;
-    height: 80vh;
-    display: block;
-    margin: 0;
-    background: transparent;
-    box-sizing: border-box;
-}
 #titulo h1 {
-    font-size: 1.2em;
+    font-size: 2em;
     text-align: center;
+    color: #ffcd81;
     margin: 0;
 }
 #titulo p {
@@ -130,33 +120,27 @@ section {
 #titulo a:hover {
     background: #ffcd81;
     color: black;
-    box-shadow: 0 0 20px #ffcd81;
     transform: rotate(2deg) scale(1.1); /* Efecto de rotación */
 }
 
 /* Contenido */
 #contenido {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     gap: 100px;
 }
-#contenido div {
-    flex: 1; /* Ocupa todo el espacio disponible */
-}
-#contenido img {
-    width: 40vw;
-    height: auto;
-    max-width: 400px;
-    transition: 0.2s; /* Efecto de rotación */
-}
-#contenido img:hover {
-    cursor: pointer;
-    transform: rotate(2deg); /* Efecto de rotación */
-}
 #contenido div h3 {
     font-size: 24px;
     margin-bottom: 40px;
+}
+#viewer3d {
+    width: 100%;
+    height: 60vh;
+    display: block;
+    max-width: 40vw;
+    min-height: 40vh;
 }
 
 /* Caracteristicas */
@@ -172,26 +156,28 @@ section {
     grid-template-columns: 1fr 1fr; /* 2 columnas */
     grid-template-rows: 1fr 1fr 1fr; /* 3 filas */
     width: 100%;
-    gap: 40px;
+    gap: 20px;
+    overflow: hidden;
 }
 .grid-caracteristicas div {
     background-color: #272b36;
     color: whitesmoke;
     padding: 20px;
-    border: 2px solid #6C6EA0; /* Borde morado */
+    border-left: 20px solid #ffcd81; /* Borde morado */
     transition: 0.2s; /* Efecto de zoom */
 }
 .grid-caracteristicas div:hover {
     background-color: #434A5F;
-    border: 2px solid black;
     transform: scale(1.01); /* Efecto de zoom */
     cursor: default;
 }
 #guia-boton {
     color: #272b36;
     background-color: #ffcd81;
-    padding: 40px;
-    width: 50%;
+    padding: 20px;
+    width: 100%;
+    margin-bottom: 40px;
+    box-sizing: border-box;
 }
 
 /* Créditos */
@@ -333,10 +319,9 @@ footer {
     grid-template-columns: repeat(3, 1fr); /* 3 columnas */
     grid-template-rows: repeat(2, 1fr); /* 2 filas */
     gap: 20px;
-    overflow-x: scroll;
+    overflow: hidden;
     /* Atributos de la lista */
     list-style: none;
-    margin: 0;
     padding: 0;
 }
 #enemigos li {
@@ -389,36 +374,49 @@ footer {
 
 /* Responsividad en dispositivos con pantalla pequeña */
 @media (max-width: 1000px) { /* 1000px o menos */
+
+    header {
+        height: fit-content;
+    }
+    header img { /* Logo */
+        width: 50vw;
+    }
     header nav {
         flex-direction: column; /* Columna */
         gap: 2px;
     }
-
-    header img { /* Logo */
-        width: 50vw;
+    header nav a {
+        font-size: 0.6em; /* Tamaño de fuente */
+        padding: 5px 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     section { /* Secciones */
-        padding: 2vh 3vw;
+        padding: 2vh 10vw;
     }
 
     #titulo {
         flex-direction: column;
-        gap: 20px;
-        padding: 0 5vw;
+        gap: 50px;
+        padding: 0 10vw;
+        height: fit-content + 50px;
+        background: linear-gradient(to bottom, #434A5F, #272b36);
     }
-    #titulo div {
-        flex: 1 1 100%;
-        max-width: 100%;
-        padding: 20px;
+    #titulo h1 {
+        font-size: 1.2em;
+    }
+    #contenido {
+        flex-direction: column;
+        gap: 0;
     }
     #viewer3d {
         display: none;
     }
 
-    #contenido {
-        flex-direction: column;
-        gap: 50px;
+    .grid-caracteristicas {
+        grid-template-columns: 1fr; /* 1 columna */
+        grid-template-rows: repeat(6, 1fr); /* 6 filas */
     }
 
     #enemigos ul {

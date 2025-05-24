@@ -9,21 +9,22 @@ const canvas = document.getElementById('viewer3d');
 const scene = new THREE.Scene();
 
 // Configuración de la cámara
-const camera = new THREE.PerspectiveCamera(20, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-camera.position.set(0, 1.2, 10);
+const camera = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+camera.position.set(0.2, 1.8, 12);
 
 // Configuración del renderizador
 // alpha: true fondo transparente
 // antialias: true suaviza los bordes
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
 renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 
 // Luz ambiental general
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(ambientLight);
 // Luz direccional para skippy
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(-1, 1, 1);
+directionalLight.position.set(-1, 1, 2);
 scene.add(directionalLight);
 
 // Cargador de materiales y objetos
@@ -37,19 +38,24 @@ let targetRotationX = 0;
 let baseRotationX = 0;
 let baseRotationY = 0;
 
+// Cargar modelo
+mtlLoader.setPath('../models/');
+objLoader.setPath('../models/');
+
 // Cargar materiales
-mtlLoader.load('../models/skippy.mtl', (materials) => {
+mtlLoader.load('skippy.mtl', (materials) => {
     materials.preload();
     objLoader.setMaterials(materials);
     // Cargar el modelo
-    objLoader.load('../models/skippy.obj', (object) => {
-        scene.add(object);
+    objLoader.load('skippy.obj', (object) => {
         // Ajustar la escala y posición del modelo
+        object.scale.set(2, 2, 2);
         object.position.set(0, 0, 0);
         baseRotationX = Math.PI / 16;
         baseRotationY = Math.PI / 2 - Math.PI / 9;
         object.rotation.set(baseRotationX, baseRotationY, 0);
         model = object;
+        scene.add(object);
     });
 });
 
@@ -59,37 +65,40 @@ window.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingClientRect();
     const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     const y = ((event.clientY - rect.top) / rect.height) * 2 - 1;
-    targetRotationY = x * Math.PI / 10; // Limita el giro horizontal
-    targetRotationX = y * Math.PI / 20; // Limita el giro vertical
+    targetRotationY = x * Math.PI / 20; // Limita el giro horizontal
+    targetRotationX = y * Math.PI / 50; // Limita el giro vertical
 });
 
-// Función para ajustar el tamaño del renderizador al tamaño de la ventana
 function resizeRendererToDisplaySize() {
-    // Obtener el tamaño del canvas
-    const width = canvas.offsetWidth;
-    const height = canvas.offsetHeight;
-    // Comprobar si el tamaño del canvas ha cambiado
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+
     const needResize = renderer.domElement.width !== width || renderer.domElement.height !== height;
 
-    // Si el tamaño ha cambiado, ajustar el tamaño del renderizador
     if (needResize) {
-        renderer.setSize(width, height, false); // false evita limpiar el canvas
+        renderer.setSize(width, height, false);
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
     }
 }
-window.addEventListener('resize', resizeRendererToDisplaySize);
 
-// Función para animar el modelo cuando se mueve el mouse
 function animate() {
     resizeRendererToDisplaySize();
+
     if (model) {
-        // Actualizar la rotación del modelo
-        // Se multiplica por 0.1 para suavizar el movimiento
+        // Rotación suave con el mouse
         model.rotation.y += ((baseRotationY + targetRotationY) - model.rotation.y) * 0.1;
         model.rotation.x += ((baseRotationX + targetRotationX) - model.rotation.x) * 0.1;
+
+        // Escala fija
+        model.scale.set(1.5, 1.5, 1.5);
+
+        // Ajustar cámara según ancho del canvas
+        const baseDistance = 9;
+        const scale = canvas.offsetWidth / 800;
+        camera.position.z = baseDistance / scale; // se aleja si canvas es más grande
     }
-    // Actualiza el renderizador para que se vea el modelo
+
     renderer.render(scene, camera);
 }
 // Llamar a la función animate en cada frame

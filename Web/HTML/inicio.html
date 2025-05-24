@@ -11,14 +11,14 @@
         <img src="../../Videojuego/docs/img/logo_overclocked.png" alt="overclocked-logo">
         <nav>
             <a href="inicio.html">Inicio</a>
-            <a href="../../Videojuego/game/html/game.html">Jugar</a>
+            <a href="../../Videojuego/game/html/game.html">Juego</a>
             <a href="guia.html">Guía</a>
             <a href="creditos.html">Créditos</a>
         </nav>
     </header>
 
     <section id="titulo">
-        <h1>¡Bienvenido a OVERCLOCKED!</h1>
+        <h1>OVERCLOCKED</h1>
         <p>
             Videojuego roguelite 2D donde encarnas un robot en una competencia de robótica. 
             Explora mapas generados aleatoriamente, derrota rivales mecánicos y completa el
@@ -40,19 +40,7 @@
                 ¿Tienes la habilidad para ser el mejor en la competencia de robots?
             </p>
         </div>
-        <div id="viewer-container">
-            <canvas id="viewer3d"></canvas>
-            <img id="skippy-img" src="../../Videojuego/docs/img/skippy_idle.gif" alt="Skippy"/>
-        </div>
-        <script>
-            // Ocultar el canvas si se está ejecutando desde un archivo local
-            if (location.protocol === 'file:') {
-                document.getElementById('viewer3d').style.display = 'none';
-                document.getElementById('skippy-img').style.display = 'block';
-            } else {
-                document.getElementById('skippy-img').style.display = 'none';
-            }
-        </script>
+        <canvas id="viewer3d"></canvas>
     </section>
 
     <section id="caracteristicas">
