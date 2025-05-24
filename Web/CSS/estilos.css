@@ -55,7 +55,7 @@ header nav {
     flex-wrap: wrap;
 }
 header nav a {
-    font-size: 0.8em; /* Tamaño de fuente */
+    font-size: 1em; /* Tamaño de fuente */
 }
 
 /* Botones */
@@ -64,16 +64,16 @@ a {
     background-color: #272b36; /* Morado */
     color: #6C6EA0;
     border: 2px solid #434A5F; /* Borde oscuro */
-    padding: 10px 20px;
+    padding: 10px;
     text-decoration: none;
     text-align: center;
     display: inline-block;
-    transition: 0.1s; /* Efecto de zoom */
+    box-sizing: border-box;
+    transition: 0.1s;
 }
 a:hover {
     background-color: #ffcd81;
     color: black;
-    transform: scale(1.05); /* Efecto de zoom */
 }
 
 /* Secciones */
@@ -143,6 +143,32 @@ section {
     min-height: 40vh;
 }
 
+/* Imagenes */
+
+#imagenes {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 1fr;
+
+    justify-content: space-evenly;
+    align-items: stretch;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+#imagenes img {
+    width: 100%;
+    height: auto;
+    border: 4px solid #272b36; /* Borde oscuro */
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+#imagenes img:hover {
+    border: 4px solid #ffcd81; /* Borde morado */
+}
+
 /* Caracteristicas */
 #caracteristicas {
     display: flex;
@@ -172,12 +198,17 @@ section {
     cursor: default;
 }
 #guia-boton {
-    color: #272b36;
-    background-color: #ffcd81;
+    color: white;
+    border: 4px solid #6C6EA0; /* Borde morado */
     padding: 20px;
     width: 100%;
     margin-bottom: 40px;
     box-sizing: border-box;
+}
+#guia-boton:hover {
+    color: #272b36;
+    border-color: #272b36;
+    background-color: #ffcd81; /* Gris oscuro */
 }
 
 /* Créditos */
@@ -204,6 +235,25 @@ section {
     font-size: 14px;
     border-top: 4px solid #6C6EA0;
 }
+
+/* Repositorio */
+
+#repositorio {
+    padding: 4vh 10vw;
+}
+#btn-repo {
+    width: 100%;
+    background-color: #434A5F;
+    color: white;
+    border: 2px solid white;
+}
+#btn-repo:hover {
+    background-color: #ffcd81; /* Gris oscuro */
+    color: black;
+    border-color: #272b36;
+}
+
+/* Assets */
 
 #assets {
     display: flex;
@@ -414,13 +464,25 @@ footer {
         display: none;
     }
 
+    #imagenes {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(5, 1fr);
+        gap: 10px;
+    }
+
     .grid-caracteristicas {
-        grid-template-columns: 1fr; /* 1 columna */
-        grid-template-rows: repeat(6, 1fr); /* 6 filas */
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, 1fr);
+    }
+
+    #controles {
+        overflow: auto;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        transition: 0.2s;
     }
 
     #enemigos ul {
-        grid-template-columns: 1fr; /* 1 columna */
-        grid-template-rows: repeat(6, 1fr); /* 6 filas */
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, 1fr);
     }
 }
